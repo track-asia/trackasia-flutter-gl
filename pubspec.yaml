@@ -1,26 +1,26 @@
 name: maplibre_gl
 description: A Flutter plugin for integrating Maplibre Maps inside a Flutter application on Android, iOS and web platforms.
 version: 0.16.0
-homepage: https://github.com/track-asia-vn/flutter-maplibre-gl
+homepage: https://github.com/track-asia-vn/trackasia-flutter-gl
 
 dependencies:
   flutter:
     sdk: flutter
-  maplibre_gl_platform_interface:
+  trackasia_gl_platform_interface:
     git:
-      url: https://github.com/track-asia-vn/flutter-maplibre-gl.git
-      path: maplibre_gl_platform_interface
+      url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+      path: trackasia_gl_platform_interface
       ref: main
-  maplibre_gl_web:
+  trackasia_gl_web:
     git:
-      url: https://github.com/track-asia-vn/flutter-maplibre-gl.git
-      path: maplibre_gl_web
+      url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+      path: trackasia_gl_web
       ref: main
 
 dependency_overrides:
-  maplibre_gl_platform_interface:
+  trackasia_gl_platform_interface:
     path: ./trackasia_gl_platform_interface
-  maplibre_gl_web:
+  trackasia_gl_web:
     path: ./trackasia_gl_web
 
 flutter:

@@ -1,4 +1,4 @@
-part of maplibre_gl_web;
+part of trackasia_gl_web;
 
 //TODO Url taken from the Maptiler tutorial; use official and stable release once available
 final _maplibreGlCssUrl =

@@ -23,8 +23,8 @@ dependencies:
 
 dependency_overrides:
   maplibre_gl_platform_interface:
-    path: ../trackasia_gl_platform_interface
-  maplibre_gl_web:
+    path: ../maplibre_gl_platform_interface
+  trackasia_gl_web:
     path: ../trackasia_gl_web
 
 dev_dependencies:
