@@ -1,4 +1,4 @@
-part of maplibre_gl_web;
+part of trackasia_gl_web;
 
 abstract class MapboxMapOptionsSink {
   // TODO: dddd replace with CameraPosition.Builder target

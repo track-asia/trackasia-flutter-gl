@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -31,11 +31,11 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
 
   static final LatLng center = const LatLng(-33.86711, 151.1947171);
 
-  MaplibreMapController? controller;
+  trackasiaMapController? controller;
   int _circleCount = 0;
   Circle? _selectedCircle;
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
     controller.onCircleTapped.add(_onCircleTapped);
   }
@@ -217,7 +217,7 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: MaplibreMap(
+            child: trackasiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),

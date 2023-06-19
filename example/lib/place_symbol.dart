@@ -9,7 +9,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -34,12 +34,12 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
 
   static final LatLng center = const LatLng(-33.86711, 151.1947171);
 
-  MaplibreMapController? controller;
+  trackasiaMapController? controller;
   int _symbolCount = 0;
   Symbol? _selectedSymbol;
   bool _iconAllowOverlap = false;
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
     controller.onSymbolTapped.add(_onSymbolTapped);
   }
@@ -289,7 +289,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: MaplibreMap(
+            child: trackasiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
               initialCameraPosition: const CameraPosition(

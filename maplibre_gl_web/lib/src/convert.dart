@@ -1,4 +1,4 @@
-part of maplibre_gl_web;
+part of trackasia_gl_web;
 
 class Convert {
   static void interpretMapboxMapOptions(

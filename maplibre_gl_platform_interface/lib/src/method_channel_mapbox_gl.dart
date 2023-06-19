@@ -1,6 +1,6 @@
-part of maplibre_gl_platform_interface;
+part of trackasia_gl_platform_interface;
 
-class MethodChannelMaplibreGl extends MapLibreGlPlatform {
+class MethodChanneltrackasiaGl extends trackasiaGlPlatform {
   late MethodChannel _channel;
   static bool useHybridComposition = false;
 

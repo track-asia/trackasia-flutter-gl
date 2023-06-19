@@ -20,7 +20,7 @@ class MapboxMapBuilder implements MapboxMapOptionsSink {
   private boolean dragEnabled = true;
   private int myLocationTrackingMode = 0;
   private int myLocationRenderMode = 0;
-  private String styleString = "https://demotiles.maplibre.org/style.json";
+  private String styleString = "https://demotiles.trackasia.org/style.json";
   private LatLngBounds bounds = null;
 
   MapboxMapController build(

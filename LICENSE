@@ -1,5 +1,5 @@
-flutter-maplibre-gl Copyright (c) 2023, MapLibre contributors.
-flutter-maplibre-gl Copyright (c) 2021, m0nac0.
+flutter-trackasia-gl Copyright (c) 2023, trackasia contributors.
+flutter-trackasia-gl Copyright (c) 2021, m0nac0.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -26,11 +26,11 @@ Redistributions in binary form must reproduce the above copyright notice, this l
 
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
-This project uses the MapLibre GL native libraries for Android and iOS from https://github.com/track-asia-vn/trackasia-gl-native, which contain the following LICENSE:
+This project uses the trackasia GL native libraries for Android and iOS from https://github.com/track-asia-vn/trackasia-gl-native, which contain the following LICENSE:
 ------------------------------------------------------------------------------------------------------
 BSD 2-Clause License
 
-Copyright (c) 2021 MapLibre contributors
+Copyright (c) 2021 trackasia contributors
 
 Copyright (c) 2018-2021 MapTiler.com
 
@@ -61,9 +61,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
-This project uses MapLibre GL JS library from https://github.com/track-asia-vn/trackasia-gl-js, which contains the following LICENSE:
+This project uses trackasia GL JS library from https://github.com/track-asia-vn/trackasia-gl-js, which contains the following LICENSE:
 ------------------------------------------------------------------------------------------------------
-Copyright (c) 2020, MapLibre contributors
+Copyright (c) 2020, trackasia contributors
 
 All rights reserved.
 
@@ -75,7 +75,7 @@ are permitted provided that the following conditions are met:
     * Redistributions in binary form must reproduce the above copyright notice,
       this list of conditions and the following disclaimer in the documentation
       and/or other materials provided with the distribution.
-    * Neither the name of MapLibre GL JS nor the names of its contributors
+    * Neither the name of trackasia GL JS nor the names of its contributors
       may be used to endorse or promote products derived from this software
       without specific prior written permission.
 

@@ -1,5 +1,5 @@
 import Mapbox
-import MapLibreAnnotationExtension
+import trackasiaAnnotationExtension
 
 /*
  * The mapping is based on the values defined here:

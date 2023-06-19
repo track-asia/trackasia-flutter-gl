@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
-import 'package:maplibre_gl_example/page.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl_example/page.dart';
 
 import 'util.dart';
 
@@ -22,14 +22,14 @@ class LayerBody extends StatefulWidget {
 class LayerState extends State {
   static final LatLng center = const LatLng(-33.86711, 151.1947171);
 
-  late MaplibreMapController controller;
+  late trackasiaMapController controller;
   Timer? bikeTimer;
   Timer? filterTimer;
   int filteredId = 0;
 
   @override
   Widget build(BuildContext context) {
-    return MaplibreMap(
+    return trackasiaMap(
       dragEnabled: false,
       myLocationEnabled: true,
       onMapCreated: _onMapCreated,
@@ -44,7 +44,7 @@ class LayerState extends State {
     );
   }
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
 
     controller.onFeatureTapped.add(onFeatureTap);

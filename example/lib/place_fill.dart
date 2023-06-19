@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -48,11 +48,11 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
     ]
   ];
 
-  MaplibreMapController? controller;
+  trackasiaMapController? controller;
   int _fillCount = 0;
   Fill? _selectedFill;
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
     controller.onFillTapped.add(_onFillTapped);
     this.controller!.onFeatureDrag.add(_onFeatureDrag);
@@ -207,7 +207,7 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: MaplibreMap(
+            child: trackasiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
               initialCameraPosition: const CameraPosition(

@@ -1,10 +1,10 @@
-part of maplibre_gl_web;
+part of trackasia_gl_web;
 
 //TODO Url taken from the Maptiler tutorial; use official and stable release once available
-final _maplibreGlCssUrl =
+final _trackasiaGlCssUrl =
     'https://cdn.maptiler.com/trackasia-gl-js/v1.13.0-rc.4/mapbox-gl.css';
 
-class MaplibreMapController extends MapLibreGlPlatform
+class trackasiaMapController extends trackasiaGlPlatform
     implements MapboxMapOptionsSink {
   late DivElement _mapElement;
 
@@ -68,7 +68,7 @@ class MaplibreMapController extends MapLibreGlPlatform
       _map = MapboxMap(
         MapOptions(
           container: _mapElement,
-          style: 'https://demotiles.maplibre.org/style.json',
+          style: 'https://demotiles.trackasia.org/style.json',
           center: LngLat(camera['target'][1], camera['target'][0]),
           zoom: camera['zoom'],
           bearing: camera['bearing'],
@@ -176,7 +176,7 @@ class MaplibreMapController extends MapLibreGlPlatform
 
   Future<void> _addStylesheetToShadowRoot(HtmlElement e) async {
     LinkElement link = LinkElement()
-      ..href = _maplibreGlCssUrl
+      ..href = _trackasiaGlCssUrl
       ..rel = 'stylesheet';
     e.append(link);
 

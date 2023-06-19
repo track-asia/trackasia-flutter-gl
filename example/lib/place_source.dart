@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -34,9 +34,9 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
 
   bool sourceAdded = false;
   bool layerAdded = false;
-  late MaplibreMapController controller;
+  late trackasiaMapController controller;
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
   }
 
@@ -99,7 +99,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: MaplibreMap(
+            child: trackasiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),

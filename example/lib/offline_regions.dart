@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'offline_region_map.dart';
 import 'page.dart';
@@ -25,19 +25,19 @@ final List<OfflineRegionDefinition> regionDefinitions = [
     bounds: hawaiiBounds,
     minZoom: 3.0,
     maxZoom: 8.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://demotiles.trackasia.org/style.json",
   ),
   OfflineRegionDefinition(
     bounds: santiagoBounds,
     minZoom: 10.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://demotiles.trackasia.org/style.json",
   ),
   OfflineRegionDefinition(
     bounds: aucklandBounds,
     minZoom: 13.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://demotiles.trackasia.org/style.json",
   ),
 ];
 

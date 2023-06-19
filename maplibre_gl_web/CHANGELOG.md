@@ -13,7 +13,7 @@ see top-level CHANGELOG.md
 ## 0.14.0, Oct 14, 2021
 
 ## 0.13.0, Oct 6, 2021
-🎉 The first release of flutter-maplibre-gl with the complete transition to Maplibre libraries. 🎉
+🎉 The first release of flutter-trackasia-gl with the complete transition to trackasia libraries. 🎉
 
 ### Changes cherry-picked/ported from tobrun/flutter-mapbox-gl:0.12.0
 * Dependencies: updated image package [#598](https://github.com/tobrun/flutter-mapbox-gl/pull/598)

@@ -1,4 +1,4 @@
-part of maplibre_gl;
+part of trackasia_gl;
 
 abstract class DownloadRegionStatus {}
 

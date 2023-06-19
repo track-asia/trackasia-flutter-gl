@@ -4,7 +4,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of maplibre_gl_platform_interface;
+part of trackasia_gl_platform_interface;
 
 FillOptions translateFillOptions(FillOptions options, LatLng delta) {
   if (options.geometry != null) {
