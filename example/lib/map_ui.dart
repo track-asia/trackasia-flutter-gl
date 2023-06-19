@@ -6,7 +6,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -39,7 +39,7 @@ class MapUiBodyState extends State<MapUiBody> {
     zoom: 11.0,
   );
 
-  trackasiaMapController? mapController;
+  MaplibreMapController? mapController;
   CameraPosition _position = _kInitialPosition;
   bool _isMoving = false;
   bool _compassEnabled = true;
@@ -50,13 +50,10 @@ class MapUiBodyState extends State<MapUiBody> {
   // Style string can a reference to a local or remote resources.
   // On Android the raw JSON can also be passed via a styleString, on iOS this is not supported.
   List<String> _styleStrings = [
-    "https://demotiles.trackasia.org/style.json",
+    "https://demotiles.maplibre.org/style.json",
     "assets/style.json"
   ];
-  List<String> _styleStringLabels = [
-    "trackasia demo style",
-    "Local style file"
-  ];
+  List<String> _styleStringLabels = ["Maplibre demo style", "Local style file"];
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool? _doubleClickToZoomEnabled;
@@ -296,10 +293,10 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _sourceFeaturesGetter() {
     return TextButton(
-      child: Text('get source features (trackasia)'),
+      child: Text('get source features (maplibre)'),
       onPressed: () async {
         var result = await mapController!
-            .querySourceFeatures("trackasia", "centroids", null);
+            .querySourceFeatures("maplibre", "centroids", null);
         print(result);
       },
     );
@@ -348,7 +345,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   @override
   Widget build(BuildContext context) {
-    final trackasiaMap mapboxMap = trackasiaMap(
+    final MaplibreMap mapboxMap = MaplibreMap(
       onMapCreated: onMapCreated,
       initialCameraPosition: _kInitialPosition,
       trackCameraPosition: true,
@@ -459,7 +456,7 @@ class MapUiBodyState extends State<MapUiBody> {
     );
   }
 
-  void onMapCreated(trackasiaMapController controller) {
+  void onMapCreated(MaplibreMapController controller) {
     mapController = controller;
     mapController!.addListener(_onMapChanged);
     _extractMapInfo();

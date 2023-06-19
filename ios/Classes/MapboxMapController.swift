@@ -1,6 +1,6 @@
 import Flutter
 import Mapbox
-import trackasiaAnnotationExtension
+import MapLibreAnnotationExtension
 
 class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, MapboxMapOptionsSink,
     UIGestureRecognizerDelegate

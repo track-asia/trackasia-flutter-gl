@@ -1,5 +1,5 @@
-name: trackasia_gl_example
-description: Demonstrates how to use the trackasia_gl plugin.
+name: maplibre_gl_example
+description: Demonstrates how to use the maplibre_gl plugin.
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -22,16 +22,16 @@ dependencies:
   device_info_plus: ^3.2.2
 
 dependency_overrides:
-  trackasia_gl_platform_interface:
+  maplibre_gl_platform_interface:
     path: ../trackasia_gl_platform_interface
-  trackasia_gl_web:
+  maplibre_gl_web:
     path: ../trackasia_gl_web
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  trackasia_gl:
+  maplibre_gl:
     path: ../
 
 # For information on the generic Dart part of this file, see the

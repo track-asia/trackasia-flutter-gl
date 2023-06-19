@@ -1,7 +1,7 @@
-name: trackasia_gl_web
-description: Web platform implementation of trackasia_gl
+name: maplibre_gl_web
+description: Web platform implementation of maplibre_gl
 version: 0.16.0
-homepage: https://github.com/track-asia-vn/flutter-trackasia-gl
+homepage: https://github.com/track-asia-vn/flutter-maplibre-gl
 
 flutter:
   plugin:
@@ -16,21 +16,21 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   meta: ^1.3.0
-  trackasia_gl_platform_interface:
+  maplibre_gl_platform_interface:
     git:
-      url: https://github.com/track-asia-vn/flutter-trackasia-gl.git
-      path: trackasia_gl_platform_interface
+      url: https://github.com/track-asia-vn/flutter-maplibre-gl.git
+      path: maplibre_gl_platform_interface
       ref: main
-  trackasia_gl_dart:
+  maplibre_gl_dart:
     git:
       url: https://github.com/m0nac0/trackasia-gl-dart.git
       ref: 0.2.2
   image: ^3.0.2
 
 dependency_overrides:
-  trackasia_gl_platform_interface:
+  maplibre_gl_platform_interface:
     path: ../trackasia_gl_platform_interface
-  #trackasia_gl_dart:
+  #maplibre_gl_dart:
   #  path: ../../trackasia-gl-dart
 
 dev_dependencies:

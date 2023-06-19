@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'page.dart';
@@ -23,7 +23,7 @@ class LocalStyle extends StatefulWidget {
 }
 
 class LocalStyleState extends State<LocalStyle> {
-  trackasiaMapController? mapController;
+  MaplibreMapController? mapController;
   String? styleAbsoluteFilePath;
 
   @override
@@ -34,7 +34,7 @@ class LocalStyleState extends State<LocalStyle> {
       String documentDir = dir.path;
       String stylesDir = '$documentDir/styles';
       String styleJSON =
-          '{"version":8,"name":"Demo style","center":[50,10],"zoom":4,"sources":{"demotiles":{"type":"vector","url":"https://demotiles.trackasia.org/tiles/tiles.json"}},"sprite":"","glyphs":"https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf","layers":[{"id":"background","type":"background","paint":{"background-color":"rgba(255, 255, 255, 1)"}},{"id":"countries","type":"line","source":"demotiles","source-layer":"countries","paint":{"line-color":"rgba(0, 0, 0, 1)","line-width":1,"line-opacity":1}}]}';
+          '{"version":8,"name":"Demo style","center":[50,10],"zoom":4,"sources":{"demotiles":{"type":"vector","url":"https://demotiles.maplibre.org/tiles/tiles.json"}},"sprite":"","glyphs":"https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf","layers":[{"id":"background","type":"background","paint":{"background-color":"rgba(255, 255, 255, 1)"}},{"id":"countries","type":"line","source":"demotiles","source-layer":"countries","paint":{"line-color":"rgba(0, 0, 0, 1)","line-width":1,"line-opacity":1}}]}';
 
       await new Directory(stylesDir).create(recursive: true);
 
@@ -48,7 +48,7 @@ class LocalStyleState extends State<LocalStyle> {
     });
   }
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(MaplibreMapController controller) {
     mapController = controller;
   }
 
@@ -61,7 +61,7 @@ class LocalStyleState extends State<LocalStyle> {
     }
 
     return new Scaffold(
-        body: trackasiaMap(
+        body: MaplibreMap(
       styleString: styleAbsoluteFilePath,
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),

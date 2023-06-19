@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of trackasia_gl;
+part of maplibre_gl;
 
 typedef void OnMapClickCallback(Point<double> point, LatLng coordinates);
 
@@ -29,7 +29,7 @@ typedef void OnCameraIdleCallback();
 
 typedef void OnMapIdleCallback();
 
-/// Controller for a single trackasiaMap instance running on the host platform.
+/// Controller for a single MaplibreMap instance running on the host platform.
 ///
 /// Change listeners are notified upon changes to any of
 ///
@@ -44,9 +44,9 @@ typedef void OnMapIdleCallback();
 /// Symbol tap events can be received by adding callbacks to [onSymbolTapped].
 /// Line tap events can be received by adding callbacks to [onLineTapped].
 /// Circle tap events can be received by adding callbacks to [onCircleTapped].
-class trackasiaMapController extends ChangeNotifier {
-  trackasiaMapController({
-    required trackasiaGlPlatform mapboxGlPlatform,
+class MaplibreMapController extends ChangeNotifier {
+  MaplibreMapController({
+    required MapLibreGlPlatform mapboxGlPlatform,
     required CameraPosition initialCameraPosition,
     required Iterable<AnnotationType> annotationOrder,
     required Iterable<AnnotationType> annotationConsumeTapEvents,
@@ -235,7 +235,7 @@ class trackasiaMapController extends ChangeNotifier {
   CameraPosition? get cameraPosition => _cameraPosition;
   CameraPosition? _cameraPosition;
 
-  final trackasiaGlPlatform _mapboxGlPlatform; //ignore: unused_field
+  final MapLibreGlPlatform _mapboxGlPlatform; //ignore: unused_field
 
   /// Updates configuration options of the map user interface.
   ///

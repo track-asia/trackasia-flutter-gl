@@ -1,4 +1,4 @@
-part of trackasia_gl;
+part of maplibre_gl;
 
 Map<String, dynamic> buildFeatureCollection(
     List<Map<String, dynamic>> features) {

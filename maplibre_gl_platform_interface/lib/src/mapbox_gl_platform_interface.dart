@@ -1,19 +1,19 @@
 // ignore_for_file: unnecessary_getters_setters
 
-part of trackasia_gl_platform_interface;
+part of maplibre_gl_platform_interface;
 
-/// The default instance of [trackasiaGlPlatform] to use.
+/// The default instance of [MapLibreGlPlatform] to use.
 typedef OnPlatformViewCreatedCallback = void Function(int);
 
-abstract class trackasiaGlPlatform {
+abstract class MapLibreGlPlatform {
   /// The default instance of [MapboxGlPlatform] to use.
   ///
-  /// Defaults to [MethodChanneltrackasiaGl].
+  /// Defaults to [MethodChannelMaplibreGl].
   ///
   /// Platform-specific plugins should set this with their own platform-specific
-  /// class that extends [trackasiaGlPlatform] when they register themselves.
-  static trackasiaGlPlatform Function() createInstance =
-      () => MethodChanneltrackasiaGl();
+  /// class that extends [MapLibreGlPlatform] when they register themselves.
+  static MapLibreGlPlatform Function() createInstance =
+      () => MethodChannelMaplibreGl();
 
   final onInfoWindowTappedPlatform = ArgumentCallbacks<String>();
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -20,10 +20,10 @@ class FullMap extends StatefulWidget {
 }
 
 class FullMapState extends State<FullMap> {
-  trackasiaMapController? mapController;
+  MaplibreMapController? mapController;
   var isLight = true;
 
-  _onMapCreated(trackasiaMapController controller) {
+  _onMapCreated(MaplibreMapController controller) {
     mapController = controller;
   }
 
@@ -49,7 +49,7 @@ class FullMapState extends State<FullMap> {
         // ),
         // ),
         // ),
-        body: trackasiaMap(
+        body: MaplibreMap(
       // TODO: styleString: isLight ? MapboxStyles.LIGHT : MapboxStyles.DARK,
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),

@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart'; // ignore: unnecessary_import
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -29,7 +29,7 @@ class CustomMarker extends StatefulWidget {
 class CustomMarkerState extends State<CustomMarker> {
   final Random _rnd = new Random();
 
-  late trackasiaMapController _mapController;
+  late MaplibreMapController _mapController;
   List<Marker> _markers = [];
   List<_MarkerState> _markerStates = [];
 
@@ -37,7 +37,7 @@ class CustomMarkerState extends State<CustomMarker> {
     _markerStates.add(markerState);
   }
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(MaplibreMapController controller) {
     _mapController = controller;
     controller.addListener(() {
       if (controller.isCameraMoving) {
@@ -83,7 +83,7 @@ class CustomMarkerState extends State<CustomMarker> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: Stack(children: [
-        trackasiaMap(
+        MaplibreMap(
           trackCameraPosition: true,
           onMapCreated: _onMapCreated,
           onMapLongClick: _onMapLongClickCallback,

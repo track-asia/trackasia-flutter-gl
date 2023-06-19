@@ -1,4 +1,4 @@
-part of trackasia_gl;
+part of maplibre_gl;
 
 extension MapBoxColorConversion on Color {
   String toHexStringRGB() {

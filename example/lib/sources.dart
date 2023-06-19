@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
-import 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.dart';
+import 'package:maplibre_gl_platform_interface/trackasia_gl_platform_interface.dart';
 
 class StyleInfo {
   final String name;
   final String baseStyle;
-  final Future<void> Function(trackasiaMapController) addDetails;
+  final Future<void> Function(MaplibreMapController) addDetails;
   final CameraPosition position;
 
   const StyleInfo(
@@ -35,15 +35,15 @@ class FullMap extends StatefulWidget {
 }
 
 class FullMapState extends State<FullMap> {
-  trackasiaMapController? controller;
+  MaplibreMapController? controller;
   final watercolorRasterId = "watercolorRaster";
   int selectedStyleId = 0;
 
-  _onMapCreated(trackasiaMapController controller) {
+  _onMapCreated(MaplibreMapController controller) {
     this.controller = controller;
   }
 
-  static Future<void> addRaster(trackasiaMapController controller) async {
+  static Future<void> addRaster(MaplibreMapController controller) async {
     await controller.addSource(
       "watercolor",
       RasterSourceProperties(
@@ -59,7 +59,7 @@ class FullMapState extends State<FullMap> {
   }
 
   static Future<void> addGeojsonCluster(
-      trackasiaMapController controller) async {
+      MaplibreMapController controller) async {
     await controller.addSource(
         "earthquakes",
         GeojsonSourceProperties(
@@ -100,11 +100,11 @@ class FullMapState extends State<FullMap> {
         ));
   }
 
-  static Future<void> addVector(trackasiaMapController controller) async {
+  static Future<void> addVector(MaplibreMapController controller) async {
     await controller.addSource(
         "terrain",
         VectorSourceProperties(
-          url: "https://demotiles.trackasia.org/tiles/tiles.json",
+          url: "https://demotiles.maplibre.org/tiles/tiles.json",
         ));
 
     await controller.addLayer(
@@ -119,7 +119,7 @@ class FullMapState extends State<FullMap> {
         sourceLayer: "countries");
   }
 
-  static Future<void> addImage(trackasiaMapController controller) async {
+  static Future<void> addImage(MaplibreMapController controller) async {
     await controller.addSource(
         "radar",
         ImageSourceProperties(
@@ -138,7 +138,7 @@ class FullMapState extends State<FullMap> {
     );
   }
 
-  static Future<void> addVideo(trackasiaMapController controller) async {
+  static Future<void> addVideo(MaplibreMapController controller) async {
     await controller.addSource(
         "video",
         VideoSourceProperties(urls: [
@@ -158,7 +158,7 @@ class FullMapState extends State<FullMap> {
     );
   }
 
-  static Future<void> addDem(trackasiaMapController controller) async {
+  static Future<void> addDem(MaplibreMapController controller) async {
     // TODO: adapt example?
     // await controller.addSource(
     //     "dem",
@@ -177,13 +177,13 @@ class FullMapState extends State<FullMap> {
   static const _stylesAndLoaders = [
     StyleInfo(
       name: "Vector",
-      baseStyle: trackasiaStyles.DEMO,
+      baseStyle: MaplibreStyles.DEMO,
       addDetails: addVector,
       position: CameraPosition(target: LatLng(33.3832, -118.4333), zoom: 6),
     ),
     StyleInfo(
       name: "Default style",
-      // Using the raw github file version of trackasiaStyles.DEMO here, because we need to
+      // Using the raw github file version of MaplibreStyles.DEMO here, because we need to
       // specify a different baseStyle for consecutive elements in this list,
       // otherwise the map will not update
       baseStyle:
@@ -193,7 +193,7 @@ class FullMapState extends State<FullMap> {
     ),
     StyleInfo(
       name: "Geojson cluster",
-      baseStyle: trackasiaStyles.DEMO,
+      baseStyle: MaplibreStyles.DEMO,
       addDetails: addGeojsonCluster,
       position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 5),
     ),
@@ -251,7 +251,7 @@ class FullMapState extends State<FullMap> {
         ),
         body: Stack(
           children: [
-            trackasiaMap(
+            MaplibreMap(
               styleString: styleInfo.baseStyle,
               onMapCreated: _onMapCreated,
               initialCameraPosition: styleInfo.position,

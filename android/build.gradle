@@ -39,10 +39,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     dependencies {
-        implementation 'org.trackasia.gl:android-sdk:9.6.0'
-        implementation 'org.trackasia.gl:android-plugin-annotation-v9:1.0.0'
-        implementation 'org.trackasia.gl:android-plugin-localization-v9:1.0.0'
-        implementation 'org.trackasia.gl:android-plugin-offline-v9:1.0.0'
+        implementation 'org.maplibre.gl:android-sdk:9.6.0'
+        implementation 'org.maplibre.gl:android-plugin-annotation-v9:1.0.0'
+        implementation 'org.maplibre.gl:android-plugin-localization-v9:1.0.0'
+        implementation 'org.maplibre.gl:android-plugin-offline-v9:1.0.0'
         implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
     }

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -24,9 +24,9 @@ class GivenBounds extends StatefulWidget {
 }
 
 class GivenBoundsState extends State<GivenBounds> {
-  late trackasiaMapController mapController;
+  late MaplibreMapController mapController;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(MaplibreMapController controller) {
     mapController = controller;
   }
 
@@ -40,7 +40,7 @@ class GivenBoundsState extends State<GivenBounds> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: trackasiaMap(
+            child: MaplibreMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition:
                   const CameraPosition(target: LatLng(0.0, 0.0)),

@@ -1,4 +1,4 @@
-library trackasia_gl_web;
+library maplibre_gl_web;
 
 import 'dart:async';
 // FIXED HERE: https://github.com/dart-lang/linter/pull/1985
@@ -16,11 +16,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide Element;
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.dart';
-import 'package:trackasia_gl_dart/mapbox_gl_dart.dart' hide Point, Source;
-import 'package:trackasia_gl_dart/mapbox_gl_dart.dart' as mapbox show Point;
+import 'package:maplibre_gl_platform_interface/trackasia_gl_platform_interface.dart';
+import 'package:maplibre_gl_dart/mapbox_gl_dart.dart' hide Point, Source;
+import 'package:maplibre_gl_dart/mapbox_gl_dart.dart' as mapbox show Point;
 import 'package:image/image.dart' hide Point;
-import 'package:trackasia_gl_web/src/layer_tools.dart';
+import 'package:maplibre_gl_web/src/layer_tools.dart';
 
 part 'src/convert.dart';
 part 'src/mapbox_map_plugin.dart';

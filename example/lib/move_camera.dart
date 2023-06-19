@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
 
@@ -23,9 +23,9 @@ class MoveCamera extends StatefulWidget {
 }
 
 class MoveCameraState extends State<MoveCamera> {
-  late trackasiaMapController mapController;
+  late MaplibreMapController mapController;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(MaplibreMapController controller) {
     mapController = controller;
   }
 
@@ -39,7 +39,7 @@ class MoveCameraState extends State<MoveCamera> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: trackasiaMap(
+            child: MaplibreMap(
               onMapCreated: _onMapCreated,
               onCameraIdle: () => print("onCameraIdle"),
               initialCameraPosition:

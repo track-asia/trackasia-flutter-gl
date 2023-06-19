@@ -12,12 +12,12 @@ see top-level CHANGELOG.md
 
 ## 0.14.0, Oct 14, 2021
 ### Breaking changes:
-* Replace example styles [#25](https://github.com/m0nac0/flutter-trackasia-gl/pull/25) (also see [#21](https://github.com/m0nac0/flutter-trackasia-gl/issues/21))
+* Replace example styles [#25](https://github.com/m0nac0/flutter-maplibre-gl/pull/25) (also see [#21](https://github.com/m0nac0/flutter-maplibre-gl/issues/21))
   * The built-in constants for specific styles were  removed. You can continue using these styles by using the styles' URL
 
 
 ## 0.13.0, Oct 6, 2021
-🎉 The first release of flutter-trackasia-gl with the complete transition to trackasia libraries. 🎉
+🎉 The first release of flutter-maplibre-gl with the complete transition to Maplibre libraries. 🎉
 
 ### Changes cherry-picked/ported from tobrun/flutter-mapbox-gl:0.12.0
 * Batch creation/removal for circles, fills and lines [#576](https://github.com/tobrun/flutter-mapbox-gl/pull/576)

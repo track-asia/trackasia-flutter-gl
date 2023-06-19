@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of trackasia_gl_platform_interface;
+part of maplibre_gl_platform_interface;
 
-class trackasiaStyles {
-  /// A very simple trackasia demo style
-  static const String DEMO = "https://demotiles.trackasia.org/style.json";
+class MaplibreStyles {
+  /// A very simple MapLibre demo style
+  static const String DEMO = "https://demotiles.maplibre.org/style.json";
 }
 
 /// The camera mode, which determines how the map camera will track the rendered location.
