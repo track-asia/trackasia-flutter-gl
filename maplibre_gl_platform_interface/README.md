@@ -1,0 +1,1 @@
+Contains the web platform implementation for the [Flutter Maplibre GL plugin](https://github.com/track-asia-vn/trackasia-flutter-gl).

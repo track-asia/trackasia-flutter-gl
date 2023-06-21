@@ -6,15 +6,15 @@ This document describes the steps needed to make a release:
 
 For each supported library:
  - `maplibre_gl_platform_interface`
- - `trackasia_gl_web`
- - `flutter-maplibre-gl`
+ - `maplibre_gl_web`
+ - `trackasia-flutter-gl`
 
 Perform the following actions (these changes should also be on `main`):
  - Update `CHANGELOG.md` with the commits associated since previous release.
  - Update library version in `pubspec.yaml`
 
 
-**Only on the release branch:** Repeat this action for `flutter-maplibre-gl` and `trackasia_gl_web` for the dependency_overrides:
+**Only on the release branch:** Repeat this action for `trackasia-flutter-gl` and `maplibre_gl_web` for the dependency_overrides:
 
 ```
 Comment out:

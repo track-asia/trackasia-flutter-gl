@@ -1,1 +1,0 @@
-Contains the web platform implementation for the [Flutter Maplibre GL plugin](https://github.com/track-asia-vn/flutter-maplibre-gl).

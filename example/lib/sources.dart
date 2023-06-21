@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'page.dart';
-import 'package:maplibre_gl_platform_interface/trackasia_gl_platform_interface.dart';
+import 'package:maplibre_gl_platform_interface/maplibre_gl_platform_interface.dart';
 
 class StyleInfo {
   final String name;

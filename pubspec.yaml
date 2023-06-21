@@ -6,22 +6,22 @@ homepage: https://github.com/track-asia-vn/trackasia-flutter-gl
 dependencies:
   flutter:
     sdk: flutter
-  trackasia_gl_platform_interface:
+  maplibre_gl_platform_interface:
     git:
       url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
-      path: trackasia_gl_platform_interface
+      path: maplibre_gl_platform_interface
       ref: main
-  trackasia_gl_web:
+  maplibre_gl_web:
     git:
       url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
-      path: trackasia_gl_web
+      path: maplibre_gl_web
       ref: main
 
 dependency_overrides:
-  trackasia_gl_platform_interface:
-    path: ./trackasia_gl_platform_interface
-  trackasia_gl_web:
-    path: ./trackasia_gl_web
+  maplibre_gl_platform_interface:
+    path: ./maplibre_gl_platform_interface
+  maplibre_gl_web:
+    path: ./maplibre_gl_web
 
 flutter:
   plugin:

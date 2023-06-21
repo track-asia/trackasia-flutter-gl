@@ -24,8 +24,8 @@ dependencies:
 dependency_overrides:
   maplibre_gl_platform_interface:
     path: ../maplibre_gl_platform_interface
-  trackasia_gl_web:
-    path: ../trackasia_gl_web
+  maplibre_gl_web:
+    path: ../maplibre_gl_web
 
 dev_dependencies:
   flutter_test:
