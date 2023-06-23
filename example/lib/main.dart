@@ -8,8 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:maplibre_gl_example/get_map_informations.dart';
-import 'package:maplibre_gl_example/given_bounds.dart';
+import 'package:trackasia_gl_example/get_map_informations.dart';
+import 'package:trackasia_gl_example/given_bounds.dart';
 
 import 'animate_camera.dart';
 import 'annotation_order_maps.dart';
@@ -31,7 +31,7 @@ import 'place_batch.dart';
 import 'layer.dart';
 import 'sources.dart';
 
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 final List<ExamplePage> _allPages = <ExamplePage>[
   MapUiPage(),
@@ -76,9 +76,9 @@ class _MapsDemoState extends State<MapsDemo> {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkVersion = androidInfo.version.sdkInt;
       if (sdkVersion != null && sdkVersion >= 29) {
-        MaplibreMap.useHybridComposition = true;
+        trackasiaMap.useHybridComposition = true;
       } else {
-        MaplibreMap.useHybridComposition = false;
+        trackasiaMap.useHybridComposition = false;
       }
     }
   }
@@ -101,12 +101,12 @@ class _MapsDemoState extends State<MapsDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Maplibre examples')),
+      appBar: AppBar(title: const Text('trackasia examples')),
       body: ListView.builder(
         itemCount: _allPages.length + 1,
         itemBuilder: (_, int index) => index == _allPages.length
             ? AboutListTile(
-                applicationName: "flutter-maplibre-gl example",
+                applicationName: "trackasia-flutter-gl example",
               )
             : ListTile(
                 leading: _allPages[index].leading,

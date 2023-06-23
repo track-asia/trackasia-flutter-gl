@@ -24,7 +24,7 @@ DEPENDENCIES:
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
 
 SPEC REPOS:
-  https://github.com/m0nac0/flutter-maplibre-podspecs.git:
+  https://github.com/m0nac0/trackasia-flutter-podspecs.git:
     - MapLibre
     - MapLibreAnnotationExtension
 

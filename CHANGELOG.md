@@ -1,48 +1,48 @@
 ## 0.16.0, Jun 28, 2022
 * cherry-picked all commits from upstream up to [https://github.com/flutter-mapbox-gl/maps/commit/3496907955cd4b442e4eb905d67e8d46692174f1), including up to release 0.16.0 from upstream
-* updated Maplibre GL JS for web
+* updated Trackasia GL JS for web
 
 ## 0.15.1, May 24, 2022
 
 * cherry-picked all commits from upstream up to [upstream release 0.15.0](https://github.com/flutter-mapbox-gl/maps/releases/tag/0.15.0)
 * improved documentation
-* betted adapted the example app to MapLibre
+* betted adapted the example app to Trackasia
 * hide logo on Android/iOS to match web
 
 ## 0.15.0, Oct 26, 2021
 
-* Fix bug when changing line color (see #448) by @vberthet in https://github.com/m0nac0/flutter-maplibre-gl/pull/15
-* Remove unnecessary imports by @m0nac0 in https://github.com/m0nac0/flutter-maplibre-gl/pull/34
-* Update example with Flutter 2.5.3 by @kuhnroyal in https://github.com/m0nac0/flutter-maplibre-gl/pull/35
-* CI: Use separate scheduled pipeline for Flutter beta builds by @kuhnroyal in https://github.com/m0nac0/flutter-maplibre-gl/pull/28
-* Null safety (cherry-pick from upstream) by @m0nac0 in https://github.com/m0nac0/flutter-maplibre-gl/pull/31
-* [web] add missing removeLines, removeCircles and removeFills (cherry-pick tobrun#622) by @m0nac0 in https://github.com/m0nac0/flutter-maplibre-gl/pull/32
-* Replace style string in local style example by @m0nac0 in https://github.com/m0nac0/flutter-maplibre-gl/pull/33
-* [web] add getSymbolLatLng and getLineLatLngs by @m0nac0 in https://github.com/m0nac0/flutter-maplibre-gl/pull/37
+* Fix bug when changing line color (see #448) by @vberthet in https://github.com/m0nac0/trackasia-flutter-gl/pull/15
+* Remove unnecessary imports by @m0nac0 in https://github.com/m0nac0/trackasia-flutter-gl/pull/34
+* Update example with Flutter 2.5.3 by @kuhnroyal in https://github.com/m0nac0/trackasia-flutter-gl/pull/35
+* CI: Use separate scheduled pipeline for Flutter beta builds by @kuhnroyal in https://github.com/m0nac0/trackasia-flutter-gl/pull/28
+* Null safety (cherry-pick from upstream) by @m0nac0 in https://github.com/m0nac0/trackasia-flutter-gl/pull/31
+* [web] add missing removeLines, removeCircles and removeFills (cherry-pick tobrun#622) by @m0nac0 in https://github.com/m0nac0/trackasia-flutter-gl/pull/32
+* Replace style string in local style example by @m0nac0 in https://github.com/m0nac0/trackasia-flutter-gl/pull/33
+* [web] add getSymbolLatLng and getLineLatLngs by @m0nac0 in https://github.com/m0nac0/trackasia-flutter-gl/pull/37
 
 ## 0.14.0
 ### Breaking changes:
-* Remove access token, update libraries, replace example styles [#25](https://github.com/m0nac0/flutter-maplibre-gl/pull/25) (also see [#21](https://github.com/m0nac0/flutter-maplibre-gl/issues/21))
-  * The parameter `accessToken` of class `MaplibreMap` was removed. If you want to continue using a tile provider that requires an API key, specify that key directly in the URL of the tile source (see [https://github.com/m0nac0/flutter-maplibre-gl#tile-sources-requiring-an-api-key](https://github.com/m0nac0/flutter-maplibre-gl#tile-sources-requiring-an-api-key))
+* Remove access token, update libraries, replace example styles [#25](https://github.com/m0nac0/trackasia-flutter-gl/pull/25) (also see [#21](https://github.com/m0nac0/trackasia-flutter-gl/issues/21))
+  * The parameter `accessToken` of class `TrackasiaMap` was removed. If you want to continue using a tile provider that requires an API key, specify that key directly in the URL of the tile source (see [https://github.com/m0nac0/trackasia-flutter-gl#tile-sources-requiring-an-api-key](https://github.com/m0nac0/trackasia-flutter-gl#tile-sources-requiring-an-api-key))
   * The built-in constants for specific styles were also removed. You can continue using these styles by using the styles' URL
 
 ### Other changes:
-* Remove warning about missing access token on Android [#22](https://github.com/m0nac0/flutter-maplibre-gl/pull/22)
-* Example: use maplibre styles and add new demo style [#23](https://github.com/m0nac0/flutter-maplibre-gl/pull/23)
-* Add about button to example app [#26](https://github.com/m0nac0/flutter-maplibre-gl/pull/26)
+* Remove warning about missing access token on Android [#22](https://github.com/m0nac0/trackasia-flutter-gl/pull/22)
+* Example: use Trackasia styles and add new demo style [#23](https://github.com/m0nac0/trackasia-flutter-gl/pull/23)
+* Add about button to example app [#26](https://github.com/m0nac0/trackasia-flutter-gl/pull/26)
 * various improvements to the CI
 * fixed formatting for some files that were not correctly formatted
 
 
 ## 0.13.0, Oct 6, 2021
-🎉 The first release of flutter-maplibre-gl with the complete transition to Maplibre libraries. 🎉
+🎉 The first release of trackasia-flutter-gl with the complete transition to Trackasia libraries. 🎉
 
 Further improvements: 
-* Update to Maplibre-Android-SDK 9.4.2
-* Update to MapLibre-iOS-SDK 5.12.0
-* Fix onUserLocationUpdated not firing on android [#14](https://github.com/m0nac0/flutter-maplibre-gl/pull/14)
-* Add speed to UserLocation [#11](https://github.com/m0nac0/flutter-maplibre-gl/pull/11)
-* Fix queryRenderedFeaturesInRect for iOS [#10](https://github.com/m0nac0/flutter-maplibre-gl/pull/10)
+* Update to Trackasia-Android-SDK 9.4.2
+* Update to Trackasia-iOS-SDK 5.12.0
+* Fix onUserLocationUpdated not firing on android [#14](https://github.com/m0nac0/trackasia-flutter-gl/pull/14)
+* Add speed to UserLocation [#11](https://github.com/m0nac0/trackasia-flutter-gl/pull/11)
+* Fix queryRenderedFeaturesInRect for iOS [#10](https://github.com/m0nac0/trackasia-flutter-gl/pull/10)
 
 
 ### Changes cherry-picked/ported from tobrun/flutter-mapbox-gl:0.12.0

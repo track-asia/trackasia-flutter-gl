@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // ignore: unnecessary_import
-import 'package:maplibre_gl/mapbox_gl.dart';
-import 'package:maplibre_gl_example/util.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl_example/util.dart';
 
 import 'page.dart';
 

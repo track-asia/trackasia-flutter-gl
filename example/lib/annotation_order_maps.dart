@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // ignore: unnecessary_import
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 import 'util.dart';
@@ -21,8 +21,8 @@ class AnnotationOrderBody extends StatefulWidget {
 }
 
 class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
-  late MaplibreMapController controllerOne;
-  late MaplibreMapController controllerTwo;
+  late trackasiaMapController controllerOne;
+  late trackasiaMapController controllerTwo;
 
   final LatLng center = const LatLng(36.580664, 32.5563837);
 
@@ -44,7 +44,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
                   child: SizedBox(
                     width: 250.0,
                     height: 250.0,
-                    child: MaplibreMap(
+                    child: trackasiaMap(
                       onMapCreated: onMapCreatedOne,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
                       initialCameraPosition: CameraPosition(
@@ -78,7 +78,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
                   child: SizedBox(
                     width: 250.0,
                     height: 250.0,
-                    child: MaplibreMap(
+                    child: trackasiaMap(
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(
@@ -102,15 +102,15 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
     );
   }
 
-  void onMapCreatedOne(MaplibreMapController controller) {
+  void onMapCreatedOne(trackasiaMapController controller) {
     this.controllerOne = controller;
   }
 
-  void onMapCreatedTwo(MaplibreMapController controller) {
+  void onMapCreatedTwo(trackasiaMapController controller) {
     this.controllerTwo = controller;
   }
 
-  void onStyleLoaded(MaplibreMapController controller) async {
+  void onStyleLoaded(trackasiaMapController controller) async {
     await addImageFromAsset(
         controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(

@@ -5,8 +5,8 @@ Current process: for each release we also create a separate branch (`release-x.y
 This document describes the steps needed to make a release:
 
 For each supported library:
- - `maplibre_gl_platform_interface`
- - `maplibre_gl_web`
+ - `trackasia_gl_platform_interface`
+ - `trackasia_gl_web`
  - `trackasia-flutter-gl`
 
 Perform the following actions (these changes should also be on `main`):
@@ -14,7 +14,7 @@ Perform the following actions (these changes should also be on `main`):
  - Update library version in `pubspec.yaml`
 
 
-**Only on the release branch:** Repeat this action for `trackasia-flutter-gl` and `maplibre_gl_web` for the dependency_overrides:
+**Only on the release branch:** Repeat this action for `trackasia-flutter-gl` and `trackasia_gl_web` for the dependency_overrides:
 
 ```
 Comment out:
@@ -23,7 +23,7 @@ dependency_overrides:
     path: ../mapbox_gl_platform_interface
 ```
 
-and for the maplibre git dependencies, change ref from `main` to `release-x.y.z`.
+and for the trackasia git dependencies, change ref from `main` to `release-x.y.z`.
 
 Finally, create a Github release and git tag from the release branch.
 

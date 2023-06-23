@@ -1,4 +1,4 @@
-part of maplibre_gl;
+part of trackasia_gl;
 
 /// Description of region to be downloaded. Identifier will be generated when
 /// the download is initiated.

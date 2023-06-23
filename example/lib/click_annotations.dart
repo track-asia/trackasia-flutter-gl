@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/mapbox_gl.dart';
 
 import 'page.dart';
 import 'util.dart';
@@ -29,9 +29,9 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   ClickAnnotationBodyState();
   static const LatLng center = const LatLng(-33.88, 151.16);
 
-  MaplibreMapController? controller;
+  trackasiaMapController? controller;
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void _onMapCreated(trackasiaMapController controller) {
     this.controller = controller;
     controller.onFillTapped.add(_onFillTapped);
     controller.onCircleTapped.add(_onCircleTapped);
@@ -133,7 +133,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
 
   @override
   Widget build(BuildContext context) {
-    return MaplibreMap(
+    return trackasiaMap(
       annotationOrder: [
         AnnotationType.fill,
         AnnotationType.line,
