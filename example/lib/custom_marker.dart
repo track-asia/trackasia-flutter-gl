@@ -29,7 +29,7 @@ class CustomMarker extends StatefulWidget {
 class CustomMarkerState extends State<CustomMarker> {
   final Random _rnd = new Random();
 
-  late trackasiaMapController _mapController;
+  late TrackasiaMapController _mapController;
   List<Marker> _markers = [];
   List<_MarkerState> _markerStates = [];
 
@@ -37,7 +37,7 @@ class CustomMarkerState extends State<CustomMarker> {
     _markerStates.add(markerState);
   }
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     _mapController = controller;
     controller.addListener(() {
       if (controller.isCameraMoving) {
@@ -83,7 +83,7 @@ class CustomMarkerState extends State<CustomMarker> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: Stack(children: [
-        trackasiaMap(
+        TrackasiaMap(
           trackCameraPosition: true,
           onMapCreated: _onMapCreated,
           onMapLongClick: _onMapLongClickCallback,

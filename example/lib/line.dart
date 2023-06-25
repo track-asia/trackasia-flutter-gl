@@ -31,12 +31,12 @@ class LineBodyState extends State<LineBody> {
 
   static final LatLng center = const LatLng(-33.86711, 151.1947171);
 
-  trackasiaMapController? controller;
+  TrackasiaMapController? controller;
   int _lineCount = 0;
   Line? _selectedLine;
   final String _linePatternImage = "assets/fill/cat_silhouette_pattern.png";
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     this.controller = controller;
     controller.onLineTapped.add(_onLineTapped);
   }
@@ -160,7 +160,7 @@ class LineBodyState extends State<LineBody> {
         Center(
           child: SizedBox(
             height: 400.0,
-            child: trackasiaMap(
+            child: TrackasiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoadedCallback,
               initialCameraPosition: const CameraPosition(

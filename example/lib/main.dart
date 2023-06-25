@@ -76,9 +76,9 @@ class _MapsDemoState extends State<MapsDemo> {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       final sdkVersion = androidInfo.version.sdkInt;
       if (sdkVersion != null && sdkVersion >= 29) {
-        trackasiaMap.useHybridComposition = true;
+        TrackasiaMap.useHybridComposition = true;
       } else {
-        trackasiaMap.useHybridComposition = false;
+        TrackasiaMap.useHybridComposition = false;
       }
     }
   }

@@ -24,9 +24,9 @@ class AnimateCamera extends StatefulWidget {
 }
 
 class AnimateCameraState extends State<AnimateCamera> {
-  late trackasiaMapController mapController;
+  late TrackasiaMapController mapController;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     mapController = controller;
   }
 
@@ -40,7 +40,7 @@ class AnimateCameraState extends State<AnimateCamera> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: trackasiaMap(
+            child: TrackasiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition:
                   const CameraPosition(target: LatLng(0.0, 0.0)),

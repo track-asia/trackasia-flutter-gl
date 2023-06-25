@@ -4,7 +4,7 @@ part of trackasia_gl_web;
 final _maplibreGlCssUrl =
     'https://cdn.maptiler.com/maplibre-gl-js/v1.13.0-rc.4/mapbox-gl.css';
 
-class MaplibreMapController extends MapLibreGlPlatform
+class TrackasiaMapController extends MapLibreGlPlatform
     implements MapboxMapOptionsSink {
   late DivElement _mapElement;
 

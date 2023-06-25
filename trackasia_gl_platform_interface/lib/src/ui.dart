@@ -4,9 +4,9 @@
 
 part of trackasia_gl_platform_interface;
 
-class trackasiaStyles {
+class TrackasiaStyles {
   /// A very simple trackasia demo style
-  static const String DEMO = "https://demotiles.trackasia.org/style.json";
+  static const String DEMO = "https://demotiles.maplibre.org/style.json";
 }
 
 /// The camera mode, which determines how the map camera will track the rendered location.

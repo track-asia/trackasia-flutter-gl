@@ -69,9 +69,9 @@ class BatchAddBodyState extends State<BatchAddBody> {
 
   static final LatLng center = const LatLng(-33.86711, 151.1947171);
 
-  late trackasiaMapController controller;
+  late TrackasiaMapController controller;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     this.controller = controller;
   }
 
@@ -145,7 +145,7 @@ class BatchAddBodyState extends State<BatchAddBody> {
         Center(
           child: SizedBox(
             height: 200.0,
-            child: trackasiaMap(
+            child: TrackasiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: () => addImageFromAsset(controller,
                   "custom-marker", "assets/symbols/custom-marker.png"),

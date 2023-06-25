@@ -8,7 +8,7 @@ import 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.
 class StyleInfo {
   final String name;
   final String baseStyle;
-  final Future<void> Function(MaplibreMapController) addDetails;
+  final Future<void> Function(TrackasiaMapController) addDetails;
   final CameraPosition position;
 
   const StyleInfo(
@@ -35,15 +35,15 @@ class FullMap extends StatefulWidget {
 }
 
 class FullMapState extends State<FullMap> {
-  MaplibreMapController? controller;
+  TrackasiaMapController? controller;
   final watercolorRasterId = "watercolorRaster";
   int selectedStyleId = 0;
 
-  _onMapCreated(MaplibreMapController controller) {
+  _onMapCreated(TrackasiaMapController controller) {
     this.controller = controller;
   }
 
-  static Future<void> addRaster(MaplibreMapController controller) async {
+  static Future<void> addRaster(TrackasiaMapController controller) async {
     await controller.addSource(
       "watercolor",
       RasterSourceProperties(
@@ -59,7 +59,7 @@ class FullMapState extends State<FullMap> {
   }
 
   static Future<void> addGeojsonCluster(
-      MaplibreMapController controller) async {
+      TrackasiaMapController controller) async {
     await controller.addSource(
         "earthquakes",
         GeojsonSourceProperties(
@@ -100,7 +100,7 @@ class FullMapState extends State<FullMap> {
         ));
   }
 
-  static Future<void> addVector(MaplibreMapController controller) async {
+  static Future<void> addVector(TrackasiaMapController controller) async {
     await controller.addSource(
         "terrain",
         VectorSourceProperties(
@@ -119,7 +119,7 @@ class FullMapState extends State<FullMap> {
         sourceLayer: "countries");
   }
 
-  static Future<void> addImage(MaplibreMapController controller) async {
+  static Future<void> addImage(TrackasiaMapController controller) async {
     await controller.addSource(
         "radar",
         ImageSourceProperties(
@@ -138,7 +138,7 @@ class FullMapState extends State<FullMap> {
     );
   }
 
-  static Future<void> addVideo(MaplibreMapController controller) async {
+  static Future<void> addVideo(TrackasiaMapController controller) async {
     await controller.addSource(
         "video",
         VideoSourceProperties(urls: [
@@ -158,7 +158,7 @@ class FullMapState extends State<FullMap> {
     );
   }
 
-  static Future<void> addDem(MaplibreMapController controller) async {
+  static Future<void> addDem(TrackasiaMapController controller) async {
     // TODO: adapt example?
     // await controller.addSource(
     //     "dem",
@@ -177,13 +177,13 @@ class FullMapState extends State<FullMap> {
   static const _stylesAndLoaders = [
     StyleInfo(
       name: "Vector",
-      baseStyle: MaplibreStyles.DEMO,
+      baseStyle: TrackasiaStyles.DEMO,
       addDetails: addVector,
       position: CameraPosition(target: LatLng(33.3832, -118.4333), zoom: 6),
     ),
     StyleInfo(
       name: "Default style",
-      // Using the raw github file version of MaplibreStyles.DEMO here, because we need to
+      // Using the raw github file version of TrackasiaStyles.DEMO here, because we need to
       // specify a different baseStyle for consecutive elements in this list,
       // otherwise the map will not update
       baseStyle:
@@ -193,14 +193,14 @@ class FullMapState extends State<FullMap> {
     ),
     StyleInfo(
       name: "Geojson cluster",
-      baseStyle: MaplibreStyles.DEMO,
+      baseStyle: TrackasiaStyles.DEMO,
       addDetails: addGeojsonCluster,
       position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 5),
     ),
     StyleInfo(
       name: "Raster",
       baseStyle:
-          "https://raw.githubusercontent.com/track-asia-vn/demotiles/gh-pages/style.json",
+          "https://raw.githubusercontent.com/maplibre/demotiles/gh-pages/style.json",
       addDetails: addRaster,
       position: CameraPosition(target: LatLng(40, -100), zoom: 3),
     ),
@@ -251,7 +251,7 @@ class FullMapState extends State<FullMap> {
         ),
         body: Stack(
           children: [
-            MaplibreMap(
+            TrackasiaMap(
               styleString: styleInfo.baseStyle,
               onMapCreated: _onMapCreated,
               initialCameraPosition: styleInfo.position,

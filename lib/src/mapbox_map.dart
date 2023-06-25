@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of maplibre_gl;
+part of trackasia_gl;
 
 enum AnnotationType { fill, line, circle, symbol }
 
-typedef void MapCreatedCallback(MaplibreMapController controller);
+typedef void MapCreatedCallback(TrackasiaMapController controller);
 
-class MaplibreMap extends StatefulWidget {
-  const MaplibreMap({
+class TrackasiaMap extends StatefulWidget {
+  const TrackasiaMap({
     Key? key,
     required this.initialCameraPosition,
     this.onMapCreated,
@@ -229,12 +229,12 @@ class MaplibreMap extends StatefulWidget {
       MethodChannelMaplibreGl.useHybridComposition = useHybridComposition;
 
   @override
-  State createState() => _MaplibreMapState();
+  State createState() => _TrackasiaMapState();
 }
 
-class _MaplibreMapState extends State<MaplibreMap> {
-  final Completer<MaplibreMapController> _controller =
-      Completer<MaplibreMapController>();
+class _TrackasiaMapState extends State<TrackasiaMap> {
+  final Completer<TrackasiaMapController> _controller =
+      Completer<TrackasiaMapController>();
 
   late _MapboxMapOptions _mapboxMapOptions;
   final MapLibreGlPlatform _mapboxGlPlatform =
@@ -273,7 +273,7 @@ class _MaplibreMapState extends State<MaplibreMap> {
   }
 
   @override
-  void didUpdateWidget(MaplibreMap oldWidget) {
+  void didUpdateWidget(TrackasiaMap oldWidget) {
     super.didUpdateWidget(oldWidget);
     final _MapboxMapOptions newOptions = _MapboxMapOptions.fromWidget(widget);
     final Map<String, dynamic> updates =
@@ -286,12 +286,12 @@ class _MaplibreMapState extends State<MaplibreMap> {
     if (updates.isEmpty) {
       return;
     }
-    final MaplibreMapController controller = await _controller.future;
+    final TrackasiaMapController controller = await _controller.future;
     controller._updateMapOptions(updates);
   }
 
   Future<void> onPlatformViewCreated(int id) async {
-    final MaplibreMapController controller = MaplibreMapController(
+    final TrackasiaMapController controller = TrackasiaMapController(
       mapboxGlPlatform: _mapboxGlPlatform,
       initialCameraPosition: widget.initialCameraPosition,
       onStyleLoadedCallback: () {
@@ -345,7 +345,7 @@ class _MapboxMapOptions {
     this.attributionButtonMargins,
   });
 
-  static _MapboxMapOptions fromWidget(MaplibreMap map) {
+  static _MapboxMapOptions fromWidget(TrackasiaMap map) {
     return _MapboxMapOptions(
       compassEnabled: map.compassEnabled,
       cameraTargetBounds: map.cameraTargetBounds,

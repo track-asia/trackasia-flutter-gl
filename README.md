@@ -34,8 +34,8 @@ to get a more stable version.
 
 
 Compared to flutter-mapbox-gl, the only breaking API changes are: 
-- `MapboxMap` <--> `trackasiaMap`
-- `MapboxMapController` <--> `trackasiaMapController`
+- `MapboxMap` <--> `TrackasiaMap`
+- `MapboxMapController` <--> `TrackasiaMapController`
 
 
 ### Documentation
@@ -48,7 +48,7 @@ To use this plugin with iOS, you need to add the source repository and 2 additio
 
 ```ruby
 source 'https://cdn.cocoapods.org/'
-source 'https://github.com/m0nac0/trackasia-flutter-podspecs.git'
+source 'https://github.com/track-asia-vn/trackasia-flutter-podspecs.git'
 
 pod 'trackasia'
 pod 'trackasiaAnnotationExtension'

@@ -20,10 +20,10 @@ class FullMap extends StatefulWidget {
 }
 
 class FullMapState extends State<FullMap> {
-  trackasiaMapController? mapController;
+  TrackasiaMapController? mapController;
   var isLight = true;
 
-  _onMapCreated(trackasiaMapController controller) {
+  _onMapCreated(TrackasiaMapController controller) {
     mapController = controller;
   }
 
@@ -49,7 +49,7 @@ class FullMapState extends State<FullMap> {
         // ),
         // ),
         // ),
-        body: trackasiaMap(
+        body: TrackasiaMap(
       // TODO: styleString: isLight ? MapboxStyles.LIGHT : MapboxStyles.DARK,
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),

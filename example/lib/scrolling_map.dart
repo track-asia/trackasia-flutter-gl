@@ -28,8 +28,8 @@ class ScrollingMapBody extends StatefulWidget {
 }
 
 class _ScrollingMapBodyState extends State<ScrollingMapBody> {
-  late MaplibreMapController controllerOne;
-  late MaplibreMapController controllerTwo;
+  late TrackasiaMapController controllerOne;
+  late TrackasiaMapController controllerTwo;
 
   final LatLng center = const LatLng(32.080664, 34.9563837);
 
@@ -50,7 +50,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                   child: SizedBox(
                     width: 300.0,
                     height: 300.0,
-                    child: MaplibreMap(
+                    child: TrackasiaMap(
                       onMapCreated: onMapCreatedOne,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
                       initialCameraPosition: CameraPosition(
@@ -85,7 +85,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                   child: SizedBox(
                     width: 300.0,
                     height: 300.0,
-                    child: MaplibreMap(
+                    child: TrackasiaMap(
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(
@@ -109,15 +109,15 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
     );
   }
 
-  void onMapCreatedOne(MaplibreMapController controller) {
+  void onMapCreatedOne(TrackasiaMapController controller) {
     this.controllerOne = controller;
   }
 
-  void onMapCreatedTwo(MaplibreMapController controller) {
+  void onMapCreatedTwo(TrackasiaMapController controller) {
     this.controllerTwo = controller;
   }
 
-  void onStyleLoaded(MaplibreMapController controller) async {
+  void onStyleLoaded(TrackasiaMapController controller) async {
     await addImageFromAsset(
         controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(SymbolOptions(

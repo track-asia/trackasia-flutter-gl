@@ -20,10 +20,10 @@ class GetMapInfoBody extends StatefulWidget {
 }
 
 class _GetMapInfoBodyState extends State<GetMapInfoBody> {
-  trackasiaMapController? controller;
+  TrackasiaMapController? controller;
   String data = '';
 
-  void onMapCreated(trackasiaMapController controller) {
+  void onMapCreated(TrackasiaMapController controller) {
     setState(() {
       this.controller = controller;
     });
@@ -59,7 +59,7 @@ class _GetMapInfoBodyState extends State<GetMapInfoBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: trackasiaMap(
+            child: TrackasiaMap(
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),
                 zoom: 11.0,

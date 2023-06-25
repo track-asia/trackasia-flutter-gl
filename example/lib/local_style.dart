@@ -23,7 +23,7 @@ class LocalStyle extends StatefulWidget {
 }
 
 class LocalStyleState extends State<LocalStyle> {
-  trackasiaMapController? mapController;
+  TrackasiaMapController? mapController;
   String? styleAbsoluteFilePath;
 
   @override
@@ -48,7 +48,7 @@ class LocalStyleState extends State<LocalStyle> {
     });
   }
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     mapController = controller;
   }
 
@@ -61,7 +61,7 @@ class LocalStyleState extends State<LocalStyle> {
     }
 
     return new Scaffold(
-        body: trackasiaMap(
+        body: TrackasiaMap(
       styleString: styleAbsoluteFilePath,
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),

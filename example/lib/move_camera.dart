@@ -23,9 +23,9 @@ class MoveCamera extends StatefulWidget {
 }
 
 class MoveCameraState extends State<MoveCamera> {
-  late trackasiaMapController mapController;
+  late TrackasiaMapController mapController;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     mapController = controller;
   }
 
@@ -39,7 +39,7 @@ class MoveCameraState extends State<MoveCamera> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: trackasiaMap(
+            child: TrackasiaMap(
               onMapCreated: _onMapCreated,
               onCameraIdle: () => print("onCameraIdle"),
               initialCameraPosition:

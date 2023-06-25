@@ -29,9 +29,9 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   ClickAnnotationBodyState();
   static const LatLng center = const LatLng(-33.88, 151.16);
 
-  trackasiaMapController? controller;
+  TrackasiaMapController? controller;
 
-  void _onMapCreated(trackasiaMapController controller) {
+  void _onMapCreated(TrackasiaMapController controller) {
     this.controller = controller;
     controller.onFillTapped.add(_onFillTapped);
     controller.onCircleTapped.add(_onCircleTapped);
@@ -133,7 +133,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
 
   @override
   Widget build(BuildContext context) {
-    return trackasiaMap(
+    return TrackasiaMap(
       annotationOrder: [
         AnnotationType.fill,
         AnnotationType.line,
