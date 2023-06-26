@@ -1,5 +1,5 @@
 import Mapbox
-import MapLibreAnnotationExtension
+import TrackasiaAnnotationExtension
 
 class Convert {
     class func interpretMapboxMapOptions(options: Any?, delegate: MapboxMapOptionsSink) {
