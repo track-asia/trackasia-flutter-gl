@@ -6,7 +6,7 @@
 
 This Flutter plugin allows to show **embedded interactive and customizable vector maps** as a Flutter widget. 
 
-For the Android and iOS integration, we use [trackasia-gl-native](https://github.com/track-asia-vn/trackasia-gl-native). For web, we rely on [trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js). This project only supports a subset of the API exposed by these libraries. 
+For the Android and iOS integration, we use [trackasia-native](https://github.com/track-asia-vn/trackasia-native). For web, we rely on [trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js). This project only supports a subset of the API exposed by these libraries. 
 
 
 This project is a fork of [https://github.com/tobrun/flutter-mapbox-gl](https://github.com/tobrun/flutter-mapbox-gl), replacing its usage of Mapbox GL libraries with the open source [trackasia GL](https://github.com/trackasia) libraries.
@@ -41,7 +41,7 @@ Compared to flutter-mapbox-gl, the only breaking API changes are:
 ### Documentation
 Documentation is available on the docs branch in the doc/api folder and automatically updated on each push to the main branch. You can easily preview the [documentation / API reference here.](https://htmlpreview.github.io/?https://github.com/track-asia-vn/trackasia-flutter-gl/blob/docs/doc/api/index.html)
 
-Please visit [https://github.com/track-asia-vn/trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js) and [https://github.com/track-asia-vn/trackasia-gl-native](https://github.com/track-asia-vn/trackasia-gl-native) for more information about the trackasia libraries.
+Please visit [https://github.com/track-asia-vn/trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js) and [https://github.com/track-asia-vn/trackasia-native](https://github.com/track-asia-vn/trackasia-native) for more information about the trackasia libraries.
 
 ### iOS
 To use this plugin with iOS, you need to add the source repository and 2 additional pods to your Podfile, as shown in the example app: https://github.com/track-asia-vn/trackasia-flutter-gl/blob/main/example/ios/Podfile

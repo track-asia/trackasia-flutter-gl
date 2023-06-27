@@ -18,6 +18,6 @@ A new Flutter plugin.
   s.dependency 'TrackasiaAnnotationExtension', '~> 0.0.1-beta.2'
   s.dependency 'Trackasia', '~> 5.12.2'
   s.swift_version = '4.2'
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '11.0'
 end
 
