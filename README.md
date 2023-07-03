@@ -1,12 +1,12 @@
 # Flutter trackasia GL
-[![Flutter CI](https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/flutter_ci.yml)
-[![Generate docs](https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/generate_docs.yml/badge.svg)](https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/generate_docs.yml)
+[![Flutter CI](https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/flutter_ci.yml/badge.svg)](https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/flutter_ci.yml)
+[![Generate docs](https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/generate_docs.yml/badge.svg)](https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/generate_docs.yml)
 
-> ``⚠️`` Current notice: the repository has been transferred to the @trackasia organization. You shouldn't see any negative effects, as GitHub automatically redirects references from the old URL to the new URL. Please see [#221](https://github.com/track-asia-vn/trackasia-flutter-gl/issues/221) for more information.
+> ``⚠️`` Current notice: the repository has been transferred to the @trackasia organization. You shouldn't see any negative effects, as GitHub automatically redirects references from the old URL to the new URL. Please see [#221](https://github.com/track-asia/trackasia-flutter-gl/issues/221) for more information.
 
 This Flutter plugin allows to show **embedded interactive and customizable vector maps** as a Flutter widget. 
 
-For the Android and iOS integration, we use [trackasia-native](https://github.com/track-asia-vn/trackasia-native). For web, we rely on [trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js). This project only supports a subset of the API exposed by these libraries. 
+For the Android and iOS integration, we use [trackasia-native](https://github.com/track-asia/trackasia-native). For web, we rely on [trackasia-gl-js](https://github.com/track-asia/trackasia-gl-js). This project only supports a subset of the API exposed by these libraries. 
 
 
 This project is a fork of [https://github.com/tobrun/flutter-mapbox-gl](https://github.com/tobrun/flutter-mapbox-gl), replacing its usage of Mapbox GL libraries with the open source [trackasia GL](https://github.com/trackasia) libraries.
@@ -24,11 +24,11 @@ dependencies:
     ...
     trackasia_gl:
       git:
-        url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+        url: https://github.com/track-asia/trackasia-flutter-gl.git
         ref: main
 ```
 This will get you the very latest changes from the main branch.
-You can replace `main` with the name of the [latest release](https://github.com/track-asia-vn/trackasia-flutter-gl/releases)
+You can replace `main` with the name of the [latest release](https://github.com/track-asia/trackasia-flutter-gl/releases)
 to get a more stable version.
 
 
@@ -39,16 +39,16 @@ Compared to flutter-mapbox-gl, the only breaking API changes are:
 
 
 ### Documentation
-Documentation is available on the docs branch in the doc/api folder and automatically updated on each push to the main branch. You can easily preview the [documentation / API reference here.](https://htmlpreview.github.io/?https://github.com/track-asia-vn/trackasia-flutter-gl/blob/docs/doc/api/index.html)
+Documentation is available on the docs branch in the doc/api folder and automatically updated on each push to the main branch. You can easily preview the [documentation / API reference here.](https://htmlpreview.github.io/?https://github.com/track-asia/trackasia-flutter-gl/blob/docs/doc/api/index.html)
 
-Please visit [https://github.com/track-asia-vn/trackasia-gl-js](https://github.com/track-asia-vn/trackasia-gl-js) and [https://github.com/track-asia-vn/trackasia-native](https://github.com/track-asia-vn/trackasia-native) for more information about the trackasia libraries.
+Please visit [https://github.com/track-asia/trackasia-gl-js](https://github.com/track-asia/trackasia-gl-js) and [https://github.com/track-asia/trackasia-native](https://github.com/track-asia/trackasia-native) for more information about the trackasia libraries.
 
 ### iOS
-To use this plugin with iOS, you need to add the source repository and 2 additional pods to your Podfile, as shown in the example app: https://github.com/track-asia-vn/trackasia-flutter-gl/blob/main/example/ios/Podfile
+To use this plugin with iOS, you need to add the source repository and 2 additional pods to your Podfile, as shown in the example app: https://github.com/track-asia/trackasia-flutter-gl/blob/main/example/ios/Podfile
 
 ```ruby
 source 'https://cdn.cocoapods.org/'
-source 'https://github.com/track-asia-vn/trackasia-flutter-podspecs.git'
+source 'https://github.com/track-asia/trackasia-flutter-podspecs.git'
 
 pod 'trackasia'
 pod 'trackasiaAnnotationExtension'
@@ -119,10 +119,10 @@ A possible explanation could be: "Shows your location on the map".
 
 ## Getting Help
 
-- **Need help with your code?**: Check the [discussions](https://github.com/track-asia-vn/trackasia-flutter-gl/discussions) on this repo or open a new one. 
+- **Need help with your code?**: Check the [discussions](https://github.com/track-asia/trackasia-flutter-gl/discussions) on this repo or open a new one. 
  Or look for previous questions on the [#trackasia tag](https://stackoverflow.com/questions/tagged/trackasia) — or [ask a new question](https://stackoverflow.com/questions/tagged/trackasia).
-- **Have a bug to report?** [Open an issue](https://github.com/track-asia-vn/trackasia-flutter-gl/issues/new). If possible, include a full log and information which shows the issue.
-- **Have a feature request?** [Open an issue](https://github.com/track-asia-vn/trackasia-flutter-gl/issues/new). Tell us what the feature should do and why you want the feature.
+- **Have a bug to report?** [Open an issue](https://github.com/track-asia/trackasia-flutter-gl/issues/new). If possible, include a full log and information which shows the issue.
+- **Have a feature request?** [Open an issue](https://github.com/track-asia/trackasia-flutter-gl/issues/new). Tell us what the feature should do and why you want the feature.
 
 ## Running in GitHub Codespaces
 When you open this project in GitHub Codespaces, you can run the example app on web with the command `flutter run -d web-server --web-hostname=0.0.0.0`
@@ -174,4 +174,4 @@ Note : iOS will display the error : `NSPredicate: Use of 'mgl_does:have:' as an 
 ## Contributing
 
 
-[Feedback](https://github.com/track-asia-vn/trackasia-flutter-gl/issues) and contributions are very welcome!
+[Feedback](https://github.com/track-asia/trackasia-flutter-gl/issues) and contributions are very welcome!

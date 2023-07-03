@@ -25,7 +25,7 @@ DEPENDENCIES:
   - TrackasiaAnnotationExtension
 
 SPEC REPOS:
-  https://github.com/track-asia-vn/trackasia-flutter-podspecs.git:
+  https://github.com/track-asia/trackasia-flutter-podspecs.git:
     - Trackasia
     - TrackasiaAnnotationExtension
 

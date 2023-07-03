@@ -1,19 +1,19 @@
 name: trackasia_gl
 description: A Flutter plugin for integrating trackasia Maps inside a Flutter application on Android, iOS and web platforms.
 version: 0.16.0
-homepage: https://github.com/track-asia-vn/trackasia-flutter-gl
+homepage: https://github.com/track-asia/trackasia-flutter-gl
 
 dependencies:
   flutter:
     sdk: flutter
   trackasia_gl_platform_interface:
     git:
-      url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+      url: https://github.com/track-asia/trackasia-flutter-gl.git
       path: trackasia_gl_platform_interface
       ref: main
   trackasia_gl_web:
     git:
-      url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+      url: https://github.com/track-asia/trackasia-flutter-gl.git
       path: trackasia_gl_web
       ref: main
 

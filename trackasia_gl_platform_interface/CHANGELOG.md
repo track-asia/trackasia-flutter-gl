@@ -12,7 +12,7 @@ see top-level CHANGELOG.md
 
 ## 0.14.0, Oct 14, 2021
 ### Breaking changes:
-* Replace example styles [#25](https://github.com/track-asia-vn/trackasia-flutter-gl/pull/25) (also see [#21](https://github.com/track-asia-vn/trackasia-flutter-gl/issues/21))
+* Replace example styles [#25](https://github.com/track-asia/trackasia-flutter-gl/pull/25) (also see [#21](https://github.com/track-asia/trackasia-flutter-gl/issues/21))
   * The built-in constants for specific styles were  removed. You can continue using these styles by using the styles' URL
 
 

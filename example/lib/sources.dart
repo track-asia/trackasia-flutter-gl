@@ -187,7 +187,7 @@ class FullMapState extends State<FullMap> {
       // specify a different baseStyle for consecutive elements in this list,
       // otherwise the map will not update
       baseStyle:
-          "https://raw.githubusercontent.com/track-asia-vn/demotiles/gh-pages/style.json",
+          "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json",
       addDetails: addDem,
       position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 8),
     ),
@@ -207,7 +207,7 @@ class FullMapState extends State<FullMap> {
     StyleInfo(
       name: "Image",
       baseStyle:
-          "https://raw.githubusercontent.com/track-asia-vn/demotiles/gh-pages/style.json?",
+          "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json?",
       addDetails: addImage,
       position: CameraPosition(target: LatLng(43, -75), zoom: 6),
     ),
@@ -216,7 +216,7 @@ class FullMapState extends State<FullMap> {
       StyleInfo(
         name: "Video",
         baseStyle:
-            "https://raw.githubusercontent.com/track-asia-vn/demotiles/gh-pages/style.json",
+            "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json",
         addDetails: addVideo,
         position: CameraPosition(
             target: LatLng(37.562984, -122.514426), zoom: 17, bearing: -96),

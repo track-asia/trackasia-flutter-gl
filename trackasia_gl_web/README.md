@@ -1,1 +1,1 @@
-Contains the web interfaces for the [Flutter trackasia GL plugin](https://github.com/track-asia-vn/trackasia-flutter-gl).
+Contains the web interfaces for the [Flutter trackasia GL plugin](https://github.com/track-asia/trackasia-flutter-gl).
