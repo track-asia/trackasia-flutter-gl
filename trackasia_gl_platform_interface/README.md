@@ -1,1 +1,0 @@
-Contains the web platform implementation for the [Flutter trackasia GL plugin](https://github.com/track-asia/trackasia-flutter-gl).

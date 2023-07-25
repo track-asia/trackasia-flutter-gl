@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.2'
+        classpath 'com.android.tools.build:gradle:4.2.2'
     }
 }
 
@@ -16,14 +16,14 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-
-    compileSdkVersion 31
+    compileSdkVersion 32
     ndkVersion "20.1.5948944"
 
     defaultConfig {
@@ -31,15 +31,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    lintOptions {
-        disable 'InvalidPackage'
+    lintOptions{
+        checkReleaseBuilds false
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     dependencies {
-        implementation 'org.maplibre.gl:android-sdk:9.6.0'
+        implementation files('../libs/trackasia-map-release.aar') 
         implementation 'org.maplibre.gl:android-plugin-annotation-v9:1.0.0'
         implementation 'org.maplibre.gl:android-plugin-localization-v9:1.0.0'
         implementation 'org.maplibre.gl:android-plugin-offline-v9:1.0.0'
@@ -51,3 +51,6 @@ android {
         targetCompatibility 1.8
     }
 }
+
+//  privatetk = "sk.eyJ1Ijoic2FuZ25ndXllbjI1IiwiYSI6ImNsa2F5N3NjODBhMm4za3BteHlpbW52eGMifQ.1Q83dZJtc0_SIOzsZ_Mkyg"
+//  publictk = "pk.eyJ1Ijoic2FuZ25ndXllbjI1IiwiYSI6ImNsMGU0djFicjBmYzczam4wbnpmdjVrcGcifQ.s-R3of1BK-vomakvEGkgYw"

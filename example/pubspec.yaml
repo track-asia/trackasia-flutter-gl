@@ -20,12 +20,12 @@ dependencies:
   # temporary fix:
   platform: ^3.1.0
   device_info_plus: ^3.2.2
-
-dependency_overrides:
-  trackasia_gl_platform_interface:
-    path: ../trackasia_gl_platform_interface
-  trackasia_gl_web:
-    path: ../trackasia_gl_web
+  trackasia_gl_platform_interface: ^1.0.1
+  # trackasia_gl_platform_interface:
+  #   path: ../../trackasia_gl_platform_interface
+  trackasia_gl_web: ^1.0.1
+  # trackasia_gl_web: 
+  #   path: ../../trackasia_gl_web
 
 dev_dependencies:
   flutter_test:

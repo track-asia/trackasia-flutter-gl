@@ -42,6 +42,7 @@ class LayerState extends State {
       ),
       annotationOrder: const [],
     );
+
   }
 
   void _onMapCreated(TrackasiaMapController controller) {

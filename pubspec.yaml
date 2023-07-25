@@ -1,27 +1,18 @@
 name: trackasia_gl
 description: A Flutter plugin for integrating trackasia Maps inside a Flutter application on Android, iOS and web platforms.
-version: 0.16.0
+version: 1.0.1
 homepage: https://github.com/track-asia/trackasia-flutter-gl
 
 dependencies:
   flutter:
     sdk: flutter
-  trackasia_gl_platform_interface:
-    git:
-      url: https://github.com/track-asia/trackasia-flutter-gl.git
-      path: trackasia_gl_platform_interface
-      ref: main
-  trackasia_gl_web:
-    git:
-      url: https://github.com/track-asia/trackasia-flutter-gl.git
-      path: trackasia_gl_web
-      ref: main
-
-dependency_overrides:
-  trackasia_gl_platform_interface:
-    path: ./trackasia_gl_platform_interface
-  trackasia_gl_web:
-    path: ./trackasia_gl_web
+  trackasia_gl_platform_interface: 1.0.1
+  # trackasia_gl_platform_interface: 
+  #   path: ../trackasia_gl_platform_interface
+  trackasia_gl_web: 1.0.1
+  # trackasia_gl_web: 
+  #   path: ../trackasia_gl_web
+  
 
 flutter:
   plugin:
@@ -35,6 +26,5 @@ flutter:
         default_package: mapbox_gl_web
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-  # Flutter versions prior to 1.10 did not support the flutter.plugin.platforms map.
-  flutter: ">=2.0.0"
+  sdk: '>=2.16.0 <3.0.0'
+  flutter: ">=2.8.1"
