@@ -6,7 +6,7 @@ homepage: https://github.com/track-asia/trackasia-flutter-gl
 dependencies:
   flutter:
     sdk: flutter
-  trackasia_gl_platform_interface: 1.0.2
+  trackasia_gl_platform_interface: 1.0.5
   # trackasia_gl_platform_interface: 
   #   path: ../trackasia_gl_platform_interface
   trackasia_gl_web: 1.0.1
