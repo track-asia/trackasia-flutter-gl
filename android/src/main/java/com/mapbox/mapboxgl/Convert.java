@@ -8,19 +8,19 @@ import android.content.Context;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import com.mapbox.geojson.Polygon;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.trackasia.android.camera.CameraPosition;
+import com.trackasia.android.camera.CameraUpdate;
+import com.trackasia.android.camera.CameraUpdateFactory;
+import com.trackasia.android.geometry.LatLng;
+import com.trackasia.android.geometry.LatLngBounds;
+import com.trackasia.android.maps.TrackasiaMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Conversions between JSON-like values and MapboxMaps data types. */
+/** Conversions between JSON-like values and TrackasiaMaps data types. */
 class Convert {
 
   private static final String TAG = "Convert";
@@ -43,7 +43,7 @@ class Convert {
     return toString(toList(o).get(0)).equals("scrollBy");
   }
 
-  static CameraUpdate toCameraUpdate(Object o, MapboxMap mapboxMap, float density) {
+  static CameraUpdate toCameraUpdate(Object o, TrackasiaMap trackasiaMap, float density) {
     final List<?> data = toList(o);
     switch (toString(data.get(0))) {
       case "newCameraPosition":
@@ -60,7 +60,7 @@ class Convert {
       case "newLatLngZoom":
         return CameraUpdateFactory.newLatLngZoom(toLatLng(data.get(1)), toFloat(data.get(2)));
       case "scrollBy":
-        mapboxMap.scrollBy(
+        trackasiaMap.scrollBy(
             toFractionalPixels(data.get(1), density), toFractionalPixels(data.get(2), density));
         return null;
       case "zoomBy":
@@ -205,7 +205,7 @@ class Convert {
     return (String) o;
   }
 
-  static void interpretMapboxMapOptions(Object o, MapboxMapOptionsSink sink, Context context) {
+  static void interpretTrackasiaMapOptions(Object o, TrackasiaMapOptionsSink sink, Context context) {
     final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
     final Map<?, ?> data = toMap(o);
     final Object cameraTargetBounds = data.get("cameraTargetBounds");

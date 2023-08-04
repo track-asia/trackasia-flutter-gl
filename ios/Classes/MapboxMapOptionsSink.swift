@@ -1,7 +1,7 @@
 
 import Mapbox
 
-protocol MapboxMapOptionsSink {
+protocol TrackasiaMapOptionsSink {
     func setCameraTargetBounds(bounds: MGLCoordinateBounds?)
     func setCompassEnabled(compassEnabled: Bool)
     func setStyleString(styleString: String)

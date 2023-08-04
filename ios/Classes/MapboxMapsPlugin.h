@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface MapboxMapsPlugin : NSObject<FlutterPlugin>
+@interface TrackasiaMapsPlugin : NSObject<FlutterPlugin>
 @end

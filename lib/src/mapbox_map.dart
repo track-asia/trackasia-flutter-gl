@@ -54,9 +54,7 @@ class TrackasiaMap extends StatefulWidget {
       AnnotationType.circle,
     ],
   })  : assert(
-          myLocationRenderMode != MyLocationRenderMode.NORMAL
-              ? myLocationEnabled
-              : true,
+          myLocationRenderMode != MyLocationRenderMode.NORMAL ? myLocationEnabled : true,
           "$myLocationRenderMode requires [myLocationEnabled] set to true.",
         ),
         assert(annotationOrder.length <= 4),
@@ -126,10 +124,10 @@ class TrackasiaMap extends StatefulWidget {
   /// This takes presedence over zoomGesturesEnabled. Only supported for web.
   final bool? doubleClickZoomEnabled;
 
-  /// True if you want to be notified of map camera movements by the MapboxMapController. Default is false.
+  /// True if you want to be notified of map camera movements by the TrackasiaMapController. Default is false.
   ///
-  /// If this is set to true and the user pans/zooms/rotates the map, MapboxMapController (which is a ChangeNotifier)
-  /// will notify it's listeners and you can then get the new MapboxMapController.cameraPosition.
+  /// If this is set to true and the user pans/zooms/rotates the map, TrackasiaMapController (which is a ChangeNotifier)
+  /// will notify it's listeners and you can then get the new TrackasiaMapController.cameraPosition.
   final bool trackCameraPosition;
 
   /// True if a "My Location" layer should be shown on the map.
@@ -219,46 +217,39 @@ class TrackasiaMap extends StatefulWidget {
   /// * All fade/transition animations have completed
   final OnMapIdleCallback? onMapIdle;
 
-  /// Set `MapboxMap.useHybridComposition` to `false` in order use Virtual-Display
+  /// Set `TrackasiaMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
   /// or leave it `true` (default) to use Hybrid composition (Slower on Android 9 and below).
-  static bool get useHybridComposition =>
-      MethodChannelMaplibreGl.useHybridComposition;
+  static bool get useHybridComposition => MethodChannelMaplibreGl.useHybridComposition;
 
-  static set useHybridComposition(bool useHybridComposition) =>
-      MethodChannelMaplibreGl.useHybridComposition = useHybridComposition;
+  static set useHybridComposition(bool useHybridComposition) => MethodChannelMaplibreGl.useHybridComposition = useHybridComposition;
 
   @override
   State createState() => _TrackasiaMapState();
 }
 
 class _TrackasiaMapState extends State<TrackasiaMap> {
-  final Completer<TrackasiaMapController> _controller =
-      Completer<TrackasiaMapController>();
+  final Completer<TrackasiaMapController> _controller = Completer<TrackasiaMapController>();
 
-  late _MapboxMapOptions _mapboxMapOptions;
-  final MapLibreGlPlatform _mapboxGlPlatform =
-      MapLibreGlPlatform.createInstance();
+  late _TrackasiaMapOptions _mapboxMapOptions;
+  final MapLibreGlPlatform _mapboxGlPlatform = MapLibreGlPlatform.createInstance();
 
   @override
   Widget build(BuildContext context) {
-    assert(
-        widget.annotationOrder.toSet().length == widget.annotationOrder.length,
-        "annotationOrder must not have duplicate types");
+    assert(widget.annotationOrder.toSet().length == widget.annotationOrder.length, "annotationOrder must not have duplicate types");
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'initialCameraPosition': widget.initialCameraPosition.toMap(),
-      'options': _MapboxMapOptions.fromWidget(widget).toMap(),
+      'options': _TrackasiaMapOptions.fromWidget(widget).toMap(),
       //'onAttributionClickOverride': widget.onAttributionClick != null,
       'dragEnabled': widget.dragEnabled,
     };
-    return _mapboxGlPlatform.buildView(
-        creationParams, onPlatformViewCreated, widget.gestureRecognizers);
+    return _mapboxGlPlatform.buildView(creationParams, onPlatformViewCreated, widget.gestureRecognizers);
   }
 
   @override
   void initState() {
     super.initState();
-    _mapboxMapOptions = _MapboxMapOptions.fromWidget(widget);
+    _mapboxMapOptions = _TrackasiaMapOptions.fromWidget(widget);
   }
 
   @override
@@ -273,9 +264,8 @@ class _TrackasiaMapState extends State<TrackasiaMap> {
   @override
   void didUpdateWidget(TrackasiaMap oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final _MapboxMapOptions newOptions = _MapboxMapOptions.fromWidget(widget);
-    final Map<String, dynamic> updates =
-        _mapboxMapOptions.updatesMap(newOptions);
+    final _TrackasiaMapOptions newOptions = _TrackasiaMapOptions.fromWidget(widget);
+    final Map<String, dynamic> updates = _mapboxMapOptions.updatesMap(newOptions);
     _updateOptions(updates);
     _mapboxMapOptions = newOptions;
   }
@@ -317,12 +307,12 @@ class _TrackasiaMapState extends State<TrackasiaMap> {
   }
 }
 
-/// Configuration options for the MapboxMaps user interface.
+/// Configuration options for the TrackasiaMaps user interface.
 ///
 /// When used to change configuration, null values will be interpreted as
 /// "do not change this configuration option".
-class _MapboxMapOptions {
-  _MapboxMapOptions({
+class _TrackasiaMapOptions {
+  _TrackasiaMapOptions({
     this.compassEnabled,
     this.cameraTargetBounds,
     this.styleString,
@@ -343,8 +333,8 @@ class _MapboxMapOptions {
     this.attributionButtonMargins,
   });
 
-  static _MapboxMapOptions fromWidget(TrackasiaMap map) {
-    return _MapboxMapOptions(
+  static _TrackasiaMapOptions fromWidget(TrackasiaMap map) {
+    return _TrackasiaMapOptions(
       compassEnabled: map.compassEnabled,
       cameraTargetBounds: map.cameraTargetBounds,
       styleString: map.styleString,
@@ -354,8 +344,7 @@ class _MapboxMapOptions {
       tiltGesturesEnabled: map.tiltGesturesEnabled,
       trackCameraPosition: map.trackCameraPosition,
       zoomGesturesEnabled: map.zoomGesturesEnabled,
-      doubleClickZoomEnabled:
-          map.doubleClickZoomEnabled ?? map.zoomGesturesEnabled,
+      doubleClickZoomEnabled: map.doubleClickZoomEnabled ?? map.zoomGesturesEnabled,
       myLocationEnabled: map.myLocationEnabled,
       myLocationTrackingMode: map.myLocationTrackingMode,
       myLocationRenderMode: map.myLocationRenderMode,
@@ -403,13 +392,7 @@ class _MapboxMapOptions {
 
   final Point? attributionButtonMargins;
 
-  final _gestureGroup = {
-    'rotateGesturesEnabled',
-    'scrollGesturesEnabled',
-    'tiltGesturesEnabled',
-    'zoomGesturesEnabled',
-    'doubleClickZoomEnabled'
-  };
+  final _gestureGroup = {'rotateGesturesEnabled', 'scrollGesturesEnabled', 'tiltGesturesEnabled', 'zoomGesturesEnabled', 'doubleClickZoomEnabled'};
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> optionsMap = <String, dynamic>{};
@@ -447,20 +430,18 @@ class _MapboxMapOptions {
     addIfNonNull('compassViewPosition', compassViewPosition?.index);
     addIfNonNull('compassViewMargins', pointToArray(compassViewMargins));
     addIfNonNull('attributionButtonPosition', attributionButtonPosition?.index);
-    addIfNonNull(
-        'attributionButtonMargins', pointToArray(attributionButtonMargins));
+    addIfNonNull('attributionButtonMargins', pointToArray(attributionButtonMargins));
     return optionsMap;
   }
 
-  Map<String, dynamic> updatesMap(_MapboxMapOptions newOptions) {
+  Map<String, dynamic> updatesMap(_TrackasiaMapOptions newOptions) {
     final Map<String, dynamic> prevOptionsMap = toMap();
     final newOptionsMap = newOptions.toMap();
 
     // if any gesture is updated also all other gestures have to the saved to
     // the update
 
-    final gesturesRequireUpdate =
-        _gestureGroup.any((key) => newOptionsMap[key] != prevOptionsMap[key]);
+    final gesturesRequireUpdate = _gestureGroup.any((key) => newOptionsMap[key] != prevOptionsMap[key]);
 
     return newOptionsMap
       ..removeWhere((String key, dynamic value) {

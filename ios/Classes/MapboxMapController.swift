@@ -2,7 +2,7 @@ import Flutter
 import Mapbox
 import TrackasiaAnnotationExtension
 
-class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, MapboxMapOptionsSink,
+class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, TrackasiaMapOptionsSink,
     UIGestureRecognizerDelegate
 {
     private var registrar: FlutterPluginRegistrar
@@ -74,7 +74,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         mapView.addGestureRecognizer(longPress)
         
         if let args = args as? [String: Any] {
-            Convert.interpretMapboxMapOptions(options: args["options"], delegate: self)
+            Convert.interpretTrackasiaMapOptions(options: args["options"], delegate: self)
             if let initialCameraPosition = args["initialCameraPosition"] as? [String: Any],
                let camera = MGLMapCamera.fromDict(initialCameraPosition, mapView: mapView),
                let zoom = initialCameraPosition["zoom"] as? Double
@@ -137,7 +137,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             }
         case "map#update":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
-            Convert.interpretMapboxMapOptions(options: arguments["options"], delegate: self)
+            Convert.interpretTrackasiaMapOptions(options: arguments["options"], delegate: self)
             if let camera = getCamera() {
                 result(camera.toDict(mapView: mapView))
             } else {
@@ -1471,7 +1471,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     }
 
     /*
-     *  MapboxMapOptionsSink
+     *  TrackasiaMapOptionsSink
      */
     func setCameraTargetBounds(bounds: MGLCoordinateBounds?) {
         cameraTargetBounds = bounds

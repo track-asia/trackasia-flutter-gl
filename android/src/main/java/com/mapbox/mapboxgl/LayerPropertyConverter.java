@@ -7,9 +7,9 @@ import static com.mapbox.mapboxgl.Convert.toMap;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.trackasia.android.style.expressions.Expression;
+import com.trackasia.android.style.layers.PropertyFactory;
+import com.trackasia.android.style.layers.PropertyValue;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

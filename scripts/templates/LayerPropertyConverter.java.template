@@ -3,9 +3,9 @@
 
 package com.mapbox.mapboxgl;
 
-import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.trackasia.android.style.expressions.Expression;
+import com.trackasia.android.style.layers.PropertyFactory;
+import com.trackasia.android.style.layers.PropertyValue;
 
 import java.util.LinkedList;
 import java.util.List;

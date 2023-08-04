@@ -2,6 +2,7 @@ group 'com.mapbox.mapboxgl'
 version '1.0-SNAPSHOT'
 
 buildscript {
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
@@ -9,6 +10,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -17,6 +19,7 @@ rootProject.allprojects {
         google()
         mavenCentral()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -24,11 +27,11 @@ apply plugin: 'com.android.library'
 apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 31
     ndkVersion "20.1.5948944"
 
     defaultConfig {
-        minSdkVersion 20
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -40,10 +43,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     dependencies {
-        implementation 'org.maplibre.gl:android-sdk:10.2.0'
-        implementation 'org.maplibre.gl:android-plugin-annotation-v9:2.0.0'
-        implementation 'org.maplibre.gl:android-plugin-localization-v9:2.0.0'
-        implementation 'org.maplibre.gl:android-plugin-offline-v9:2.0.0'
+        implementation 'io.github.track-asia:android-sdk:1.0.5'
+        // implementation 'io.github.track-asia:android-sdk-geojson:1.0.0'
+        // implementation 'io.github.track-asia:android-sdk-turf:1.0.0'
+        implementation 'io.github.track-asia:android-plugin-annotation-v9:1.0.0'
+        implementation 'io.github.track-asia:android-plugin-localization-v9:1.0.0'
+        implementation 'io.github.track-asia:android-plugin-offline-v9:1.0.0'
+        implementation 'com.google.code.gson:gson:2.8.6'
         implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     }
     compileOptions {
@@ -52,8 +58,6 @@ android {
     }
 }
 
-//  privatetk = "sk.eyJ1Ijoic2FuZ25ndXllbjI1IiwiYSI6ImNsa2F5N3NjODBhMm4za3BteHlpbW52eGMifQ.1Q83dZJtc0_SIOzsZ_Mkyg"
-//  publictk = "pk.eyJ1Ijoic2FuZ25ndXllbjI1IiwiYSI6ImNsMGU0djFicjBmYzczam4wbnpmdjVrcGcifQ.s-R3of1BK-vomakvEGkgYw"
 dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
 }

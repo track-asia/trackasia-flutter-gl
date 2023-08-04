@@ -7,7 +7,7 @@ public class SwiftMapboxGlFlutterPlugin: NSObject, FlutterPlugin {
     static var downloadOfflineRegionChannelHandler: OfflineChannelHandler? = nil
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let instance = MapboxMapFactory(withRegistrar: registrar)
+        let instance = TrackasiaMapFactory(withRegistrar: registrar)
         registrar.register(instance, withId: "plugins.flutter.io/mapbox_gl")
 
         let channel = FlutterMethodChannel(

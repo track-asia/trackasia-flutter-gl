@@ -87,7 +87,7 @@ Further improvements:
 * Update readme to fix UnsatisfiedLinkError [#422](https://github.com/tobrun/flutter-mapbox-gl/pull/442)
 * Improved Image Source Support [#469](https://github.com/tobrun/flutter-mapbox-gl/pull/469)
 * Avoid white space when resizing map on web [#474](https://github.com/tobrun/flutter-mapbox-gl/pull/474)
-* Allow MapboxMap() to override Widget Key. [#475](https://github.com/tobrun/flutter-mapbox-gl/pull/475)
+* Allow TrackasiaMap() to override Widget Key. [#475](https://github.com/tobrun/flutter-mapbox-gl/pull/475)
 * Offline region feature [#336](https://github.com/tobrun/flutter-mapbox-gl/pull/336)
 * Fix iOS symbol tapped interaction [#443](https://github.com/tobrun/flutter-mapbox-gl/pull/443)
 

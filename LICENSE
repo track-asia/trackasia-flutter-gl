@@ -17,7 +17,7 @@ This project was forked from (and therefore contains a lot of modified and unmod
 (Additionally more changes / code was later cherry-picked / ported from that repository (https://github.com/tobrun/flutter-mapbox-gl), while the license continued to be the same as at the time of the fork, which is:)
 ------------------------------------------------------------------------------------------------------
 
-flutter-mapbox-gl copyright (c) 2018, Mapbox.
+flutter-mapbox-gl copyright (c) 2018, Trackasia.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

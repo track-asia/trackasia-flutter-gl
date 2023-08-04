@@ -49,14 +49,8 @@ class MapUiBodyState extends State<MapUiBody> {
   int _styleStringIndex = 0;
   // Style string can a reference to a local or remote resources.
   // On Android the raw JSON can also be passed via a styleString, on iOS this is not supported.
-  List<String> _styleStrings = [
-    "https://demotiles.trackasia.org/style.json",
-    "assets/style.json"
-  ];
-  List<String> _styleStringLabels = [
-    "trackasia demo style",
-    "Local style file"
-  ];
+  List<String> _styleStrings = ["https://demotiles.trackasia.org/style.json", "assets/style.json"];
+  List<String> _styleStringLabels = ["trackasia demo style", "Local style file"];
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool? _doubleClickToZoomEnabled;
@@ -93,9 +87,7 @@ class MapUiBodyState extends State<MapUiBody> {
   }
 
   Widget _myLocationTrackingModeCycler() {
-    final MyLocationTrackingMode nextType = MyLocationTrackingMode.values[
-        (_myLocationTrackingMode.index + 1) %
-            MyLocationTrackingMode.values.length];
+    final MyLocationTrackingMode nextType = MyLocationTrackingMode.values[(_myLocationTrackingMode.index + 1) % MyLocationTrackingMode.values.length];
     return TextButton(
       child: Text('change to $nextType'),
       onPressed: () {
@@ -108,8 +100,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _queryFilterToggler() {
     return TextButton(
-      child: Text(
-          'filter zoo on click ${_featureQueryFilter == null ? 'disabled' : 'enabled'}'),
+      child: Text('filter zoo on click ${_featureQueryFilter == null ? 'disabled' : 'enabled'}'),
       onPressed: () {
         setState(() {
           if (_featureQueryFilter == null) {
@@ -151,15 +142,11 @@ class MapUiBodyState extends State<MapUiBody> {
   Widget _latLngBoundsToggler() {
     return TextButton(
       child: Text(
-        _cameraTargetBounds.bounds == null
-            ? 'bound camera target'
-            : 'release camera target',
+        _cameraTargetBounds.bounds == null ? 'bound camera target' : 'release camera target',
       ),
       onPressed: () {
         setState(() {
-          _cameraTargetBounds = _cameraTargetBounds.bounds == null
-              ? CameraTargetBounds(sydneyBounds)
-              : CameraTargetBounds.unbounded;
+          _cameraTargetBounds = _cameraTargetBounds.bounds == null ? CameraTargetBounds(sydneyBounds) : CameraTargetBounds.unbounded;
         });
       },
     );
@@ -167,14 +154,10 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _zoomBoundsToggler() {
     return TextButton(
-      child: Text(_minMaxZoomPreference.minZoom == null
-          ? 'bound zoom'
-          : 'release zoom'),
+      child: Text(_minMaxZoomPreference.minZoom == null ? 'bound zoom' : 'release zoom'),
       onPressed: () {
         setState(() {
-          _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null
-              ? const MinMaxZoomPreference(12.0, 16.0)
-              : MinMaxZoomPreference.unbounded;
+          _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null ? const MinMaxZoomPreference(12.0, 16.0) : MinMaxZoomPreference.unbounded;
         });
       },
     );
@@ -182,8 +165,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _setStyleToSatellite() {
     return TextButton(
-      child: Text(
-          'change map style to ${_styleStringLabels[(_styleStringIndex + 1) % _styleStringLabels.length]}'),
+      child: Text('change map style to ${_styleStringLabels[(_styleStringIndex + 1) % _styleStringLabels.length]}'),
       onPressed: () {
         setState(() {
           _styleStringIndex = (_styleStringIndex + 1) % _styleStrings.length;
@@ -287,8 +269,7 @@ class MapUiBodyState extends State<MapUiBody> {
       onPressed: () async {
         var result = await mapController!.getVisibleRegion();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              "SW: ${result.southwest.toString()} NE: ${result.northeast.toString()}"),
+          content: Text("SW: ${result.southwest.toString()} NE: ${result.northeast.toString()}"),
         ));
       },
     );
@@ -298,8 +279,7 @@ class MapUiBodyState extends State<MapUiBody> {
     return TextButton(
       child: Text('get source features (trackasia)'),
       onPressed: () async {
-        var result = await mapController!
-            .querySourceFeatures("trackasia", "centroids", null);
+        var result = await mapController!.querySourceFeatures("trackasia", "centroids", null);
         print(result);
       },
     );
@@ -325,15 +305,11 @@ class MapUiBodyState extends State<MapUiBody> {
   }
 
   _drawFill(List<dynamic> features) async {
-    Map<String, dynamic>? feature =
-        features.firstWhereOrNull((f) => f['geometry']['type'] == 'Polygon');
+    Map<String, dynamic>? feature = features.firstWhereOrNull((f) => f['geometry']['type'] == 'Polygon');
 
     if (feature != null) {
-      List<List<LatLng>> geometry = feature['geometry']['coordinates']
-          .map(
-              (ll) => ll.map((l) => LatLng(l[1], l[0])).toList().cast<LatLng>())
-          .toList()
-          .cast<List<LatLng>>();
+      List<List<LatLng>> geometry =
+          feature['geometry']['coordinates'].map((ll) => ll.map((l) => LatLng(l[1], l[0])).toList().cast<LatLng>()).toList().cast<List<LatLng>>();
       Fill fill = await mapController!.addFill(FillOptions(
         geometry: geometry,
         fillColor: "#FF0000",
@@ -348,7 +324,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TrackasiaMap mapboxMap = TrackasiaMap(
+    final TrackasiaMap trackasiaMap = TrackasiaMap(
       onMapCreated: onMapCreated,
       initialCameraPosition: _kInitialPosition,
       trackCameraPosition: true,
@@ -365,35 +341,27 @@ class MapUiBodyState extends State<MapUiBody> {
       myLocationTrackingMode: _myLocationTrackingMode,
       myLocationRenderMode: MyLocationRenderMode.GPS,
       onMapClick: (point, latLng) async {
-        print(
-            "Map click: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
+        print("Map click: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
         print("Filter $_featureQueryFilter");
-        List features = await mapController!
-            .queryRenderedFeatures(point, [], _featureQueryFilter);
+        List features = await mapController!.queryRenderedFeatures(point, [], _featureQueryFilter);
         print('# features: ${features.length}');
         _clearFill();
         if (features.isEmpty && _featureQueryFilter != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('QueryRenderedFeatures: No features found!')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('QueryRenderedFeatures: No features found!')));
         } else if (features.isNotEmpty) {
           _drawFill(features);
         }
       },
       onMapLongClick: (point, latLng) async {
-        print(
-            "Map long press: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
+        print("Map long press: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
         Point convertedPoint = await mapController!.toScreenLocation(latLng);
         LatLng convertedLatLng = await mapController!.toLatLng(point);
-        print(
-            "Map long press converted: ${convertedPoint.x},${convertedPoint.y}   ${convertedLatLng.latitude}/${convertedLatLng.longitude}");
-        double metersPerPixel =
-            await mapController!.getMetersPerPixelAtLatitude(latLng.latitude);
+        print("Map long press converted: ${convertedPoint.x},${convertedPoint.y}   ${convertedLatLng.latitude}/${convertedLatLng.longitude}");
+        double metersPerPixel = await mapController!.getMetersPerPixelAtLatitude(latLng.latitude);
 
-        print(
-            "Map long press The distance measured in meters at latitude ${latLng.latitude} is $metersPerPixel m");
+        print("Map long press The distance measured in meters at latitude ${latLng.latitude} is $metersPerPixel m");
 
-        List features =
-            await mapController!.queryRenderedFeatures(point, [], null);
+        List features = await mapController!.queryRenderedFeatures(point, [], null);
         if (features.length > 0) {
           print(features[0]);
         }
@@ -447,7 +415,7 @@ class MapUiBodyState extends State<MapUiBody> {
           child: SizedBox(
             width: _mapExpanded ? null : 300.0,
             height: 200.0,
-            child: mapboxMap,
+            child: trackasiaMap,
           ),
         ),
         Expanded(

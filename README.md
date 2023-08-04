@@ -11,7 +11,7 @@ For the Android and iOS integration, we use [trackasia-native](https://github.co
 
 This project is a fork of [https://github.com/tobrun/flutter-mapbox-gl](https://github.com/tobrun/flutter-mapbox-gl), replacing its usage of Mapbox GL libraries with the open source [trackasia GL](https://github.com/trackasia) libraries.
 
-**Please note that this project is community driven and is not affiliated with the company Mapbox.** <br>
+**Please note that this project is community driven and is not affiliated with the company Trackasia.** <br>
 It does use some of their amazing open source libraries/tools, though. Thank you, Mapbox, for all the open-source work you do!
 
 
@@ -34,8 +34,8 @@ to get a more stable version.
 
 
 Compared to flutter-mapbox-gl, the only breaking API changes are: 
-- `MapboxMap` <--> `TrackasiaMap`
-- `MapboxMapController` <--> `TrackasiaMapController`
+- `TrackasiaMap` <--> `TrackasiaMap`
+- `TrackasiaMapController` <--> `TrackasiaMapController`
 
 
 ### Documentation

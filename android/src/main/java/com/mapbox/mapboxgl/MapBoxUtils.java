@@ -1,12 +1,12 @@
 package com.mapbox.mapboxgl;
 
 import android.content.Context;
-import com.mapbox.mapboxsdk.Mapbox;
+import com.trackasia.android.Trackasia;
 
 abstract class MapBoxUtils {
-  private static final String TAG = "MapboxMapController";
+  private static final String TAG = "TrackasiaMapController";
 
-  static Mapbox getMapbox(Context context) {
-    return Mapbox.getInstance(context);
+  static Trackasia getMapbox(Context context) {
+    return Trackasia.getInstance(context);
   }
 }

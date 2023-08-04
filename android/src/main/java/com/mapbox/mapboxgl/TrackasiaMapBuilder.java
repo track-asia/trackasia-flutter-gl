@@ -7,15 +7,15 @@ package com.mapbox.mapboxgl;
 import android.content.Context;
 import android.view.Gravity;
 import androidx.annotation.NonNull;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
+import com.trackasia.android.camera.CameraPosition;
+import com.trackasia.android.geometry.LatLngBounds;
+import com.trackasia.android.maps.TrackasiaMapOptions;
 import io.flutter.plugin.common.BinaryMessenger;
 
-class MapboxMapBuilder implements MapboxMapOptionsSink {
+class TrackasiaMapBuilder implements TrackasiaMapOptionsSink {
   public final String TAG = getClass().getSimpleName();
-  private final MapboxMapOptions options =
-      new MapboxMapOptions().attributionEnabled(true).logoEnabled(false).textureMode(true);
+  private final TrackasiaMapOptions options =
+      new TrackasiaMapOptions().attributionEnabled(true).logoEnabled(false).textureMode(true);
   private boolean trackCameraPosition = false;
   private boolean myLocationEnabled = false;
   private boolean dragEnabled = true;
@@ -24,13 +24,13 @@ class MapboxMapBuilder implements MapboxMapOptionsSink {
   private String styleString = "https://demotiles.maplibre.org/style.json";
   private LatLngBounds bounds = null;
 
-  MapboxMapController build(
+  TrackasiaMapController build(
       int id,
       Context context,
       BinaryMessenger messenger,
-      MapboxMapsPlugin.LifecycleProvider lifecycleProvider) {
-    final MapboxMapController controller =
-        new MapboxMapController(
+      TrackasiaMapsPlugin.LifecycleProvider lifecycleProvider) {
+    final TrackasiaMapController controller =
+        new TrackasiaMapController(
             id, context, messenger, lifecycleProvider, options, styleString, dragEnabled);
     controller.init();
     controller.setMyLocationEnabled(myLocationEnabled);

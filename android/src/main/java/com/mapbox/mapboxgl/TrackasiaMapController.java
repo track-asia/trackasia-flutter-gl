@@ -35,47 +35,47 @@ import com.mapbox.android.gestures.AndroidGesturesManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.MapboxConstants;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.geometry.LatLngBounds;
-import com.mapbox.mapboxsdk.geometry.LatLngQuad;
-import com.mapbox.mapboxsdk.geometry.VisibleRegion;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
-import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener;
-import com.mapbox.mapboxsdk.location.engine.LocationEngineCallback;
-import com.mapbox.mapboxsdk.location.engine.LocationEngineResult;
-import com.mapbox.mapboxsdk.location.modes.CameraMode;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.offline.OfflineManager;
-import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
-import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
-import com.mapbox.mapboxsdk.style.layers.FillExtrusionLayer;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
-import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
-import com.mapbox.mapboxsdk.style.layers.HillshadeLayer;
-import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.LineLayer;
-import com.mapbox.mapboxsdk.style.layers.Property;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
-import com.mapbox.mapboxsdk.style.layers.RasterLayer;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
-import com.mapbox.mapboxsdk.style.sources.CustomGeometrySource;
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.style.sources.ImageSource;
-import com.mapbox.mapboxsdk.style.sources.Source;
-import com.mapbox.mapboxsdk.style.sources.VectorSource;
+import com.trackasia.android.camera.CameraPosition;
+import com.trackasia.android.camera.CameraUpdate;
+import com.trackasia.android.camera.CameraUpdateFactory;
+import com.trackasia.android.constants.TrackasiaConstants;
+import com.trackasia.android.geometry.LatLng;
+import com.trackasia.android.geometry.LatLngBounds;
+import com.trackasia.android.geometry.LatLngQuad;
+import com.trackasia.android.geometry.VisibleRegion;
+import com.trackasia.android.location.LocationComponent;
+import com.trackasia.android.location.LocationComponentActivationOptions;
+import com.trackasia.android.location.LocationComponentOptions;
+import com.trackasia.android.location.OnCameraTrackingChangedListener;
+import com.trackasia.android.location.engine.LocationEngineCallback;
+import com.trackasia.android.location.engine.LocationEngineResult;
+import com.trackasia.android.location.modes.CameraMode;
+import com.trackasia.android.location.modes.RenderMode;
+import com.trackasia.android.maps.MapView;
+import com.trackasia.android.maps.TrackasiaMap;
+import com.trackasia.android.maps.TrackasiaMapOptions;
+import com.trackasia.android.maps.OnMapReadyCallback;
+import com.trackasia.android.maps.Style;
+import com.trackasia.android.offline.OfflineManager;
+import com.trackasia.android.plugins.localization.LocalizationPlugin;
+import com.trackasia.android.style.expressions.Expression;
+import com.trackasia.android.style.layers.CircleLayer;
+import com.trackasia.android.style.layers.FillExtrusionLayer;
+import com.trackasia.android.style.layers.FillLayer;
+import com.trackasia.android.style.layers.HeatmapLayer;
+import com.trackasia.android.style.layers.HillshadeLayer;
+import com.trackasia.android.style.layers.Layer;
+import com.trackasia.android.style.layers.LineLayer;
+import com.trackasia.android.style.layers.Property;
+import com.trackasia.android.style.layers.PropertyValue;
+import com.trackasia.android.style.layers.RasterLayer;
+import com.trackasia.android.style.layers.SymbolLayer;
+import com.trackasia.android.style.layers.PropertyFactory;
+import com.trackasia.android.style.sources.CustomGeometrySource;
+import com.trackasia.android.style.sources.GeoJsonSource;
+import com.trackasia.android.style.sources.ImageSource;
+import com.trackasia.android.style.sources.Source;
+import com.trackasia.android.style.sources.VectorSource;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -93,35 +93,35 @@ import java.util.Map;
 import java.util.Set;
 
 
-/** Controller of a single MapboxMaps MapView instance. */
+/** Controller of a single TrackasiaMaps MapView instance. */
 @SuppressLint("MissingPermission")
-final class MapboxMapController
+final class TrackasiaMapController
     implements DefaultLifecycleObserver,
-        MapboxMap.OnCameraIdleListener,
-        MapboxMap.OnCameraMoveListener,
-        MapboxMap.OnCameraMoveStartedListener,
+        TrackasiaMap.OnCameraIdleListener,
+        TrackasiaMap.OnCameraMoveListener,
+        TrackasiaMap.OnCameraMoveStartedListener,
         MapView.OnDidBecomeIdleListener,
-        MapboxMap.OnMapClickListener,
-        MapboxMap.OnMapLongClickListener,
-        MapboxMapOptionsSink,
+        TrackasiaMap.OnMapClickListener,
+        TrackasiaMap.OnMapLongClickListener,
+        TrackasiaMapOptionsSink,
         MethodChannel.MethodCallHandler,
         OnMapReadyCallback,
         OnCameraTrackingChangedListener,
         PlatformView {
-  private static final String TAG = "MapboxMapController";
+  private static final String TAG = "TrackasiaMapController";
   private final int id;
   private final MethodChannel methodChannel;
-  private final MapboxMapsPlugin.LifecycleProvider lifecycleProvider;
+  private final TrackasiaMapsPlugin.LifecycleProvider lifecycleProvider;
   private final float density;
   private final Context context;
   private final String styleStringInitial;
   /**
    * This container is returned as the final platform view instead of returning `mapView`.
-   * See {@link MapboxMapController#destroyMapViewIfNecessary()} for details.
+   * See {@link TrackasiaMapController#destroyMapViewIfNecessary()} for details.
    */
   private FrameLayout mapViewContainer;
   private MapView mapView;
-  private MapboxMap mapboxMap;
+  private TrackasiaMap trackasiaMap;
   private boolean trackCameraPosition = false;
   private boolean myLocationEnabled = false;
   private int myLocationTrackingMode = 0;
@@ -147,7 +147,7 @@ final class MapboxMapController
       new Style.OnStyleLoaded() {
         @Override
         public void onStyleLoaded(@NonNull Style style) {
-          MapboxMapController.this.style = style;
+          TrackasiaMapController.this.style = style;
 
           // commented out while cherry-picking upstream956
           // if (myLocationEnabled) {
@@ -158,23 +158,23 @@ final class MapboxMapController
           updateMyLocationEnabled();
 
           if (null != bounds) {
-            mapboxMap.setLatLngBoundsForCameraTarget(bounds);
+            trackasiaMap.setLatLngBoundsForCameraTarget(bounds);
           }
 
-          mapboxMap.addOnMapClickListener(MapboxMapController.this);
-          mapboxMap.addOnMapLongClickListener(MapboxMapController.this);
-          localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, style);
+          trackasiaMap.addOnMapClickListener(TrackasiaMapController.this);
+          trackasiaMap.addOnMapLongClickListener(TrackasiaMapController.this);
+          localizationPlugin = new LocalizationPlugin(mapView, trackasiaMap, style);
 
           methodChannel.invokeMethod("map#onStyleLoaded", null);
         }
       };
 
-  MapboxMapController(
+  TrackasiaMapController(
       int id,
       Context context,
       BinaryMessenger messenger,
-      MapboxMapsPlugin.LifecycleProvider lifecycleProvider,
-      MapboxMapOptions options,
+      TrackasiaMapsPlugin.LifecycleProvider lifecycleProvider,
+      TrackasiaMapOptions options,
       String styleStringInitial,
       boolean dragEnabled) {
     MapBoxUtils.getMapbox(context);
@@ -208,27 +208,27 @@ final class MapboxMapController
   }
 
   private void moveCamera(CameraUpdate cameraUpdate) {
-    mapboxMap.moveCamera(cameraUpdate);
+    trackasiaMap.moveCamera(cameraUpdate);
   }
 
   private void animateCamera(CameraUpdate cameraUpdate) {
-    mapboxMap.animateCamera(cameraUpdate);
+    trackasiaMap.animateCamera(cameraUpdate);
   }
 
   private CameraPosition getCameraPosition() {
-    return trackCameraPosition ? mapboxMap.getCameraPosition() : null;
+    return trackCameraPosition ? trackasiaMap.getCameraPosition() : null;
   }
 
   @Override
-  public void onMapReady(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
+  public void onMapReady(TrackasiaMap trackasiaMap) {
+    this.trackasiaMap = trackasiaMap;
     if (mapReadyResult != null) {
       mapReadyResult.success(null);
       mapReadyResult = null;
     }
-    mapboxMap.addOnCameraMoveStartedListener(this);
-    mapboxMap.addOnCameraMoveListener(this);
-    mapboxMap.addOnCameraIdleListener(this);
+    trackasiaMap.addOnCameraMoveStartedListener(this);
+    trackasiaMap.addOnCameraMoveListener(this);
+    trackasiaMap.addOnCameraIdleListener(this);
 
     if (androidGesturesManager != null) {
       androidGesturesManager.setMoveGestureListener(new MoveGestureListener());
@@ -248,7 +248,7 @@ final class MapboxMapController
           DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
           final Bitmap bitmap = getScaledImage(id, displayMetrics.density);
           if (bitmap != null) {
-            mapboxMap.getStyle().addImage(id, bitmap);
+            trackasiaMap.getStyle().addImage(id, bitmap);
           }
         });
 
@@ -267,19 +267,19 @@ final class MapboxMapController
     if (styleString == null || styleString.isEmpty()) {
       Log.e(TAG, "setStyleString - string empty or null");
     } else if (styleString.startsWith("{") || styleString.startsWith("[")) {
-      mapboxMap.setStyle(new Style.Builder().fromJson(styleString), onStyleLoadedCallback);
+      trackasiaMap.setStyle(new Style.Builder().fromJson(styleString), onStyleLoadedCallback);
     } else if (styleString.startsWith("/")) {
       // Absolute path
-      mapboxMap.setStyle(
+      trackasiaMap.setStyle(
           new Style.Builder().fromUri("file://" + styleString), onStyleLoadedCallback);
     } else if (!styleString.startsWith("http://")
         && !styleString.startsWith("https://")
         && !styleString.startsWith("mapbox://")) {
       // We are assuming that the style will be loaded from an asset here.
-      String key = MapboxMapsPlugin.flutterAssets.getAssetFilePathByName(styleString);
-      mapboxMap.setStyle(new Style.Builder().fromUri("asset://" + key), onStyleLoadedCallback);
+      String key = TrackasiaMapsPlugin.flutterAssets.getAssetFilePathByName(styleString);
+      trackasiaMap.setStyle(new Style.Builder().fromUri("asset://" + key), onStyleLoadedCallback);
     } else {
-      mapboxMap.setStyle(new Style.Builder().fromUri(styleString), onStyleLoadedCallback);
+      trackasiaMap.setStyle(new Style.Builder().fromUri(styleString), onStyleLoadedCallback);
     }
   }
 
@@ -289,7 +289,7 @@ final class MapboxMapController
   private void enableLocationComponent(@NonNull Style style) {
     if (hasLocationPermission()) {
 
-      locationComponent = mapboxMap.getLocationComponent();
+      locationComponent = trackasiaMap.getLocationComponent();
 
       LocationComponentActivationOptions options =
               LocationComponentActivationOptions
@@ -608,7 +608,7 @@ final class MapboxMapController
       Collections.reverse(layersInOrder);
 
       for (String id : layersInOrder) {
-        List<Feature> features = mapboxMap.queryRenderedFeatures(in, id);
+        List<Feature> features = trackasiaMap.queryRenderedFeatures(in, id);
         if (!features.isEmpty()) {
           return features.get(0);
         }
@@ -622,7 +622,7 @@ final class MapboxMapController
 
     switch (call.method) {
       case "map#waitForMap":
-        if (mapboxMap != null) {
+        if (trackasiaMap != null) {
           result.success(null);
           return;
         }
@@ -630,7 +630,7 @@ final class MapboxMapController
         break;
       case "map#update":
         {
-          Convert.interpretMapboxMapOptions(call.argument("options"), this, context);
+          Convert.interpretTrackasiaMapOptions(call.argument("options"), this, context);
           result.success(Convert.toJson(getCameraPosition()));
           break;
         }
@@ -684,7 +684,7 @@ final class MapboxMapController
       case "map#getVisibleRegion":
         {
           Map<String, Object> reply = new HashMap<>();
-          VisibleRegion visibleRegion = mapboxMap.getProjection().getVisibleRegion();
+          VisibleRegion visibleRegion = trackasiaMap.getProjection().getVisibleRegion();
           reply.put(
               "sw",
               Arrays.asList(
@@ -701,7 +701,7 @@ final class MapboxMapController
         {
           Map<String, Object> reply = new HashMap<>();
           PointF pointf =
-              mapboxMap
+              trackasiaMap
                   .getProjection()
                   .toScreenLocation(
                       new LatLng(call.argument("latitude"), call.argument("longitude")));
@@ -717,7 +717,7 @@ final class MapboxMapController
 
           for (int i = 0; i < param.length; i += 2) {
             PointF pointf =
-                mapboxMap.getProjection().toScreenLocation(new LatLng(param[i], param[i + 1]));
+                trackasiaMap.getProjection().toScreenLocation(new LatLng(param[i], param[i + 1]));
             reply[i] = pointf.x;
             reply[i + 1] = pointf.y;
           }
@@ -729,7 +729,7 @@ final class MapboxMapController
         {
           Map<String, Object> reply = new HashMap<>();
           LatLng latlng =
-              mapboxMap
+              trackasiaMap
                   .getProjection()
                   .fromScreenLocation(
                       new PointF(
@@ -744,7 +744,7 @@ final class MapboxMapController
         {
           Map<String, Object> reply = new HashMap<>();
           Double retVal =
-              mapboxMap
+              trackasiaMap
                   .getProjection()
                   .getMetersPerPixelAtLatitude((Double) call.argument("latitude"));
           reply.put("metersperpixel", retVal);
@@ -754,10 +754,10 @@ final class MapboxMapController
       case "camera#move":
         {
           final CameraUpdate cameraUpdate =
-              Convert.toCameraUpdate(call.argument("cameraUpdate"), mapboxMap, density);
+              Convert.toCameraUpdate(call.argument("cameraUpdate"), trackasiaMap, density);
           if (cameraUpdate != null) {
             // camera transformation not handled yet
-            mapboxMap.moveCamera(
+            trackasiaMap.moveCamera(
                 cameraUpdate,
                 new OnCameraMoveFinishedListener() {
                   @Override
@@ -782,7 +782,7 @@ final class MapboxMapController
       case "camera#animate":
         {
           final CameraUpdate cameraUpdate =
-              Convert.toCameraUpdate(call.argument("cameraUpdate"), mapboxMap, density);
+              Convert.toCameraUpdate(call.argument("cameraUpdate"), trackasiaMap, density);
           final Integer duration = call.argument("duration");
 
           final OnCameraMoveFinishedListener onCameraMoveFinishedListener =
@@ -801,10 +801,10 @@ final class MapboxMapController
               };
           if (cameraUpdate != null && duration != null) {
             // camera transformation not handled yet
-            mapboxMap.animateCamera(cameraUpdate, duration, onCameraMoveFinishedListener);
+            trackasiaMap.animateCamera(cameraUpdate, duration, onCameraMoveFinishedListener);
           } else if (cameraUpdate != null) {
             // camera transformation not handled yet
-            mapboxMap.animateCamera(cameraUpdate, onCameraMoveFinishedListener);
+            trackasiaMap.animateCamera(cameraUpdate, onCameraMoveFinishedListener);
           } else {
             result.success(false);
           }
@@ -829,7 +829,7 @@ final class MapboxMapController
             Double x = call.argument("x");
             Double y = call.argument("y");
             PointF pixel = new PointF(x.floatValue(), y.floatValue());
-            features = mapboxMap.queryRenderedFeatures(pixel, filterExpression, layerIds);
+            features = trackasiaMap.queryRenderedFeatures(pixel, filterExpression, layerIds);
           } else {
             Double left = call.argument("left");
             Double top = call.argument("top");
@@ -838,7 +838,7 @@ final class MapboxMapController
             RectF rectF =
                 new RectF(
                     left.floatValue(), top.floatValue(), right.floatValue(), bottom.floatValue());
-            features = mapboxMap.queryRenderedFeatures(rectF, filterExpression, layerIds);
+            features = trackasiaMap.queryRenderedFeatures(rectF, filterExpression, layerIds);
           }
           List<String> featuresJson = new ArrayList<>();
           for (Feature feature : features) {
@@ -1070,7 +1070,7 @@ final class MapboxMapController
           if (this.myLocationEnabled && locationComponent != null) {
             Map<String, Object> reply = new HashMap<>();
 
-            mapboxMap.getLocationComponent().getLocationEngine().getLastLocation(
+            trackasiaMap.getLocationComponent().getLocationEngine().getLastLocation(
                 new LocationEngineCallback<LocationEngineResult>() {
                   @Override
                   public void onSuccess(LocationEngineResult locationEngineResult) {
@@ -1227,7 +1227,7 @@ final class MapboxMapController
                   .include(locationOne) // Northeast
                   .include(locationTwo) // Southwest
                   .build();
-          mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+          trackasiaMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
                   padding), 200);
 
           break;
@@ -1413,7 +1413,7 @@ final class MapboxMapController
   @Override
   public void onCameraMoveStarted(int reason) {
     final Map<String, Object> arguments = new HashMap<>(2);
-    boolean isGesture = reason == MapboxMap.OnCameraMoveStartedListener.REASON_API_GESTURE;
+    boolean isGesture = reason == TrackasiaMap.OnCameraMoveStartedListener.REASON_API_GESTURE;
     arguments.put("isGesture", isGesture);
     methodChannel.invokeMethod("camera#onMoveStarted", arguments);
   }
@@ -1424,7 +1424,7 @@ final class MapboxMapController
       return;
     }
     final Map<String, Object> arguments = new HashMap<>(2);
-    arguments.put("position", Convert.toJson(mapboxMap.getCameraPosition()));
+    arguments.put("position", Convert.toJson(trackasiaMap.getCameraPosition()));
     methodChannel.invokeMethod("camera#onMove", arguments);
   }
 
@@ -1432,7 +1432,7 @@ final class MapboxMapController
   public void onCameraIdle() {
     final Map<String, Object> arguments = new HashMap<>(2);
     if (trackCameraPosition) {
-      arguments.put("position", Convert.toJson(mapboxMap.getCameraPosition()));
+      arguments.put("position", Convert.toJson(trackasiaMap.getCameraPosition()));
     }
     methodChannel.invokeMethod("camera#onIdle", arguments);
   }
@@ -1457,7 +1457,7 @@ final class MapboxMapController
 
   @Override
   public boolean onMapClick(@NonNull LatLng point) {
-    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
+    PointF pointf = trackasiaMap.getProjection().toScreenLocation(point);
     RectF rectF = new RectF(pointf.x - 10, pointf.y - 10, pointf.x + 10, pointf.y + 10);
     Feature feature = firstFeatureOnLayers(rectF);
     final Map<String, Object> arguments = new HashMap<>();
@@ -1476,7 +1476,7 @@ final class MapboxMapController
 
   @Override
   public boolean onMapLongClick(@NonNull LatLng point) {
-    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
+    PointF pointf = trackasiaMap.getProjection().toScreenLocation(point);
     final Map<String, Object> arguments = new HashMap<>(5);
     arguments.put("x", pointf.x);
     arguments.put("y", pointf.y);
@@ -1503,7 +1503,7 @@ final class MapboxMapController
   private void moveCamera(CameraUpdate cameraUpdate, MethodChannel.Result result) {
     if (cameraUpdate != null) {
       // camera transformation not handled yet
-      mapboxMap.moveCamera(
+      trackasiaMap.moveCamera(
           cameraUpdate,
           new OnCameraMoveFinishedListener() {
             @Override
@@ -1543,10 +1543,10 @@ final class MapboxMapController
         };
     if (cameraUpdate != null && duration != null) {
       // camera transformation not handled yet
-      mapboxMap.animateCamera(cameraUpdate, duration, onCameraMoveFinishedListener);
+      trackasiaMap.animateCamera(cameraUpdate, duration, onCameraMoveFinishedListener);
     } else if (cameraUpdate != null) {
       // camera transformation not handled yet
-      mapboxMap.animateCamera(cameraUpdate, onCameraMoveFinishedListener);
+      trackasiaMap.animateCamera(cameraUpdate, onCameraMoveFinishedListener);
     } else {
       result.success(false);
     }
@@ -1634,7 +1634,7 @@ final class MapboxMapController
     destroyMapViewIfNecessary();
   }
 
-  // MapboxMapOptionsSink methods
+  // TrackasiaMapOptionsSink methods
 
   @Override
   public void setCameraTargetBounds(LatLngBounds bounds) {
@@ -1643,7 +1643,7 @@ final class MapboxMapController
 
   @Override
   public void setCompassEnabled(boolean compassEnabled) {
-    mapboxMap.getUiSettings().setCompassEnabled(compassEnabled);
+    trackasiaMap.getUiSettings().setCompassEnabled(compassEnabled);
   }
 
   @Override
@@ -1653,28 +1653,28 @@ final class MapboxMapController
 
   @Override
   public void setRotateGesturesEnabled(boolean rotateGesturesEnabled) {
-    mapboxMap.getUiSettings().setRotateGesturesEnabled(rotateGesturesEnabled);
+    trackasiaMap.getUiSettings().setRotateGesturesEnabled(rotateGesturesEnabled);
   }
 
   @Override
   public void setScrollGesturesEnabled(boolean scrollGesturesEnabled) {
-    mapboxMap.getUiSettings().setScrollGesturesEnabled(scrollGesturesEnabled);
+    trackasiaMap.getUiSettings().setScrollGesturesEnabled(scrollGesturesEnabled);
   }
 
   @Override
   public void setTiltGesturesEnabled(boolean tiltGesturesEnabled) {
-    mapboxMap.getUiSettings().setTiltGesturesEnabled(tiltGesturesEnabled);
+    trackasiaMap.getUiSettings().setTiltGesturesEnabled(tiltGesturesEnabled);
   }
 
   @Override
   public void setMinMaxZoomPreference(Float min, Float max) {
-    mapboxMap.setMinZoomPreference(min != null ? min : MapboxConstants.MINIMUM_ZOOM);
-    mapboxMap.setMaxZoomPreference(max != null ? max : MapboxConstants.MAXIMUM_ZOOM);
+    trackasiaMap.setMinZoomPreference(min != null ? min : TrackasiaConstants.MINIMUM_ZOOM);
+    trackasiaMap.setMaxZoomPreference(max != null ? max : TrackasiaConstants.MAXIMUM_ZOOM);
   }
 
   @Override
   public void setZoomGesturesEnabled(boolean zoomGesturesEnabled) {
-    mapboxMap.getUiSettings().setZoomGesturesEnabled(zoomGesturesEnabled);
+    trackasiaMap.getUiSettings().setZoomGesturesEnabled(zoomGesturesEnabled);
   }
 
   @Override
@@ -1683,14 +1683,14 @@ final class MapboxMapController
       return;
     }
     this.myLocationEnabled = myLocationEnabled;
-    if (mapboxMap != null) {
+    if (trackasiaMap != null) {
       updateMyLocationEnabled();
     }
   }
 
   @Override
   public void setMyLocationTrackingMode(int myLocationTrackingMode) {
-    if (mapboxMap != null) {
+    if (trackasiaMap != null) {
       // ensure that location is trackable
       updateMyLocationEnabled();
     }
@@ -1698,7 +1698,7 @@ final class MapboxMapController
       return;
     }
     this.myLocationTrackingMode = myLocationTrackingMode;
-    if (mapboxMap != null && locationComponent != null) {
+    if (trackasiaMap != null && locationComponent != null) {
       updateMyLocationTrackingMode();
     }
   }
@@ -1709,49 +1709,49 @@ final class MapboxMapController
       return;
     }
     this.myLocationRenderMode = myLocationRenderMode;
-    if (mapboxMap != null && locationComponent != null) {
+    if (trackasiaMap != null && locationComponent != null) {
       updateMyLocationRenderMode();
     }
   }
 
   public void setLogoViewMargins(int x, int y) {
-    mapboxMap.getUiSettings().setLogoMargins(x, 0, 0, y);
+    trackasiaMap.getUiSettings().setLogoMargins(x, 0, 0, y);
   }
 
   @Override
   public void setCompassGravity(int gravity) {
     switch (gravity) {
       case 0:
-        mapboxMap.getUiSettings().setCompassGravity(Gravity.TOP | Gravity.START);
+        trackasiaMap.getUiSettings().setCompassGravity(Gravity.TOP | Gravity.START);
         break;
       default:
       case 1:
-        mapboxMap.getUiSettings().setCompassGravity(Gravity.TOP | Gravity.END);
+        trackasiaMap.getUiSettings().setCompassGravity(Gravity.TOP | Gravity.END);
         break;
       case 2:
-        mapboxMap.getUiSettings().setCompassGravity(Gravity.BOTTOM | Gravity.START);
+        trackasiaMap.getUiSettings().setCompassGravity(Gravity.BOTTOM | Gravity.START);
         break;
       case 3:
-        mapboxMap.getUiSettings().setCompassGravity(Gravity.BOTTOM | Gravity.END);
+        trackasiaMap.getUiSettings().setCompassGravity(Gravity.BOTTOM | Gravity.END);
         break;
     }
   }
 
   @Override
   public void setCompassViewMargins(int x, int y) {
-    switch (mapboxMap.getUiSettings().getCompassGravity()) {
+    switch (trackasiaMap.getUiSettings().getCompassGravity()) {
       case Gravity.TOP | Gravity.START:
-        mapboxMap.getUiSettings().setCompassMargins(x, y, 0, 0);
+        trackasiaMap.getUiSettings().setCompassMargins(x, y, 0, 0);
         break;
       default:
       case Gravity.TOP | Gravity.END:
-        mapboxMap.getUiSettings().setCompassMargins(0, y, x, 0);
+        trackasiaMap.getUiSettings().setCompassMargins(0, y, x, 0);
         break;
       case Gravity.BOTTOM | Gravity.START:
-        mapboxMap.getUiSettings().setCompassMargins(x, 0, 0, y);
+        trackasiaMap.getUiSettings().setCompassMargins(x, 0, 0, y);
         break;
       case Gravity.BOTTOM | Gravity.END:
-        mapboxMap.getUiSettings().setCompassMargins(0, 0, x, y);
+        trackasiaMap.getUiSettings().setCompassMargins(0, 0, x, y);
         break;
     }
   }
@@ -1760,43 +1760,43 @@ final class MapboxMapController
   public void setAttributionButtonGravity(int gravity) {
     switch (gravity) {
       case 0:
-        mapboxMap.getUiSettings().setAttributionGravity(Gravity.TOP | Gravity.START);
+        trackasiaMap.getUiSettings().setAttributionGravity(Gravity.TOP | Gravity.START);
         break;
       default:
       case 1:
-        mapboxMap.getUiSettings().setAttributionGravity(Gravity.TOP | Gravity.END);
+        trackasiaMap.getUiSettings().setAttributionGravity(Gravity.TOP | Gravity.END);
         break;
       case 2:
-        mapboxMap.getUiSettings().setAttributionGravity(Gravity.BOTTOM | Gravity.START);
+        trackasiaMap.getUiSettings().setAttributionGravity(Gravity.BOTTOM | Gravity.START);
         break;
       case 3:
-        mapboxMap.getUiSettings().setAttributionGravity(Gravity.BOTTOM | Gravity.END);
+        trackasiaMap.getUiSettings().setAttributionGravity(Gravity.BOTTOM | Gravity.END);
         break;
     }
   }
 
   @Override
   public void setAttributionButtonMargins(int x, int y) {
-    switch (mapboxMap.getUiSettings().getAttributionGravity()) {
+    switch (trackasiaMap.getUiSettings().getAttributionGravity()) {
       case Gravity.TOP | Gravity.START:
-        mapboxMap.getUiSettings().setAttributionMargins(x, y, 0, 0);
+        trackasiaMap.getUiSettings().setAttributionMargins(x, y, 0, 0);
         break;
       default:
       case Gravity.TOP | Gravity.END:
-        mapboxMap.getUiSettings().setAttributionMargins(0, y, x, 0);
+        trackasiaMap.getUiSettings().setAttributionMargins(0, y, x, 0);
         break;
       case Gravity.BOTTOM | Gravity.START:
-        mapboxMap.getUiSettings().setAttributionMargins(x, 0, 0, y);
+        trackasiaMap.getUiSettings().setAttributionMargins(x, 0, 0, y);
         break;
       case Gravity.BOTTOM | Gravity.END:
-        mapboxMap.getUiSettings().setAttributionMargins(0, 0, x, y);
+        trackasiaMap.getUiSettings().setAttributionMargins(0, 0, x, y);
         break;
     }
   }
 
   private void updateMyLocationEnabled() {
     if (this.locationComponent == null && myLocationEnabled) {
-      enableLocationComponent(mapboxMap.getStyle());
+      enableLocationComponent(trackasiaMap.getStyle());
     }
 
     if (myLocationEnabled) {
@@ -1889,7 +1889,7 @@ final class MapboxMapController
       String assetPath;
       if (i == 1) {
         // If density is 1.0x then simply take the default asset path
-        assetPath = MapboxMapsPlugin.flutterAssets.getAssetFilePathByName(imageId);
+        assetPath = TrackasiaMapsPlugin.flutterAssets.getAssetFilePathByName(imageId);
       } else {
         // Build a resolution aware asset path as follows:
         // <directory asset>/<ratio>/<image name>
@@ -1902,7 +1902,7 @@ final class MapboxMapController
         stringBuilder.append(((float) i) + "x");
         stringBuilder.append("/");
         stringBuilder.append(imagePathList.get(imagePathList.size() - 1));
-        assetPath = MapboxMapsPlugin.flutterAssets.getAssetFilePathByName(stringBuilder.toString());
+        assetPath = TrackasiaMapsPlugin.flutterAssets.getAssetFilePathByName(stringBuilder.toString());
       }
       // Build up a list of resolution aware asset paths.
       assetPathList.add(assetPath);
@@ -1933,7 +1933,7 @@ final class MapboxMapController
     if (detector.getPreviousEvent().getActionMasked() == MotionEvent.ACTION_DOWN
         && detector.getPointersCount() == 1) {
       PointF pointf = detector.getFocalPoint();
-      LatLng origin = mapboxMap.getProjection().fromScreenLocation(pointf);
+      LatLng origin = trackasiaMap.getProjection().fromScreenLocation(pointf);
       RectF rectF = new RectF(pointf.x - 10, pointf.y - 10, pointf.x + 10, pointf.y + 10);
       Feature feature = firstFeatureOnLayers(rectF);
       if (feature != null && startDragging(feature, origin)) {
@@ -1945,7 +1945,7 @@ final class MapboxMapController
   }
 
   private void invokeFeatureDrag(PointF pointf, String eventType) {
-    LatLng current = mapboxMap.getProjection().fromScreenLocation(pointf);
+    LatLng current = trackasiaMap.getProjection().fromScreenLocation(pointf);
 
     final Map<String, Object> arguments = new HashMap<>(9);
     arguments.put("id", draggedFeature.id());
@@ -2002,7 +2002,7 @@ final class MapboxMapController
   }
 
   /** Simple Listener to listen for the status of camera movements. */
-  public class OnCameraMoveFinishedListener implements MapboxMap.CancelableCallback {
+  public class OnCameraMoveFinishedListener implements TrackasiaMap.CancelableCallback {
     @Override
     public void onFinish() {}
 
@@ -2014,17 +2014,17 @@ final class MapboxMapController
 
     @Override
     public boolean onMoveBegin(MoveGestureDetector detector) {
-      return MapboxMapController.this.onMoveBegin(detector);
+      return TrackasiaMapController.this.onMoveBegin(detector);
     }
 
     @Override
     public boolean onMove(MoveGestureDetector detector, float distanceX, float distanceY) {
-      return MapboxMapController.this.onMove(detector);
+      return TrackasiaMapController.this.onMove(detector);
     }
 
     @Override
     public void onMoveEnd(MoveGestureDetector detector, float velocityX, float velocityY) {
-      MapboxMapController.this.onMoveEnd(detector);
+      TrackasiaMapController.this.onMoveEnd(detector);
     }
   }
 }

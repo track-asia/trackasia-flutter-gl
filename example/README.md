@@ -1,6 +1,6 @@
-# trackasia_gl_example
+# maplibre_gl_example
 
-Demonstrates how to use the trackasia_gl plugin.
+Demonstrates how to use the maplibre_gl plugin.
 
 ## Getting Started
 

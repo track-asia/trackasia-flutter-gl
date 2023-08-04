@@ -2,7 +2,7 @@ import Mapbox
 import TrackasiaAnnotationExtension
 
 class Convert {
-    class func interpretMapboxMapOptions(options: Any?, delegate: MapboxMapOptionsSink) {
+    class func interpretTrackasiaMapOptions(options: Any?, delegate: TrackasiaMapOptionsSink) {
         guard let options = options as? [String: Any] else { return }
         if let cameraTargetBounds = options["cameraTargetBounds"] as? [[[Double]]] {
             delegate

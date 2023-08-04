@@ -1,7 +1,7 @@
-#import "MapboxMapsPlugin.h"
+#import "TrackasiaMapsPlugin.h"
 #import <trackasia_gl/trackasia_gl-Swift.h>
 
-@implementation MapboxMapsPlugin 
+@implementation TrackasiaMapsPlugin 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   [SwiftMapboxGlFlutterPlugin registerWithRegistrar:registrar];
 }

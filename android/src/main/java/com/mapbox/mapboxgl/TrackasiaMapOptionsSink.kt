@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 package com.mapbox.mapboxgl
 
-import com.mapbox.mapboxsdk.geometry.LatLngBounds
+import com.trackasia.android.geometry.LatLngBounds
 
-/** Receiver of MapboxMap configuration options.  */
-internal interface MapboxMapOptionsSink {
+/** Receiver of TrackasiaMap configuration options.  */
+internal interface TrackasiaMapOptionsSink {
     // todo: dddd replace with CameraPosition.Builder target
     fun setCameraTargetBounds(bounds: LatLngBounds)
 
