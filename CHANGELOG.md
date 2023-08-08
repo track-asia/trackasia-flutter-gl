@@ -39,7 +39,7 @@
 
 Further improvements: 
 * Update to Trackasia-Android-SDK 9.4.2
-* Update to Trackasia-iOS-SDK 5.12.0
+* Update to Trackasia-iOS-SDK 1.0.0
 * Fix onUserLocationUpdated not firing on android [#14](https://github.com/track-asia/trackasia-flutter-gl/pull/14)
 * Add speed to UserLocation [#11](https://github.com/track-asia/trackasia-flutter-gl/pull/11)
 * Fix queryRenderedFeaturesInRect for iOS [#10](https://github.com/track-asia/trackasia-flutter-gl/pull/10)
