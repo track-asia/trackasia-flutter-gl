@@ -44,8 +44,6 @@ android {
     }
     dependencies {
         implementation 'io.github.track-asia:android-sdk:1.0.5'
-        // implementation 'io.github.track-asia:android-sdk-geojson:1.0.0'
-        // implementation 'io.github.track-asia:android-sdk-turf:1.0.0'
         implementation 'io.github.track-asia:android-plugin-annotation-v9:1.0.0'
         implementation 'io.github.track-asia:android-plugin-localization-v9:1.0.0'
         implementation 'io.github.track-asia:android-plugin-offline-v9:1.0.0'
