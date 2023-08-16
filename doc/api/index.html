@@ -221,7 +221,7 @@ Android supports the following format : <code>'rgba(192, 192, 255, 1.0)'</code>,
 <h3 id="ios-crashes-with-error-nsinvalidargumentexception-reason-invalid-filter-value-filter-property-must-be-a-string">iOS crashes with error: <code>'NSInvalidArgumentException', reason: 'Invalid filter value: filter property must be a string'</code></h3>
 <p>Check if one of your expression is : <code>["!has", "value"]</code>. Android support this format, but iOS does not.
 You can replace your expression with :   <code>["!",["has", "value"] ]</code> which works both in Android and iOS.</p>
-<p>Note : iOS will display the error : <code>NSPredicate: Use of 'mgl_does:have:' as an NSExpression function is forbidden</code>, but it seems like the expression still works well.</p>
+<p>Note : iOS will display the error : <code>NSPredicate: Use of 'MLN_does:have:' as an NSExpression function is forbidden</code>, but it seems like the expression still works well.</p>
 <h2 id="contributing">Contributing</h2>
 <p><a href="https://github.com/track-asia-vn/trackasia-flutter-gl/issues">Feedback</a> and contributions are very welcome!</p>
 </section>

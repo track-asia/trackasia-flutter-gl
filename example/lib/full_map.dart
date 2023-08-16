@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
@@ -38,20 +38,9 @@ class FullMapState extends State<FullMap> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        // TODO: commented out when cherry-picking https://github.com/flutter-mapbox-gl/maps/pull/775
-        // needs different dark and light styles in this repo
-        // floatingActionButton: Padding(
-        // padding: const EdgeInsets.all(32.0),
-        // child: FloatingActionButton(
-        // child: Icon(Icons.swap_horiz),
-        // onPressed: () => setState(
-        // () => isLight = !isLight,
-        // ),
-        // ),
-        // ),
         body: TrackasiaMap(
-      // TODO: styleString: isLight ? MapboxStyles.LIGHT : MapboxStyles.DARK,
       onMapCreated: _onMapCreated,
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
       onStyleLoadedCallback: _onStyleLoadedCallback,
     ));

@@ -6,7 +6,7 @@ import MapboxAnnotationExtension
 
 class LayerPropertyConverter {
 {{#layerTypes}}
-    class func add{{typePascal}}Properties({{type}}Layer: MGL{{typePascal}}StyleLayer, properties: [String: String]) {
+    class func add{{typePascal}}Properties({{type}}Layer: MLN{{typePascal}}StyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(propertyName: propertyName, expression: propertyValue)
             switch propertyName {
@@ -48,14 +48,14 @@ class LayerPropertyConverter {
 
         do {
             let json = try JSONSerialization.jsonObject(with: expression.data(using: .utf8)!, options: .fragmentsAllowed)
-            // this is required because NSExpression.init(mglJSONObject: json) fails to create
+            // this is required because NSExpression.init(MLNJSONObject: json) fails to create
             // a proper Expression if the data of is a hexString
             if isColor {
                 if let color = json as? String {
                     return NSExpression(forConstantValue: UIColor(hexString: color))
                 }
             }
-            // this is required because NSExpression.init(mglJSONObject: json) fails to create
+            // this is required because NSExpression.init(MLNJSONObject: json) fails to create
             // a proper Expression if the data of a literal is an array
             if let offset = json as? [Any]{
                 if offset.count == 2 && offset.first is String && offset.first as? String == "literal" {
@@ -69,7 +69,7 @@ class LayerPropertyConverter {
                     }
                 }
             }
-            return NSExpression.init(mglJSONObject: json)
+            return NSExpression.init(MLNJSONObject: json)
         } catch {
         }
         return nil

@@ -1,4 +1,4 @@
-package com.mapbox.mapboxgl;
+package com.trackasia.trackasiagl;
 
 import com.trackasia.android.module.http.HttpRequestUtil;
 import io.flutter.plugin.common.MethodChannel;

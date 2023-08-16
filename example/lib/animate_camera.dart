@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
 class AnimateCameraPage extends ExamplePage {
-  AnimateCameraPage()
-      : super(const Icon(Icons.map), 'Camera control, animated');
+  AnimateCameraPage() : super(const Icon(Icons.map), 'Camera control, animated');
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +40,9 @@ class AnimateCameraState extends State<AnimateCamera> {
             width: 300.0,
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
-              initialCameraPosition:
-                  const CameraPosition(target: LatLng(0.0, 0.0)),
+              initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
             ),
           ),
         ),
@@ -65,8 +64,7 @@ class AnimateCameraState extends State<AnimateCamera> {
                             ),
                           ),
                         )
-                        .then((result) => print(
-                            "mapController.animateCamera() returned $result"));
+                        .then((result) => print("mapController.animateCamera() returned $result"));
                   },
                   child: const Text('newCameraPosition'),
                 ),
@@ -79,8 +77,7 @@ class AnimateCameraState extends State<AnimateCamera> {
                           ),
                           duration: Duration(seconds: 5),
                         )
-                        .then((result) => print(
-                            "mapController.animateCamera() returned $result"));
+                        .then((result) => print("mapController.animateCamera() returned $result"));
                   },
                   child: const Text('newLatLng'),
                 ),

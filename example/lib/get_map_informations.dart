@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
@@ -60,6 +60,7 @@ class _GetMapInfoBodyState extends State<GetMapInfoBody> {
             width: 300.0,
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),
                 zoom: 11.0,
@@ -68,29 +69,6 @@ class _GetMapInfoBodyState extends State<GetMapInfoBody> {
               compassEnabled: false,
               annotationOrder: [],
               myLocationEnabled: false,
-              styleString: '''{
-                "version": 8,
-                "sources": {
-                  "OSM": {
-                    "type": "raster",
-                    "tiles": [
-                      "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    ],
-                    "tileSize": 256,
-                    "attribution": "© OpenStreetMap contributors",
-                    "maxzoom": 18
-                  }
-                },
-                "layers": [
-                  {
-                    "id": "OSM-layer",
-                    "source": "OSM",
-                    "type": "raster"
-                  }
-                ]
-              }''',
             ),
           ),
         ),

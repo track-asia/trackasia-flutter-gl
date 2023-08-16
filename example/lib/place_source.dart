@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
@@ -46,8 +46,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
   }
 
   /// Adds an asset image as a source to the currently displayed style
-  Future<void> addImageSourceFromAsset(
-      String imageSourceId, String assetName) async {
+  Future<void> addImageSourceFromAsset(String imageSourceId, String assetName) async {
     final ByteData bytes = await rootBundle.load(assetName);
     final Uint8List list = bytes.buffer.asUint8List();
     return controller.addImageSource(
@@ -74,14 +73,12 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
     return controller.addImageLayer(imageLayerId, imageSourceId);
   }
 
-  Future<void> addLayerBelow(
-      String imageLayerId, String imageSourceId, String belowLayerId) {
+  Future<void> addLayerBelow(String imageLayerId, String imageSourceId, String belowLayerId) {
     if (layerAdded) {
       removeLayer(imageLayerId);
     }
     setState(() => layerAdded = true);
-    return controller.addImageLayerBelow(
-        imageLayerId, imageSourceId, belowLayerId);
+    return controller.addImageLayerBelow(imageLayerId, imageSourceId, belowLayerId);
   }
 
   Future<void> removeLayer(String imageLayerId) {
@@ -100,6 +97,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
             width: 300.0,
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),
@@ -120,9 +118,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
                       onPressed: sourceAdded
                           ? null
                           : () {
-                              addImageSourceFromAsset(
-                                      SOURCE_ID, 'assets/sydney.png')
-                                  .then((value) {
+                              addImageSourceFromAsset(SOURCE_ID, 'assets/sydney.png').then((value) {
                                 setState(() => sourceAdded = true);
                               });
                             },
@@ -140,20 +136,15 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
                     ),
                     TextButton(
                       child: const Text('Show layer'),
-                      onPressed: sourceAdded
-                          ? () => addLayer(LAYER_ID, SOURCE_ID)
-                          : null,
+                      onPressed: sourceAdded ? () => addLayer(LAYER_ID, SOURCE_ID) : null,
                     ),
                     TextButton(
                       child: const Text('Show layer below water'),
-                      onPressed: sourceAdded
-                          ? () => addLayerBelow(LAYER_ID, SOURCE_ID, 'water')
-                          : null,
+                      onPressed: sourceAdded ? () => addLayerBelow(LAYER_ID, SOURCE_ID, 'water') : null,
                     ),
                     TextButton(
                       child: const Text('Hide layer'),
-                      onPressed:
-                          sourceAdded ? () => removeLayer(LAYER_ID) : null,
+                      onPressed: sourceAdded ? () => removeLayer(LAYER_ID) : null,
                     ),
                   ],
                 ),

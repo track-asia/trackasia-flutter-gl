@@ -1,4 +1,4 @@
-package com.mapbox.mapboxgl;
+package com.trackasia.trackasiagl;
 
 import androidx.annotation.Nullable;
 import com.google.gson.Gson;

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 import 'util.dart';
@@ -75,8 +75,7 @@ class BatchAddBodyState extends State<BatchAddBody> {
     this.controller = controller;
   }
 
-  List<LineOptions> makeLinesOptionsForFillOptions(
-      Iterable<FillOptions> options) {
+  List<LineOptions> makeLinesOptionsForFillOptions(Iterable<FillOptions> options) {
     final listOptions = <LineOptions>[];
     for (final option in options) {
       for (final geom in option.geometry!) {
@@ -86,28 +85,24 @@ class BatchAddBodyState extends State<BatchAddBody> {
     return listOptions;
   }
 
-  List<CircleOptions> makeCircleOptionsForFillOptions(
-      Iterable<FillOptions> options) {
+  List<CircleOptions> makeCircleOptionsForFillOptions(Iterable<FillOptions> options) {
     final circleOptions = <CircleOptions>[];
     for (final option in options) {
       // put circles only on the outside
       for (final latLng in option.geometry!.first) {
-        circleOptions
-            .add(CircleOptions(geometry: latLng, circleColor: "#00FF00"));
+        circleOptions.add(CircleOptions(geometry: latLng, circleColor: "#00FF00"));
       }
     }
     return circleOptions;
   }
 
-  List<SymbolOptions> makeSymbolOptionsForFillOptions(
-      Iterable<FillOptions> options) {
+  List<SymbolOptions> makeSymbolOptionsForFillOptions(Iterable<FillOptions> options) {
     final symbolOptions = <SymbolOptions>[];
     for (final option in options) {
       // put symbols only on the inner most ring if it exists
       if (option.geometry!.length > 1)
         for (final latLng in option.geometry!.last) {
-          symbolOptions
-              .add(SymbolOptions(iconImage: 'custom-marker', geometry: latLng));
+          symbolOptions.add(SymbolOptions(iconImage: 'custom-marker', geometry: latLng));
         }
     }
     return symbolOptions;
@@ -116,12 +111,9 @@ class BatchAddBodyState extends State<BatchAddBody> {
   void _add() async {
     if (_fills.isEmpty) {
       _fills = await controller.addFills(fillOptions);
-      _lines = await controller
-          .addLines(makeLinesOptionsForFillOptions(fillOptions));
-      _circles = await controller
-          .addCircles(makeCircleOptionsForFillOptions(fillOptions));
-      _symbols = await controller
-          .addSymbols(makeSymbolOptionsForFillOptions(fillOptions));
+      _lines = await controller.addLines(makeLinesOptionsForFillOptions(fillOptions));
+      _circles = await controller.addCircles(makeCircleOptionsForFillOptions(fillOptions));
+      _symbols = await controller.addSymbols(makeSymbolOptionsForFillOptions(fillOptions));
     }
   }
 
@@ -146,9 +138,9 @@ class BatchAddBodyState extends State<BatchAddBody> {
           child: SizedBox(
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
-              onStyleLoadedCallback: () => addImageFromAsset(controller,
-                  "custom-marker", "assets/symbols/custom-marker.png"),
+              onStyleLoadedCallback: () => addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png"),
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.8, 151.511),
                 zoom: 8.2,
@@ -171,11 +163,8 @@ class BatchAddBodyState extends State<BatchAddBody> {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        TextButton(
-                            child: const Text('batch add'), onPressed: _add),
-                        TextButton(
-                            child: const Text('batch remove'),
-                            onPressed: _remove),
+                        TextButton(child: const Text('batch add'), onPressed: _add),
+                        TextButton(child: const Text('batch remove'), onPressed: _remove),
                       ],
                     ),
                   ],

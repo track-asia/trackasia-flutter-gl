@@ -3,14 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 import 'util.dart';
 
 class ClickAnnotationPage extends ExamplePage {
-  ClickAnnotationPage()
-      : super(const Icon(Icons.check_circle), 'Annotation tap');
+  ClickAnnotationPage() : super(const Icon(Icons.check_circle), 'Annotation tap');
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +49,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
 
   _showSnackBar(String type, String id) {
     final snackBar = SnackBar(
-        content: Text('Tapped $type $id',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor);
+        content: Text('Tapped $type $id', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), backgroundColor: Theme.of(context).primaryColor);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -74,8 +71,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   }
 
   void _onStyleLoaded() async {
-    await addImageFromAsset(
-        controller!, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller!, "custom-marker", "assets/symbols/custom-marker.png");
     controller!.addCircle(
       CircleOptions(
         geometry: LatLng(-33.881979408447314, 151.171361438502117),
@@ -134,6 +130,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   @override
   Widget build(BuildContext context) {
     return TrackasiaMap(
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       annotationOrder: [
         AnnotationType.fill,
         AnnotationType.line,

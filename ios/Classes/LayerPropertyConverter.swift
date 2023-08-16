@@ -5,7 +5,7 @@ import Mapbox
 import TrackasiaAnnotationExtension
 
 class LayerPropertyConverter {
-    class func addSymbolProperties(symbolLayer: MGLSymbolStyleLayer, properties: [String: String]) {
+    class func addSymbolProperties(symbolLayer: MLNSymbolStyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(
                 propertyName: propertyName,
@@ -131,7 +131,7 @@ class LayerPropertyConverter {
         }
     }
 
-    class func addCircleProperties(circleLayer: MGLCircleStyleLayer, properties: [String: String]) {
+    class func addCircleProperties(circleLayer: MLNCircleStyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(
                 propertyName: propertyName,
@@ -171,7 +171,7 @@ class LayerPropertyConverter {
         }
     }
 
-    class func addLineProperties(lineLayer: MGLLineStyleLayer, properties: [String: String]) {
+    class func addLineProperties(lineLayer: MLNLineStyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(
                 propertyName: propertyName,
@@ -219,7 +219,7 @@ class LayerPropertyConverter {
         }
     }
 
-    class func addFillProperties(fillLayer: MGLFillStyleLayer, properties: [String: String]) {
+    class func addFillProperties(fillLayer: MLNFillStyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(
                 propertyName: propertyName,
@@ -251,7 +251,7 @@ class LayerPropertyConverter {
         }
     }
 
-    class func addRasterProperties(rasterLayer: MGLRasterStyleLayer, properties: [String: String]) {
+    class func addRasterProperties(rasterLayer: MLNRasterStyleLayer, properties: [String: String]) {
         for (propertyName, propertyValue) in properties {
             let expression = interpretExpression(
                 propertyName: propertyName,
@@ -284,7 +284,7 @@ class LayerPropertyConverter {
     }
 
     class func addHillshadeProperties(
-        hillshadeLayer: MGLHillshadeStyleLayer,
+        hillshadeLayer: MLNHillshadeStyleLayer,
         properties: [String: String]
     ) {
         for (propertyName, propertyValue) in properties {
@@ -324,14 +324,14 @@ class LayerPropertyConverter {
                 with: expression.data(using: .utf8)!,
                 options: .fragmentsAllowed
             )
-            // this is required because NSExpression.init(mglJSONObject: json) fails to create
+            // this is required because NSExpression.init(MLNJSONObject: json) fails to create
             // a proper Expression if the data of is a hexString
             if isColor {
                 if let color = json as? String {
                     return NSExpression(forConstantValue: UIColor(hexString: color))
                 }
             }
-            // this is required because NSExpression.init(mglJSONObject: json) fails to create
+            // this is required because NSExpression.init(MLNJSONObject: json) fails to create
             // a proper Expression if the data of a literal is an array
             if let offset = json as? [Any] {
                 if offset.count == 2, offset.first is String, offset.first as? String == "literal" {

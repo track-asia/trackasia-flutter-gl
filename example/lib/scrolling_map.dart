@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // ignore: unnecessary_import
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 import 'package:trackasia_gl_example/util.dart';
 
 import 'page.dart';
@@ -51,14 +51,14 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                     width: 300.0,
                     height: 300.0,
                     child: TrackasiaMap(
+                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
                       onMapCreated: onMapCreatedOne,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
                       initialCameraPosition: CameraPosition(
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
                         Factory<OneSequenceGestureRecognizer>(
                           () => EagerGestureRecognizer(),
                         ),
@@ -78,22 +78,21 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                 const Text('This map doesn\'t consume the vertical drags.'),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12.0),
-                  child:
-                      Text('It still gets other gestures (e.g scale or tap).'),
+                  child: Text('It still gets other gestures (e.g scale or tap).'),
                 ),
                 Center(
                   child: SizedBox(
                     width: 300.0,
                     height: 300.0,
                     child: TrackasiaMap(
+                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
                         Factory<OneSequenceGestureRecognizer>(
                           () => ScaleGestureRecognizer(),
                         ),
@@ -118,8 +117,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
   }
 
   void onStyleLoaded(TrackasiaMapController controller) async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(SymbolOptions(
         geometry: LatLng(
           center.latitude,

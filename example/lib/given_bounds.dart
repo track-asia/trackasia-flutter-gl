@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
 class GivenBoundsPage extends ExamplePage {
-  GivenBoundsPage()
-      : super(const Icon(Icons.map_sharp), 'Changing given bounds');
+  GivenBoundsPage() : super(const Icon(Icons.map_sharp), 'Changing given bounds');
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +40,9 @@ class GivenBoundsState extends State<GivenBounds> {
             width: 300.0,
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
-              initialCameraPosition:
-                  const CameraPosition(target: LatLng(0.0, 0.0)),
+              initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
             ),
           ),
         ),

@@ -19,8 +19,8 @@ Perform the following actions (these changes should also be on `main`):
 ```
 Comment out:
 dependency_overrides:
-  mapbox_gl_platform_interface:
-    path: ../mapbox_gl_platform_interface
+  trackasia_gl_platform_interface:
+    path: ../trackasia_gl_platform_interface
 ```
 
 and for the trackasia git dependencies, change ref from `main` to `release-x.y.z`.

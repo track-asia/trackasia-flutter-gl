@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart'; // ignore: unnecessary_import
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
@@ -74,8 +74,7 @@ class CustomMarkerState extends State<CustomMarker> {
 
   void _addMarker(Point<double> point, LatLng coordinates) {
     setState(() {
-      _markers.add(Marker(_rnd.nextInt(100000).toString(), coordinates, point,
-          _addMarkerStates));
+      _markers.add(Marker(_rnd.nextInt(100000).toString(), coordinates, point, _addMarkerStates));
     });
   }
 
@@ -84,13 +83,13 @@ class CustomMarkerState extends State<CustomMarker> {
     return new Scaffold(
       body: Stack(children: [
         TrackasiaMap(
+          styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
           trackCameraPosition: true,
           onMapCreated: _onMapCreated,
           onMapLongClick: _onMapLongClickCallback,
           onCameraIdle: _onCameraIdleCallback,
           onStyleLoadedCallback: _onStyleLoadedCallback,
-          initialCameraPosition:
-              const CameraPosition(target: LatLng(35.0, 135.0), zoom: 5),
+          initialCameraPosition: const CameraPosition(target: LatLng(35.0, 135.0), zoom: 5),
         ),
         IgnorePointer(
             ignoring: true,
@@ -112,8 +111,7 @@ class CustomMarkerState extends State<CustomMarker> {
 
           _mapController.toScreenLocationBatch(param).then((value) {
             for (var i = 0; i < randomMarkerNum; i++) {
-              var point =
-                  Point<double>(value[i].x as double, value[i].y as double);
+              var point = Point<double>(value[i].x as double, value[i].y as double);
               _addMarker(point, param[i]);
             }
           });
@@ -143,8 +141,7 @@ class CustomMarkerState extends State<CustomMarker> {
         sw.start();
         var list = <Future<Point<num>>>[];
         for (var j = 0; j < batch; j++) {
-          var p = _mapController
-              .toScreenLocation(LatLng(j.toDouble() % 80, j.toDouble() % 300));
+          var p = _mapController.toScreenLocation(LatLng(j.toDouble() % 80, j.toDouble() % 300));
           list.add(p);
         }
         Future.wait(list);
@@ -168,8 +165,7 @@ class CustomMarkerState extends State<CustomMarker> {
         sw.reset();
       }
 
-      print(
-          'batch=$batch,primitive=${results[batch]![0] / trial}ms, batch=${results[batch]![1] / trial}ms');
+      print('batch=$batch,primitive=${results[batch]![0] / trial}ms, batch=${results[batch]![1] / trial}ms');
     }
   }
 }
@@ -179,9 +175,7 @@ class Marker extends StatefulWidget {
   final LatLng _coordinate;
   final void Function(_MarkerState) _addMarkerState;
 
-  Marker(
-      String key, this._coordinate, this._initialPosition, this._addMarkerState)
-      : super(key: Key(key));
+  Marker(String key, this._coordinate, this._initialPosition, this._addMarkerState) : super(key: Key(key));
 
   @override
   State<StatefulWidget> createState() {
@@ -233,10 +227,7 @@ class _MarkerState extends State with TickerProviderStateMixin {
     return Positioned(
         left: _position.x / ratio - _iconSize / 2,
         top: _position.y / ratio - _iconSize / 2,
-        child: RotationTransition(
-            turns: _animation,
-            child: Image.asset('assets/symbols/2.0x/custom-icon.png',
-                height: _iconSize)));
+        child: RotationTransition(turns: _animation, child: Image.asset('assets/symbols/2.0x/custom-icon.png', height: _iconSize)));
   }
 
   void updatePosition(Point<num> point) {

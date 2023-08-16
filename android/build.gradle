@@ -1,4 +1,4 @@
-group 'com.mapbox.mapboxgl'
+group 'com.trackasia.trackasiagl'
 version '1.0-SNAPSHOT'
 
 buildscript {

@@ -169,7 +169,7 @@ You have to have the color in the following format : `#C0C0FF`
 Check if one of your expression is : `["!has", "value"]`. Android support this format, but iOS does not.
 You can replace your expression with :   `["!",["has", "value"] ]` which works both in Android and iOS.
 
-Note : iOS will display the error : `NSPredicate: Use of 'mgl_does:have:' as an NSExpression function is forbidden`, but it seems like the expression still works well.
+Note : iOS will display the error : `NSPredicate: Use of 'MLN_does:have:' as an NSExpression function is forbidden`, but it seems like the expression still works well.
 
 ## Contributing
 

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 import 'package:trackasia_gl_example/page.dart';
 
 import 'util.dart';
@@ -30,11 +30,11 @@ class LayerState extends State {
   @override
   Widget build(BuildContext context) {
     return TrackasiaMap(
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       dragEnabled: false,
       myLocationEnabled: true,
       onMapCreated: _onMapCreated,
-      onMapClick: (point, latLong) =>
-          print(point.toString() + latLong.toString()),
+      onMapClick: (point, latLong) => print(point.toString() + latLong.toString()),
       onStyleLoadedCallback: _onStyleLoadedCallback,
       initialCameraPosition: CameraPosition(
         target: center,
@@ -42,7 +42,6 @@ class LayerState extends State {
       ),
       annotationOrder: const [],
     );
-
   }
 
   void _onMapCreated(TrackasiaMapController controller) {
@@ -64,8 +63,7 @@ class LayerState extends State {
   }
 
   void _onStyleLoadedCallback() async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     await controller.addGeoJsonSource("points", _points);
     await controller.addGeoJsonSource("moving", _movingFeature(0));
 
@@ -91,17 +89,15 @@ class LayerState extends State {
     await controller.addLineLayer(
       "fills",
       "lines",
-      LineLayerProperties(
-          lineColor: Colors.lightBlue.toHexStringRGB(),
-          lineWidth: [
-            Expressions.interpolate,
-            ["linear"],
-            [Expressions.zoom],
-            11.0,
-            2.0,
-            20.0,
-            10.0
-          ]),
+      LineLayerProperties(lineColor: Colors.lightBlue.toHexStringRGB(), lineWidth: [
+        Expressions.interpolate,
+        ["linear"],
+        [Expressions.zoom],
+        11.0,
+        2.0,
+        20.0,
+        10.0
+      ]),
     );
 
     await controller.addCircleLayer(

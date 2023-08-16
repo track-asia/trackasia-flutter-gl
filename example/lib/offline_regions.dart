@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'offline_region_map.dart';
 import 'page.dart';
@@ -164,13 +164,9 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
                     )
                   : IconButton(
                       icon: Icon(
-                        _items[index].isDownloaded
-                            ? Icons.delete
-                            : Icons.file_download,
+                        _items[index].isDownloaded ? Icons.delete : Icons.file_download,
                       ),
-                      onPressed: _items[index].isDownloaded
-                          ? () => _deleteRegion(_items[index], index)
-                          : () => _downloadRegion(_items[index], index),
+                      onPressed: _items[index].isDownloaded ? () => _deleteRegion(_items[index], index) : () => _downloadRegion(_items[index], index),
                     ),
             ],
           ),
@@ -183,8 +179,7 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
     List<OfflineRegion> offlineRegions = await getListOfRegions();
     List<OfflineRegionListItem> regionItems = [];
     for (var item in allRegions) {
-      final offlineRegion = offlineRegions.firstWhereOrNull(
-          (offlineRegion) => offlineRegion.metadata['name'] == item.name);
+      final offlineRegion = offlineRegions.firstWhereOrNull((offlineRegion) => offlineRegion.metadata['name'] == item.name);
       if (offlineRegion != null) {
         regionItems.add(item.copyWith(downloadedId: offlineRegion.id));
       } else {

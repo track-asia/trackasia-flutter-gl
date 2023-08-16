@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
@@ -72,17 +72,12 @@ class LineBodyState extends State<LineBody> {
 
   void _add() {
     controller!.addLine(
-      LineOptions(
-          geometry: [
-            LatLng(-33.86711, 151.1947171),
-            LatLng(-33.86711, 151.1947171),
-            LatLng(-32.86711, 151.1947171),
-            LatLng(-33.86711, 152.1947171),
-          ],
-          lineColor: "#ff0000",
-          lineWidth: 14.0,
-          lineOpacity: 0.5,
-          draggable: true),
+      LineOptions(geometry: [
+        LatLng(-33.86711, 151.1947171),
+        LatLng(-33.86711, 151.1947171),
+        LatLng(-32.86711, 151.1947171),
+        LatLng(-33.86711, 152.1947171),
+      ], lineColor: "#ff0000", lineWidth: 14.0, lineOpacity: 0.5, draggable: true),
     );
     setState(() {
       _lineCount += 1;
@@ -92,12 +87,9 @@ class LineBodyState extends State<LineBody> {
   _move() async {
     final currentStart = _selectedLine!.options.geometry![0];
     final currentEnd = _selectedLine!.options.geometry![1];
-    final end =
-        LatLng(currentEnd.latitude + 0.001, currentEnd.longitude + 0.001);
-    final start =
-        LatLng(currentStart.latitude - 0.001, currentStart.longitude - 0.001);
-    await controller!
-        .updateLine(_selectedLine!, LineOptions(geometry: [start, end]));
+    final end = LatLng(currentEnd.latitude + 0.001, currentEnd.longitude + 0.001);
+    final start = LatLng(currentStart.latitude - 0.001, currentStart.longitude - 0.001);
+    await controller!.updateLine(_selectedLine!, LineOptions(geometry: [start, end]));
   }
 
   void _remove() {
@@ -109,8 +101,7 @@ class LineBodyState extends State<LineBody> {
   }
 
   Future<void> _changeLinePattern() async {
-    String? current =
-        _selectedLine!.options.linePattern == null ? "assetImage" : null;
+    String? current = _selectedLine!.options.linePattern == null ? "assetImage" : null;
     await _updateSelectedLine(
       LineOptions(linePattern: current),
     );
@@ -161,6 +152,7 @@ class LineBodyState extends State<LineBody> {
           child: SizedBox(
             height: 400.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoadedCallback,
               initialCameraPosition: const CameraPosition(
@@ -197,9 +189,7 @@ class LineBodyState extends State<LineBody> {
                         ),
                         TextButton(
                           child: const Text('change line-pattern'),
-                          onPressed: (_selectedLine == null)
-                              ? null
-                              : _changeLinePattern,
+                          onPressed: (_selectedLine == null) ? null : _changeLinePattern,
                         ),
                       ],
                     ),
@@ -207,21 +197,18 @@ class LineBodyState extends State<LineBody> {
                       children: <Widget>[
                         TextButton(
                           child: const Text('change alpha'),
-                          onPressed:
-                              (_selectedLine == null) ? null : _changeAlpha,
+                          onPressed: (_selectedLine == null) ? null : _changeAlpha,
                         ),
                         TextButton(
                           child: const Text('toggle visible'),
-                          onPressed:
-                              (_selectedLine == null) ? null : _toggleVisible,
+                          onPressed: (_selectedLine == null) ? null : _toggleVisible,
                         ),
                         TextButton(
                           child: const Text('print current LatLng'),
                           onPressed: (_selectedLine == null)
                               ? null
                               : () async {
-                                  var latLngs = await controller!
-                                      .getLineLatLngs(_selectedLine!);
+                                  var latLngs = await controller!.getLineLatLngs(_selectedLine!);
                                   for (var latLng in latLngs) {
                                     print(latLng.toString());
                                   }

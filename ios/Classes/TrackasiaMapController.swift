@@ -2,13 +2,13 @@ import Flutter
 import Mapbox
 import TrackasiaAnnotationExtension
 
-class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, TrackasiaMapOptionsSink,
+class TrackasiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate, TrackasiaMapOptionsSink,
     UIGestureRecognizerDelegate
 {
     private var registrar: FlutterPluginRegistrar
     private var channel: FlutterMethodChannel?
 
-    private var mapView: MGLMapView
+    private var mapView: MLNMapView
     private var isMapReady = false
     private var dragEnabled = true
     private var isFirstStyleLoad = true
@@ -16,16 +16,16 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     private var mapReadyResult: FlutterResult?
     private var previousDragCoordinate: CLLocationCoordinate2D?
     private var originDragCoordinate: CLLocationCoordinate2D?
-    private var dragFeature: MGLFeature?
+    private var dragFeature: MLNFeature?
 
     private var initialTilt: CGFloat?
-    private var cameraTargetBounds: MGLCoordinateBounds?
+    private var cameraTargetBounds: MLNCoordinateBounds?
     private var trackCameraPosition = false
     private var myLocationEnabled = false
     private var scrollingEnabled = true
 
     private var interactiveFeatureLayerIds = Set<String>()
-    private var addedShapesByLayer = [String: MGLShape]()
+    private var addedShapesByLayer = [String: MLNShape]()
 
     func view() -> UIView {
         return mapView
@@ -37,7 +37,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         arguments args: Any?,
         registrar: FlutterPluginRegistrar
     ) {
-        mapView = MGLMapView(frame: frame)
+        mapView = MLNMapView(frame: frame)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.logoView.isHidden = true
         self.registrar = registrar
@@ -76,7 +76,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         if let args = args as? [String: Any] {
             Convert.interpretTrackasiaMapOptions(options: args["options"], delegate: self)
             if let initialCameraPosition = args["initialCameraPosition"] as? [String: Any],
-               let camera = MGLMapCamera.fromDict(initialCameraPosition, mapView: mapView),
+               let camera = MLNMapCamera.fromDict(initialCameraPosition, mapView: mapView),
                let zoom = initialCameraPosition["zoom"] as? Double
             {
                 mapView.setCenter(
@@ -106,7 +106,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             mapView.addGestureRecognizer(pan)
         }
     }
-    func removeAllForController(controller: MGLAnnotationController, ids: [String]){
+    func removeAllForController(controller: MLNAnnotationController, ids: [String]){
         let idSet = Set(ids)
         let annotations = controller.styleAnnotations()
         controller.removeStyleAnnotations(annotations.filter { idSet.contains($0.identifier) })
@@ -144,7 +144,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 result(nil)
             }
         case "map#invalidateAmbientCache":
-            MGLOfflineStorage.shared.invalidateAmbientCache {
+            MLNOfflineStorage.shared.invalidateAmbientCache {
                 error in
                 if let error = error {
                     result(error)
@@ -155,7 +155,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         case "map#updateMyLocationTrackingMode":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             if let myLocationTrackingMode = arguments["mode"] as? UInt,
-               let trackingMode = MGLUserTrackingMode(rawValue: myLocationTrackingMode)
+               let trackingMode = MLNUserTrackingMode(rawValue: myLocationTrackingMode)
             {
                 setMyLocationTrackingMode(myLocationTrackingMode: trackingMode)
             }
@@ -211,7 +211,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 filterExpression = NSPredicate(mglJSONObject: filter)
             }
             var reply = [String: NSObject]()
-            var features: [MGLFeature] = []
+            var features: [MLNFeature] = []
             if let x = arguments["x"] as? Double, let y = arguments["y"] as? Double {
                 features = mapView.visibleFeatures(
                     at: CGPoint(x: x, y: y),
@@ -245,10 +245,10 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         case "map#setTelemetryEnabled":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             let telemetryEnabled = arguments["enabled"] as? Bool
-            UserDefaults.standard.set(telemetryEnabled, forKey: "MGLMapboxMetricsEnabled")
+            UserDefaults.standard.set(telemetryEnabled, forKey: "MLNMapboxMetricsEnabled")
             result(nil)
         case "map#getTelemetryEnabled":
-            let telemetryEnabled = UserDefaults.standard.bool(forKey: "MGLMapboxMetricsEnabled")
+            let telemetryEnabled = UserDefaults.standard.bool(forKey: "MLNMapboxMetricsEnabled")
             result(telemetryEnabled)
         case "map#getVisibleRegion":
             var reply = [String: NSObject]()
@@ -504,7 +504,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             guard let image = UIImage(data: data) else { return }
 
             guard let coordinates = arguments["coordinates"] as? [[Double]] else { return }
-            let quad = MGLCoordinateQuad(
+            let quad = MLNCoordinateQuad(
                 topLeft: CLLocationCoordinate2D(
                     latitude: coordinates[0][0],
                     longitude: coordinates[0][1]
@@ -533,7 +533,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 return
             }
 
-            let source = MGLImageSource(
+            let source = MLNImageSource(
                 identifier: imageSourceId,
                 coordinateQuad: quad,
                 image: image
@@ -576,7 +576,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 return
             }
 
-            let layer = MGLRasterStyleLayer(identifier: imageLayerId, source: source)
+            let layer = MLNRasterStyleLayer(identifier: imageLayerId, source: source)
 
             if let minzoom = minzoom {
                 layer.minimumZoomLevel = Float(minzoom)
@@ -624,7 +624,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 return
             }
 
-            let layer = MGLRasterStyleLayer(identifier: imageLayerId, source: source)
+            let layer = MLNRasterStyleLayer(identifier: imageLayerId, source: source)
 
             if let minzoom = minzoom {
                 layer.minimumZoomLevel = Float(minzoom)
@@ -658,7 +658,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
 
             let southwest = CLLocationCoordinate2D(latitude: south, longitude: west)
             let northeast = CLLocationCoordinate2D(latitude: north, longitude: east)
-            let bounds = MGLCoordinateBounds(sw: southwest, ne: northeast)
+            let bounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
             mapView.setVisibleCoordinateBounds(bounds, edgePadding: UIEdgeInsets(top: padding,
                 left: padding, bottom: padding, right: padding) , animated: true)
             result(nil)
@@ -729,13 +729,13 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             }
             
             var reply = [String: NSObject]()
-            var features: [MGLFeature] = []
+            var features: [MLNFeature] = []
             
             guard let style = mapView.style else { return }
             if let source = style.source(withIdentifier: sourceId) {
-                if let vectorSource = source as? MGLVectorTileSource {
+                if let vectorSource = source as? MLNVectorTileSource {
                     features = vectorSource.features(sourceLayerIdentifiers: sourceLayerId, predicate: filterExpression)
-                } else if let shapeSource = source as? MGLShapeSource {
+                } else if let shapeSource = source as? MLNShapeSource {
                     features = shapeSource.features(matching: filterExpression)
                 }
             }
@@ -785,7 +785,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             guard let layer = style.layer(withIdentifier: layerId) else { return }
             
             var currentLayerFilter : String = ""
-            if let vectorLayer = layer as? MGLVectorStyleLayer {
+            if let vectorLayer = layer as? MLNVectorStyleLayer {
                 if let layerFilter = vectorLayer.predicate {
                     
                     let jsonExpression = layerFilter.mgl_jsonExpressionObject
@@ -838,14 +838,14 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         mapView.showsUserLocation = myLocationEnabled
     }
 
-    private func getCamera() -> MGLMapCamera? {
+    private func getCamera() -> MLNMapCamera? {
         return trackCameraPosition ? mapView.camera : nil
     }
 
     /*
      *  Scan layers from top to bottom and return the first matching feature
      */
-    private func firstFeatureOnLayers(at: CGPoint) -> MGLFeature? {
+    private func firstFeatureOnLayers(at: CGPoint) -> MLNFeature? {
         guard let style = mapView.style else { return nil }
 
         // get layers in order (interactiveFeatureLayerIds is unordered)
@@ -981,7 +981,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
      * Override the attribution button's click target to handle the event locally.
      * Called if the application supplies an onAttributionClick handler.
      */
-    func setupAttribution(_ mapView: MGLMapView) {
+    func setupAttribution(_ mapView: MLNMapView) {
         mapView.attributionButton.removeTarget(
             mapView,
             action: #selector(mapView.showAttribution),
@@ -1003,9 +1003,9 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     } */
 
     /*
-     *  MGLMapViewDelegate
+     *  MLNMapViewDelegate
      */
-    func mapView(_ mapView: MGLMapView, didFinishLoading _: MGLStyle) {
+    func mapView(_ mapView: MLNMapView, didFinishLoading _: MLNStyle) {
         isMapReady = true
         updateMyLocationEnabled()
 
@@ -1033,12 +1033,12 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     }
 
     // handle missing images
-    func mapView(_: MGLMapView, didFailToLoadImage name: String) -> UIImage? {
+    func mapView(_: MLNMapView, didFailToLoadImage name: String) -> UIImage? {
         return loadIconImage(name: name)
     }
 
-    func mapView(_ mapView: MGLMapView, shouldChangeFrom _: MGLMapCamera,
-                 to newCamera: MGLMapCamera) -> Bool
+    func mapView(_ mapView: MLNMapView, shouldChangeFrom _: MLNMapCamera,
+                 to newCamera: MLNMapCamera) -> Bool
     {
         guard let bbox = cameraTargetBounds else { return true }
 
@@ -1056,14 +1056,14 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         mapView.camera = currentCamera
 
         // Test if the newCameraCenter and newVisibleCoordinates are inside bbox.
-        let inside = MGLCoordinateInCoordinateBounds(newCameraCenter, bbox)
-        let intersects = MGLCoordinateInCoordinateBounds(newVisibleCoordinates.ne, bbox) &&
-            MGLCoordinateInCoordinateBounds(newVisibleCoordinates.sw, bbox)
+        let inside = MLNCoordinateInCoordinateBounds(newCameraCenter, bbox)
+        let intersects = MLNCoordinateInCoordinateBounds(newVisibleCoordinates.ne, bbox) &&
+            MLNCoordinateInCoordinateBounds(newVisibleCoordinates.sw, bbox)
 
         return inside && intersects
     }
 
-    func mapView(_: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
+    func mapView(_: MLNMapView, didUpdate userLocation: MLNUserLocation?) {
         if let channel = channel, let userLocation = userLocation,
            let location = userLocation.location
         {
@@ -1074,7 +1074,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         }
     }
 
-    func mapView(_: MGLMapView, didChange mode: MGLUserTrackingMode, animated _: Bool) {
+    func mapView(_: MLNMapView, didChange mode: MLNUserTrackingMode, animated _: Bool) {
         if let channel = channel {
             channel.invokeMethod("map#onCameraTrackingChanged", arguments: ["mode": mode.rawValue])
             if mode == .none {
@@ -1096,7 +1096,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLSymbolStyleLayer(identifier: layerId, source: source)
+                let layer = MLNSymbolStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addSymbolProperties(
                     symbolLayer: layer,
                     properties: properties
@@ -1141,7 +1141,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLLineStyleLayer(identifier: layerId, source: source)
+                let layer = MLNLineStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addLineProperties(lineLayer: layer, properties: properties)
                 if let sourceLayerIdentifier = sourceLayerIdentifier {
                     layer.sourceLayerIdentifier = sourceLayerIdentifier
@@ -1183,7 +1183,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLFillStyleLayer(identifier: layerId, source: source)
+                let layer = MLNFillStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addFillProperties(fillLayer: layer, properties: properties)
                 if let sourceLayerIdentifier = sourceLayerIdentifier {
                     layer.sourceLayerIdentifier = sourceLayerIdentifier
@@ -1225,7 +1225,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) -> Result<Void, MethodCallError> {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLCircleStyleLayer(identifier: layerId, source: source)
+                let layer = MLNCircleStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addCircleProperties(
                     circleLayer: layer,
                     properties: properties
@@ -1257,7 +1257,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         return .success(())
     }
 
-    func setFilter(_ layer: MGLStyleLayer, _ filter: String) -> Result<Void, MethodCallError> {
+    func setFilter(_ layer: MLNStyleLayer, _ filter: String) -> Result<Void, MethodCallError> {
         do {
             let filter = try JSONSerialization.jsonObject(
                 with: filter.data(using: .utf8)!,
@@ -1267,7 +1267,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                 return .success(())
             }
             let predicate = NSPredicate(mglJSONObject: filter)
-            if let layer = layer as? MGLVectorStyleLayer {
+            if let layer = layer as? MLNVectorStyleLayer {
                 layer.predicate = predicate
             } else {
                 return .failure(MethodCallError.invalidLayerType(
@@ -1290,7 +1290,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLHillshadeStyleLayer(identifier: layerId, source: source)
+                let layer = MLNHillshadeStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addHillshadeProperties(
                     hillshadeLayer: layer,
                     properties: properties
@@ -1320,7 +1320,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     ) {
         if let style = mapView.style {
             if let source = style.source(withIdentifier: sourceId) {
-                let layer = MGLRasterStyleLayer(identifier: layerId, source: source)
+                let layer = MLNRasterStyleLayer(identifier: layerId, source: source)
                 LayerPropertyConverter.addRasterProperties(
                     rasterLayer: layer,
                     properties: properties
@@ -1342,7 +1342,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
 
     func addSource(sourceId: String, properties: [String: Any]) {
         if let style = mapView.style, let type = properties["type"] as? String {
-            var source: MGLSource?
+            var source: MLNSource?
 
             switch type {
             case "vector":
@@ -1380,19 +1380,19 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         }
     }
 
-    func mapViewDidBecomeIdle(_: MGLMapView) {
+    func mapViewDidBecomeIdle(_: MLNMapView) {
         if let channel = channel {
             channel.invokeMethod("map#onIdle", arguments: [])
         }
     }
 
-    func mapView(_: MGLMapView, regionWillChangeAnimated _: Bool) {
+    func mapView(_: MLNMapView, regionWillChangeAnimated _: Bool) {
         if let channel = channel {
             channel.invokeMethod("camera#onMoveStarted", arguments: [])
         }
     }
 
-    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+    func mapViewRegionIsChanging(_ mapView: MLNMapView) {
         if !trackCameraPosition { return }
         if let channel = channel {
             channel.invokeMethod("camera#onMove", arguments: [
@@ -1401,7 +1401,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         }
     }
 
-    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated _: Bool) {
+    func mapView(_ mapView: MLNMapView, regionDidChangeAnimated _: Bool) {
         let arguments = trackCameraPosition ? [
             "position": getCamera()?.toDict(mapView: mapView)
         ] : [:]
@@ -1412,11 +1412,11 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
 
     func addSourceGeojson(sourceId: String, geojson: String) {
         do {
-            let parsed = try MGLShape(
+            let parsed = try MLNShape(
                 data: geojson.data(using: .utf8)!,
                 encoding: String.Encoding.utf8.rawValue
             )
-            let source = MGLShapeSource(identifier: sourceId, shape: parsed, options: [:])
+            let source = MLNShapeSource(identifier: sourceId, shape: parsed, options: [:])
             addedShapesByLayer[sourceId] = parsed
             mapView.style?.addSource(source)
             print(source)
@@ -1425,11 +1425,11 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
 
     func setSource(sourceId: String, geojson: String) {
         do {
-            let parsed = try MGLShape(
+            let parsed = try MLNShape(
                 data: geojson.data(using: .utf8)!,
                 encoding: String.Encoding.utf8.rawValue
             )
-            if let source = mapView.style?.source(withIdentifier: sourceId) as? MGLShapeSource {
+            if let source = mapView.style?.source(withIdentifier: sourceId) as? MLNShapeSource {
                 addedShapesByLayer[sourceId] = parsed
                 source.shape = parsed
             }
@@ -1438,13 +1438,13 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
 
     func setFeature(sourceId: String, geojsonFeature: String) {
         do {
-            let newShape = try MGLShape(
+            let newShape = try MLNShape(
                 data: geojsonFeature.data(using: .utf8)!,
                 encoding: String.Encoding.utf8.rawValue
             )
-            if let source = mapView.style?.source(withIdentifier: sourceId) as? MGLShapeSource,
-               let shape = addedShapesByLayer[sourceId] as? MGLShapeCollectionFeature,
-               let feature = newShape as? MGLShape & MGLFeature
+            if let source = mapView.style?.source(withIdentifier: sourceId) as? MLNShapeSource,
+               let shape = addedShapesByLayer[sourceId] as? MLNShapeCollectionFeature,
+               let feature = newShape as? MLNShape & MLNFeature
             {
                 if let index = shape.shapes
                     .firstIndex(where: {
@@ -1461,7 +1461,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                     var shapes = shape.shapes
                     shapes[index] = feature
 
-                    source.shape = MGLShapeCollectionFeature(shapes: shapes)
+                    source.shape = MLNShapeCollectionFeature(shapes: shapes)
                 }
 
                 addedShapesByLayer[sourceId] = source.shape
@@ -1473,7 +1473,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     /*
      *  TrackasiaMapOptionsSink
      */
-    func setCameraTargetBounds(bounds: MGLCoordinateBounds?) {
+    func setCameraTargetBounds(bounds: MLNCoordinateBounds?) {
         cameraTargetBounds = bounds
     }
 
@@ -1547,7 +1547,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         updateMyLocationEnabled()
     }
 
-    func setMyLocationTrackingMode(myLocationTrackingMode: MGLUserTrackingMode) {
+    func setMyLocationTrackingMode(myLocationTrackingMode: MLNUserTrackingMode) {
         mapView.userTrackingMode = myLocationTrackingMode
     }
 
@@ -1566,7 +1566,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         mapView.logoViewMargins = CGPoint(x: x, y: y)
     }
 
-    func setCompassViewPosition(position: MGLOrnamentPosition) {
+    func setCompassViewPosition(position: MLNOrnamentPosition) {
         mapView.compassViewPosition = position
     }
 
@@ -1578,7 +1578,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         mapView.attributionButtonMargins = CGPoint(x: x, y: y)
     }
 
-    func setAttributionButtonPosition(position: MGLOrnamentPosition) {
+    func setAttributionButtonPosition(position: MLNOrnamentPosition) {
         mapView.attributionButtonPosition = position
     }
 }

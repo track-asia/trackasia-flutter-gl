@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mapbox.mapboxglexample"
+        applicationId "com.trackasia.trackasiaglexample"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

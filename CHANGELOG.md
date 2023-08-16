@@ -12,13 +12,13 @@
 ## 0.15.0, Oct 26, 2021
 
 * Fix bug when changing line color (see #448) by @vberthet in https://github.com/track-asia/trackasia-flutter-gl/pull/15
-* Remove unnecessary imports by @m0nac0 in https://github.com/track-asia/trackasia-flutter-gl/pull/34
+* Remove unnecessary imports by @trackasia in https://github.com/track-asia/trackasia-flutter-gl/pull/34
 * Update example with Flutter 2.5.3 by @kuhnroyal in https://github.com/track-asia/trackasia-flutter-gl/pull/35
 * CI: Use separate scheduled pipeline for Flutter beta builds by @kuhnroyal in https://github.com/track-asia/trackasia-flutter-gl/pull/28
-* Null safety (cherry-pick from upstream) by @m0nac0 in https://github.com/track-asia/trackasia-flutter-gl/pull/31
-* [web] add missing removeLines, removeCircles and removeFills (cherry-pick tobrun#622) by @m0nac0 in https://github.com/track-asia/trackasia-flutter-gl/pull/32
-* Replace style string in local style example by @m0nac0 in https://github.com/track-asia/trackasia-flutter-gl/pull/33
-* [web] add getSymbolLatLng and getLineLatLngs by @m0nac0 in https://github.com/track-asia/trackasia-flutter-gl/pull/37
+* Null safety (cherry-pick from upstream) by @trackasia in https://github.com/track-asia/trackasia-flutter-gl/pull/31
+* [web] add missing removeLines, removeCircles and removeFills (cherry-pick tobrun#622) by @trackasia in https://github.com/track-asia/trackasia-flutter-gl/pull/32
+* Replace style string in local style example by @trackasia in https://github.com/track-asia/trackasia-flutter-gl/pull/33
+* [web] add getSymbolLatLng and getLineLatLngs by @trackasia in https://github.com/track-asia/trackasia-flutter-gl/pull/37
 
 ## 0.14.0
 ### Breaking changes:
@@ -117,8 +117,8 @@ Further improvements:
 - Add line#getGeometry and symbol#getGeometry [#281](https://github.com/tobrun/flutter-mapbox-gl/pull/281)
 
 ## 0.7.0, June 6, 2020
-* Introduction of mapbox_gl_platform_interface library
-* Introduction of mapbox_gl_web library
+* Introduction of trackasia_gl_platform_interface library
+* Introduction of trackasia_gl_web library
 * Integrate web support through mapbox-gl-js
 * Add icon-allow-overlap configurations
 

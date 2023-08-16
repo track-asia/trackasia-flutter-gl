@@ -1,0 +1,64 @@
+PODS:
+  - device_info_plus (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - location (0.0.1):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - Trackasia (2.0.0)
+  - trackasia_gl (1.0.6):
+    - Flutter
+    - Trackasia (~> 2.0.0)
+    - TrackasiaAnnotationExtension (~> 2.0.0)
+  - TrackasiaAnnotationExtension (2.0.0):
+    - Trackasia (~> 2.0.0)
+
+DEPENDENCIES:
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - Flutter (from `Flutter`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - Trackasia (from `https://github.com/track-asia/trackasia-cocoapods.git`, tag `2.0.0`)
+  - trackasia_gl (from `.symlinks/plugins/trackasia_gl/ios`)
+  - TrackasiaAnnotationExtension (from `https://github.com/track-asia/trackasia-annotation-extension.git`, tag `2.0.0`)
+
+EXTERNAL SOURCES:
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
+  Flutter:
+    :path: Flutter
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
+  Trackasia:
+    :git: https://github.com/track-asia/trackasia-cocoapods.git
+    :tag: 2.0.0
+  trackasia_gl:
+    :path: ".symlinks/plugins/trackasia_gl/ios"
+  TrackasiaAnnotationExtension:
+    :git: https://github.com/track-asia/trackasia-annotation-extension.git
+    :tag: 2.0.0
+
+CHECKOUT OPTIONS:
+  Trackasia:
+    :git: https://github.com/track-asia/trackasia-cocoapods.git
+    :tag: 2.0.0
+  TrackasiaAnnotationExtension:
+    :git: https://github.com/track-asia/trackasia-annotation-extension.git
+    :tag: 2.0.0
+
+SPEC CHECKSUMS:
+  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  Trackasia: c8e0ace98b2d2d6a4fed959e99f0040305b3df00
+  trackasia_gl: 132db0577dd122a2544d47f6bb1de37f64109a75
+  TrackasiaAnnotationExtension: a3214dcf5351a15de9459f9383e96b7b8ceb5e5d
+
+PODFILE CHECKSUM: 47bd951086d725a4517e837a21b498c9ec9abf7a
+
+COCOAPODS: 1.12.1

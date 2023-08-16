@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'page.dart';
@@ -62,7 +62,7 @@ class LocalStyleState extends State<LocalStyle> {
 
     return new Scaffold(
         body: TrackasiaMap(
-      styleString: styleAbsoluteFilePath,
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
       onStyleLoadedCallback: onStyleLoadedCallback,

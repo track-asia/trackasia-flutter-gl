@@ -1,4 +1,4 @@
-package com.mapbox.mapboxgl;
+package com.trackasia.trackasiagl;
 
 import android.content.Context;
 import com.trackasia.android.Trackasia;

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // ignore: unnecessary_import
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 import 'util.dart';
 
 class AnnotationOrderPage extends ExamplePage {
-  AnnotationOrderPage()
-      : super(const Icon(Icons.layers), 'Annotation order maps');
+  AnnotationOrderPage() : super(const Icon(Icons.layers), 'Annotation order maps');
 
   @override
   Widget build(BuildContext context) => AnnotationOrderBody();
@@ -37,14 +36,14 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
               children: <Widget>[
                 const Padding(
                   padding: EdgeInsets.only(bottom: 5.0),
-                  child: Text(
-                      'This map has polygones (fill) above all other anotations (default behavior)'),
+                  child: Text('This map has polygones (fill) above all other anotations (default behavior)'),
                 ),
                 Center(
                   child: SizedBox(
                     width: 250.0,
                     height: 250.0,
                     child: TrackasiaMap(
+                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
                       onMapCreated: onMapCreatedOne,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
                       initialCameraPosition: CameraPosition(
@@ -71,14 +70,14 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
               children: <Widget>[
                 const Padding(
                   padding: EdgeInsets.only(bottom: 5.0, top: 5.0),
-                  child: Text(
-                      'This map has polygones (fill) under all other anotations'),
+                  child: Text('This map has polygones (fill) under all other anotations'),
                 ),
                 Center(
                   child: SizedBox(
                     width: 250.0,
                     height: 250.0,
                     child: TrackasiaMap(
+                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(
@@ -111,8 +110,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
   }
 
   void onStyleLoaded(TrackasiaMapController controller) async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(
       SymbolOptions(
         geometry: LatLng(

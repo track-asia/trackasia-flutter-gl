@@ -7,25 +7,10 @@ import 'package:recase/recase.dart';
 import 'conversions.dart';
 
 main() async {
-  var styleJson =
-      jsonDecode(await new File('scripts/input/style.json').readAsString());
+  var styleJson = jsonDecode(await new File('scripts/input/style.json').readAsString());
 
-  final layerTypes = [
-    "symbol",
-    "circle",
-    "line",
-    "fill",
-    "raster",
-    "hillshade"
-  ];
-  final sourceTypes = [
-    "vector",
-    "raster",
-    "raster_dem",
-    "geojson",
-    "video",
-    "image"
-  ];
+  final layerTypes = ["symbol", "circle", "line", "fill", "raster", "hillshade"];
+  final sourceTypes = ["vector", "raster", "raster_dem", "geojson", "video", "image"];
 
   final renderContext = {
     "layerTypes": [
@@ -49,18 +34,18 @@ main() async {
   };
 
   // required for deduplication
-  renderContext["all_layout_properties"] = [
-    for (final type in renderContext["layerTypes"]!)
-      ...type["layout_properties"].map((p) => p["value"]).toList()
-  ].toSet().map((p) => {"property": p}).toList();
+  renderContext["all_layout_properties"] = [for (final type in renderContext["layerTypes"]!) ...type["layout_properties"].map((p) => p["value"]).toList()]
+      .toSet()
+      .map((p) => {"property": p})
+      .toList();
 
   const templates = [
-    "android/src/main/java/com/mapbox/mapboxgl/LayerPropertyConverter.java",
+    "android/src/main/java/com.trackasia.trackasiagl/LayerPropertyConverter.java",
     "ios/Classes/LayerPropertyConverter.swift",
     "lib/src/layer_expressions.dart",
     "lib/src/layer_properties.dart",
-    "mapbox_gl_web/lib/src/layer_tools.dart",
-    "mapbox_gl_platform_interface/lib/src/source_properties.dart",
+    "trackasia_gl_web/lib/src/layer_tools.dart",
+    "trackasia_gl_platform_interface/lib/src/source_properties.dart",
   ];
 
   for (var template in templates) await render(renderContext, template);
@@ -75,8 +60,7 @@ Future<void> render(
   final outputPath = pathItems.join("/");
 
   print("Rendering $filename");
-  var templateFile =
-      await File('./scripts/templates/$filename.template').readAsString();
+  var templateFile = await File('./scripts/templates/$filename.template').readAsString();
 
   var template = Template(templateFile);
   var outputFile = File('$outputPath/$filename');
@@ -84,15 +68,13 @@ Future<void> render(
   outputFile.writeAsString(template.renderString(renderContext));
 }
 
-List<Map<String, dynamic>> buildStyleProperties(
-    Map<String, dynamic> styleJson, String key) {
+List<Map<String, dynamic>> buildStyleProperties(Map<String, dynamic> styleJson, String key) {
   final Map<String, dynamic> items = styleJson[key];
 
   return items.entries.map((e) => buildStyleProperty(e.key, e.value)).toList();
 }
 
-Map<String, dynamic> buildStyleProperty(
-    String key, Map<String, dynamic> value) {
+Map<String, dynamic> buildStyleProperty(String key, Map<String, dynamic> value) {
   final camelCase = ReCase(key).camelCase;
   return <String, dynamic>{
     'value': key,
@@ -106,25 +88,18 @@ Map<String, dynamic> buildStyleProperty(
   };
 }
 
-List<Map<String, dynamic>> buildSourceProperties(
-    Map<String, dynamic> styleJson, String key) {
+List<Map<String, dynamic>> buildSourceProperties(Map<String, dynamic> styleJson, String key) {
   final Map<String, dynamic> items = styleJson[key];
 
-  return items.entries
-      .where((e) => e.key != "*" && e.key != "type")
-      .map((e) => buildSourceProperty(e.key, e.value))
-      .toList();
+  return items.entries.where((e) => e.key != "*" && e.key != "type").map((e) => buildSourceProperty(e.key, e.value)).toList();
 }
 
-Map<String, dynamic> buildSourceProperty(
-    String key, Map<String, dynamic> value) {
+Map<String, dynamic> buildSourceProperty(String key, Map<String, dynamic> value) {
   final camelCase = ReCase(key).camelCase;
   final typeDart = dartTypeMappingTable[value["type"]];
   final typeSwift = swiftTypeMappingTable[value["type"]];
-  final nestedTypeDart = dartTypeMappingTable[value["value"]] ??
-      dartTypeMappingTable[value["value"]["type"]];
-  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ??
-      swiftTypeMappingTable[value["value"]["type"]];
+  final nestedTypeDart = dartTypeMappingTable[value["value"]] ?? dartTypeMappingTable[value["value"]["type"]];
+  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ?? swiftTypeMappingTable[value["value"]["type"]];
 
   var defaultValue = value["default"];
   if (defaultValue is List) {
@@ -139,8 +114,7 @@ Map<String, dynamic> buildSourceProperty(
     'default': defaultValue,
     'hasDefault': value["default"] != null,
     'type': nestedTypeDart == null ? typeDart : "$typeDart<$nestedTypeDart>",
-    'typeSwift':
-        nestedTypeSwift == null ? typeSwift : "$typeSwift<$nestedTypeSwift>",
+    'typeSwift': nestedTypeSwift == null ? typeSwift : "$typeSwift<$nestedTypeSwift>",
     'docSplit': buildDocSplit(value).map((s) => {"part": s}).toList(),
     'valueAsCamelCase': camelCase
   };
@@ -165,8 +139,7 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
       result.add("Options:");
       for (var value in values.entries) {
         result.add("  \"${value.key}\"");
-        result.addAll(
-            splitIntoChunks("${value.value["doc"]}", 70, prefix: "     "));
+        result.addAll(splitIntoChunks("${value.value["doc"]}", 70, prefix: "     "));
       }
     }
   }
@@ -187,8 +160,7 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
   return result;
 }
 
-List<String> splitIntoChunks(String input, int lineLength,
-    {String prefix = ""}) {
+List<String> splitIntoChunks(String input, int lineLength, {String prefix = ""}) {
   final words = input.split(" ");
   final chunks = <String>[];
 
@@ -207,8 +179,7 @@ List<String> splitIntoChunks(String input, int lineLength,
   return chunks;
 }
 
-List<Map<String, dynamic>> buildExpressionProperties(
-    Map<String, dynamic> styleJson) {
+List<Map<String, dynamic>> buildExpressionProperties(Map<String, dynamic> styleJson) {
   final Map<String, dynamic> items = styleJson["expression_name"]["values"];
 
   final renamed = {

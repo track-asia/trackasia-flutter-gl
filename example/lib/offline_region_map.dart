@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'offline_regions.dart';
 
@@ -28,7 +28,7 @@ class _OfflineRegionMapState extends State<OfflineRegionMap> {
           widget.item.offlineRegionDefinition.minZoom,
           widget.item.offlineRegionDefinition.maxZoom,
         ),
-        styleString: widget.item.offlineRegionDefinition.mapStyleUrl,
+        styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
         cameraTargetBounds: CameraTargetBounds(
           widget.item.offlineRegionDefinition.bounds,
         ),
