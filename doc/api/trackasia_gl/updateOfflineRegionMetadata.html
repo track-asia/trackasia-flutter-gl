@@ -77,8 +77,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;OfflineRegion&gt; updateOfflineRegionMetadata(
-    int id, Map&lt;String, dynamic&gt; metadata) async {
+  <pre class="language-dart"><code class="language-dart">Future&lt;OfflineRegion&gt; updateOfflineRegionMetadata(int id, Map&lt;String, dynamic&gt; metadata) async {
   final regionJson = await _globalChannel.invokeMethod(
     &#39;updateOfflineRegionMetadata&#39;,
     &lt;String, dynamic&gt;{
@@ -120,7 +119,7 @@
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

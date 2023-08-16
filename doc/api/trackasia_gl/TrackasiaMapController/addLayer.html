@@ -102,64 +102,30 @@ Filters are written as <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addLayer(
-    String sourceId, String layerId, LayerProperties properties,
-    {String? belowLayerId,
-    bool enableInteraction = true,
-    String? sourceLayer,
-    double? minzoom,
-    double? maxzoom,
-    dynamic filter}) async {
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addLayer(String sourceId, String layerId, LayerProperties properties,
+    {String? belowLayerId, bool enableInteraction = true, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter}) async {
   if (properties is FillLayerProperties) {
     addFillLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        enableInteraction: enableInteraction,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom,
-        filter: filter);
+        belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
   } else if (properties is LineLayerProperties) {
     addLineLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        enableInteraction: enableInteraction,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom,
-        filter: filter);
+        belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
   } else if (properties is SymbolLayerProperties) {
     addSymbolLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        enableInteraction: enableInteraction,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom,
-        filter: filter);
+        belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
   } else if (properties is CircleLayerProperties) {
     addCircleLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        enableInteraction: enableInteraction,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom,
-        filter: filter);
+        belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
   } else if (properties is RasterLayerProperties) {
     if (filter != null) {
       throw UnimplementedError(&quot;RasterLayer does not support filter&quot;);
     }
-    addRasterLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom);
+    addRasterLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
   } else if (properties is HillshadeLayerProperties) {
     if (filter != null) {
       throw UnimplementedError(&quot;HillShadeLayer does not support filter&quot;);
     }
-    addHillshadeLayer(sourceId, layerId, properties,
-        belowLayerId: belowLayerId,
-        sourceLayer: sourceLayer,
-        minzoom: minzoom,
-        maxzoom: maxzoom);
+    addHillshadeLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
   } else {
     throw UnimplementedError(&quot;Unknown layer type $properties&quot;);
   }
@@ -196,7 +162,7 @@ Filters are written as <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

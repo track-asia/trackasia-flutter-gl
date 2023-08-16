@@ -83,11 +83,8 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addImageLayerBelow(
-    String layerId, String sourceId, String imageSourceId,
-    {double? minzoom, double? maxzoom}) {
-  return _mapboxGlPlatform.addLayerBelow(
-      layerId, sourceId, imageSourceId, minzoom, maxzoom);
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addImageLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
+  return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
 }</code></pre>
 </section>
 
@@ -121,7 +118,7 @@
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

@@ -82,10 +82,8 @@ Note: On web, this will probably only work for GeoJson source, not for vector ti
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;List&gt; querySourceFeatures(
-    String sourceId, String? sourceLayerId, List&lt;Object&gt;? filter) async {
-  return _mapboxGlPlatform.querySourceFeatures(
-      sourceId, sourceLayerId, filter);
+  <pre class="language-dart"><code class="language-dart">Future&lt;List&gt; querySourceFeatures(String sourceId, String? sourceLayerId, List&lt;Object&gt;? filter) async {
+  return _mapboxGlPlatform.querySourceFeatures(sourceId, sourceLayerId, filter);
 }</code></pre>
 </section>
 
@@ -119,7 +117,7 @@ Note: On web, this will probably only work for GeoJson source, not for vector ti
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

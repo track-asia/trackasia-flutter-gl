@@ -63,8 +63,8 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/Fill-class.html">Fill</a></span>&gt;</span></span>
-<span class="name ">addFill</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addFill-param-options"><span class="type-annotation"><a href="../../trackasia_gl/FillOptions-class.html">FillOptions</a></span> <span class="parameter-name">options</span>, </span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/Fill-class.html">Fill</a></span>&gt;</span></span>
+<span class="name ">addFill</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addFill-param-options"><span class="type-annotation"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/FillOptions-class.html">FillOptions</a></span> <span class="parameter-name">options</span>, </span></li>
 <li><span class="parameter" id="addFill-param-data">[<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a>?</span> <span class="parameter-name">data</span>]</span></li>
 </ol>)
 
@@ -85,8 +85,7 @@ been notified.</p>
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">Future&lt;Fill&gt; addFill(FillOptions options, [Map? data]) async {
-  final FillOptions effectiveOptions =
-      FillOptions.defaultOptions.copyWith(options);
+  final FillOptions effectiveOptions = FillOptions.defaultOptions.copyWith(options);
   final fill = Fill(getRandomString(), effectiveOptions, data);
   await fillManager!.add(fill);
   notifyListeners();
@@ -124,7 +123,7 @@ been notified.</p>
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

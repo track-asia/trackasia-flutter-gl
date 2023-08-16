@@ -89,11 +89,8 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@Deprecated(&quot;This method was renamed to addImageLayerBelow for clarity.&quot;)
-Future&lt;void&gt; addLayerBelow(
-    String layerId, String sourceId, String imageSourceId,
-    {double? minzoom, double? maxzoom}) {
-  return _mapboxGlPlatform.addLayerBelow(
-      layerId, sourceId, imageSourceId, minzoom, maxzoom);
+Future&lt;void&gt; addLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
+  return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
 }</code></pre>
 </section>
 
@@ -127,7 +124,7 @@ Future&lt;void&gt; addLayerBelow(
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

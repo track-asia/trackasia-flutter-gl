@@ -100,14 +100,8 @@ Filters are written as <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addSymbolLayer(
-    String sourceId, String layerId, SymbolLayerProperties properties,
-    {String? belowLayerId,
-    String? sourceLayer,
-    double? minzoom,
-    double? maxzoom,
-    dynamic filter,
-    bool enableInteraction = true}) async {
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; addSymbolLayer(String sourceId, String layerId, SymbolLayerProperties properties,
+    {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
   await _mapboxGlPlatform.addSymbolLayer(
     sourceId,
     layerId,
@@ -152,7 +146,7 @@ Filters are written as <a href="https://docs.mapbox.com/mapbox-gl-js/style-spec/
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

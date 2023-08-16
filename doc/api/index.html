@@ -29,7 +29,7 @@
 <header id="title">
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
-    <li><a href="https://github.com/track-asia-vn/trackasia-flutter-gl">trackasia_gl package</a></li>
+    <li><a href="https://github.com/track-asia/trackasia-flutter-gl">trackasia_gl package</a></li>
   </ol>
   <div class="self-name">trackasia_gl</div>
   <form class="search navbar-right" role="search">
@@ -53,15 +53,15 @@
       
 <section class="desc markdown">
   <h1 id="flutter-trackasia-gl">Flutter trackasia GL</h1>
-<p><a href="https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/flutter_ci.yml"><img src="https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/flutter_ci.yml/badge.svg" alt="Flutter CI"></a>
-<a href="https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/generate_docs.yml"><img src="https://github.com/track-asia-vn/trackasia-flutter-gl/actions/workflows/generate_docs.yml/badge.svg" alt="Generate docs"></a></p>
+<p><a href="https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/flutter_ci.yml"><img src="https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/flutter_ci.yml/badge.svg" alt="Flutter CI"></a>
+<a href="https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/generate_docs.yml"><img src="https://github.com/track-asia/trackasia-flutter-gl/actions/workflows/generate_docs.yml/badge.svg" alt="Generate docs"></a></p>
 <blockquote>
-<p><code>⚠️</code> Current notice: the repository has been transferred to the @trackasia organization. You shouldn't see any negative effects, as GitHub automatically redirects references from the old URL to the new URL. Please see <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/issues/221">#221</a> for more information.</p>
+<p><code>⚠️</code> Current notice: the repository has been transferred to the @trackasia organization. You shouldn't see any negative effects, as GitHub automatically redirects references from the old URL to the new URL. Please see <a href="https://github.com/track-asia/trackasia-flutter-gl/issues/221">#221</a> for more information.</p>
 </blockquote>
 <p>This Flutter plugin allows to show <strong>embedded interactive and customizable vector maps</strong> as a Flutter widget.</p>
-<p>For the Android and iOS integration, we use <a href="https://github.com/track-asia-vn/trackasia-gl-native">trackasia-gl-native</a>. For web, we rely on <a href="https://github.com/track-asia-vn/trackasia-gl-js">trackasia-gl-js</a>. This project only supports a subset of the API exposed by these libraries.</p>
+<p>For the Android and iOS integration, we use <a href="https://github.com/track-asia/trackasia-native">trackasia-native</a>. For web, we rely on <a href="https://github.com/track-asia/trackasia-gl-js">trackasia-gl-js</a>. This project only supports a subset of the API exposed by these libraries.</p>
 <p>This project is a fork of <a href="https://github.com/tobrun/flutter-mapbox-gl">https://github.com/tobrun/flutter-mapbox-gl</a>, replacing its usage of Mapbox GL libraries with the open source <a href="https://github.com/trackasia">trackasia GL</a> libraries.</p>
-<p><strong>Please note that this project is community driven and is not affiliated with the company Mapbox.</strong> <br>
+<p><strong>Please note that this project is community driven and is not affiliated with the company Trackasia.</strong> <br>
 It does use some of their amazing open source libraries/tools, though. Thank you, Mapbox, for all the open-source work you do!</p>
 <h2 id="using-the-plugin-in-your-project">Using the plugin in your project</h2>
 <p>This project is not yet available on pub.dev.
@@ -70,11 +70,11 @@ You can use it by referencing it in your <code>pubspec.yaml</code> like this:</p
     ...
     trackasia_gl:
       git:
-        url: https://github.com/track-asia-vn/trackasia-flutter-gl.git
+        url: https://github.com/track-asia/trackasia-flutter-gl.git
         ref: main
 </code></pre>
 <p>This will get you the very latest changes from the main branch.
-You can replace <code>main</code> with the name of the <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/releases">latest release</a>
+You can replace <code>main</code> with the name of the <a href="https://github.com/track-asia/trackasia-flutter-gl/releases">latest release</a>
 to get a more stable version.</p>
 <p>Compared to flutter-mapbox-gl, the only breaking API changes are:</p>
 <ul>
@@ -82,12 +82,12 @@ to get a more stable version.</p>
 <li><code>TrackasiaMapController</code> &lt;--&gt; <code>TrackasiaMapController</code></li>
 </ul>
 <h3 id="documentation">Documentation</h3>
-<p>Documentation is available on the docs branch in the doc/api folder and automatically updated on each push to the main branch. You can easily preview the <a href="https://htmlpreview.github.io/?https://github.com/track-asia-vn/trackasia-flutter-gl/blob/docs/doc/api/index.html">documentation / API reference here.</a></p>
-<p>Please visit <a href="https://github.com/track-asia-vn/trackasia-gl-js">https://github.com/track-asia-vn/trackasia-gl-js</a> and <a href="https://github.com/track-asia-vn/trackasia-gl-native">https://github.com/track-asia-vn/trackasia-gl-native</a> for more information about the trackasia libraries.</p>
+<p>Documentation is available on the docs branch in the doc/api folder and automatically updated on each push to the main branch. You can easily preview the <a href="https://htmlpreview.github.io/?https://github.com/track-asia/trackasia-flutter-gl/blob/docs/doc/api/index.html">documentation / API reference here.</a></p>
+<p>Please visit <a href="https://github.com/track-asia/trackasia-gl-js">https://github.com/track-asia/trackasia-gl-js</a> and <a href="https://github.com/track-asia/trackasia-native">https://github.com/track-asia/trackasia-native</a> for more information about the trackasia libraries.</p>
 <h3 id="ios">iOS</h3>
-<p>To use this plugin with iOS, you need to add the source repository and 2 additional pods to your Podfile, as shown in the example app: <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/blob/main/example/ios/Podfile">https://github.com/track-asia-vn/trackasia-flutter-gl/blob/main/example/ios/Podfile</a></p>
+<p>To use this plugin with iOS, you need to add the source repository and 2 additional pods to your Podfile, as shown in the example app: <a href="https://github.com/track-asia/trackasia-flutter-gl/blob/main/example/ios/Podfile">https://github.com/track-asia/trackasia-flutter-gl/blob/main/example/ios/Podfile</a></p>
 <pre class="language-ruby"><code class="language-ruby">source 'https://cdn.cocoapods.org/'
-source 'https://github.com/track-asia-vn/trackasia-flutter-podspecs.git'
+source 'https://github.com/track-asia/trackasia-flutter-podspecs.git'
 
 pod 'trackasia'
 pod 'trackasiaAnnotationExtension'
@@ -188,10 +188,10 @@ For example:</p>
 <p>A possible explanation could be: "Shows your location on the map".</p>
 <h2 id="getting-help">Getting Help</h2>
 <ul>
-<li><strong>Need help with your code?</strong>: Check the <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/discussions">discussions</a> on this repo or open a new one.
+<li><strong>Need help with your code?</strong>: Check the <a href="https://github.com/track-asia/trackasia-flutter-gl/discussions">discussions</a> on this repo or open a new one.
  Or look for previous questions on the <a href="https://stackoverflow.com/questions/tagged/trackasia">#trackasia tag</a> — or <a href="https://stackoverflow.com/questions/tagged/trackasia">ask a new question</a>.</li>
-<li><strong>Have a bug to report?</strong> <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/issues/new">Open an issue</a>. If possible, include a full log and information which shows the issue.</li>
-<li><strong>Have a feature request?</strong> <a href="https://github.com/track-asia-vn/trackasia-flutter-gl/issues/new">Open an issue</a>. Tell us what the feature should do and why you want the feature.</li>
+<li><strong>Have a bug to report?</strong> <a href="https://github.com/track-asia/trackasia-flutter-gl/issues/new">Open an issue</a>. If possible, include a full log and information which shows the issue.</li>
+<li><strong>Have a feature request?</strong> <a href="https://github.com/track-asia/trackasia-flutter-gl/issues/new">Open an issue</a>. Tell us what the feature should do and why you want the feature.</li>
 </ul>
 <h2 id="running-in-github-codespaces">Running in GitHub Codespaces</h2>
 <p>When you open this project in GitHub Codespaces, you can run the example app on web with the command <code>flutter run -d web-server --web-hostname=0.0.0.0</code></p>
@@ -223,7 +223,7 @@ Android supports the following format : <code>'rgba(192, 192, 255, 1.0)'</code>,
 You can replace your expression with :   <code>["!",["has", "value"] ]</code> which works both in Android and iOS.</p>
 <p>Note : iOS will display the error : <code>NSPredicate: Use of 'MLN_does:have:' as an NSExpression function is forbidden</code>, but it seems like the expression still works well.</p>
 <h2 id="contributing">Contributing</h2>
-<p><a href="https://github.com/track-asia-vn/trackasia-flutter-gl/issues">Feedback</a> and contributions are very welcome!</p>
+<p><a href="https://github.com/track-asia/trackasia-flutter-gl/issues">Feedback</a> and contributions are very welcome!</p>
 </section>
 
 
@@ -251,7 +251,7 @@ You can replace your expression with :   <code>["!",["has", "value"] ]</code> wh
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-    <li><a href="https://github.com/track-asia-vn/trackasia-flutter-gl">trackasia_gl package</a></li>
+    <li><a href="https://github.com/track-asia/trackasia-flutter-gl">trackasia_gl package</a></li>
 </ol>
 
 
@@ -271,7 +271,7 @@ You can replace your expression with :   <code>["!",["has", "value"] ]</code> wh
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

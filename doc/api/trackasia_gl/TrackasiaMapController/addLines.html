@@ -63,8 +63,8 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/Line-class.html">Line</a></span>&gt;</span></span>&gt;</span></span>
-<span class="name ">addLines</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addLines-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/LineOptions-class.html">LineOptions</a></span>&gt;</span></span> <span class="parameter-name">options</span>, </span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/Line-class.html">Line</a></span>&gt;</span></span>&gt;</span></span>
+<span class="name ">addLines</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addLines-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/LineOptions-class.html">LineOptions</a></span>&gt;</span></span> <span class="parameter-name">options</span>, </span></li>
 <li><span class="parameter" id="addLines-param-data">[<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span>?</span> <span class="parameter-name">data</span>]</span></li>
 </ol>)
 
@@ -84,13 +84,8 @@ been notified.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Line&gt;&gt; addLines(List&lt;LineOptions&gt; options,
-    [List&lt;Map&gt;? data]) async {
-  final lines = [
-    for (var i = 0; i &lt; options.length; i++)
-      Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]),
-          data?[i])
-  ];
+  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Line&gt;&gt; addLines(List&lt;LineOptions&gt; options, [List&lt;Map&gt;? data]) async {
+  final lines = [for (var i = 0; i &lt; options.length; i++) Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]), data?[i])];
   await lineManager!.addAll(lines);
 
   notifyListeners();
@@ -128,7 +123,7 @@ been notified.</p>
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

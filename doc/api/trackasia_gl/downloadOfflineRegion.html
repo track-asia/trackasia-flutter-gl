@@ -85,11 +85,9 @@
   Map&lt;String, dynamic&gt; metadata = const {},
   Function(DownloadRegionStatus event)? onEvent,
 }) async {
-  String channelName =
-      &#39;downloadOfflineRegion_${DateTime.now().microsecondsSinceEpoch}&#39;;
+  String channelName = &#39;downloadOfflineRegion_${DateTime.now().microsecondsSinceEpoch}&#39;;
 
-  await _globalChannel
-      .invokeMethod(&#39;downloadOfflineRegion#setup&#39;, &lt;String, dynamic&gt;{
+  await _globalChannel.invokeMethod(&#39;downloadOfflineRegion#setup&#39;, &lt;String, dynamic&gt;{
     &#39;channelName&#39;: channelName,
   });
 
@@ -102,8 +100,7 @@
       var unknownError = Error(
         PlatformException(
           code: &#39;UnknowException&#39;,
-          message:
-              &#39;This error is unhandled by plugin. Please contact us if needed.&#39;,
+          message: &#39;This error is unhandled by plugin. Please contact us if needed.&#39;,
           details: error,
         ),
       );
@@ -138,8 +135,7 @@
     });
   }
 
-  final result = await _globalChannel
-      .invokeMethod(&#39;downloadOfflineRegion&#39;, &lt;String, dynamic&gt;{
+  final result = await _globalChannel.invokeMethod(&#39;downloadOfflineRegion&#39;, &lt;String, dynamic&gt;{
     &#39;definition&#39;: definition.toMap(),
     &#39;metadata&#39;: metadata,
   });
@@ -177,7 +173,7 @@
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

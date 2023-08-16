@@ -63,8 +63,8 @@
     <section class="multi-line-signature">
       
 
-<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/Symbol-class.html">Symbol</a></span>&gt;</span></span>&gt;</span></span>
-<span class="name ">addSymbols</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addSymbols-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/SymbolOptions-class.html">SymbolOptions</a></span>&gt;</span></span> <span class="parameter-name">options</span>, </span></li>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/Symbol-class.html">Symbol</a></span>&gt;</span></span>&gt;</span></span>
+<span class="name ">addSymbols</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="addSymbols-param-options"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/SymbolOptions-class.html">SymbolOptions</a></span>&gt;</span></span> <span class="parameter-name">options</span>, </span></li>
 <li><span class="parameter" id="addSymbols-param-data">[<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a></span>&gt;</span>?</span> <span class="parameter-name">data</span>]</span></li>
 </ol>)
 
@@ -85,13 +85,8 @@ been notified.</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Symbol&gt;&gt; addSymbols(List&lt;SymbolOptions&gt; options,
-    [List&lt;Map&gt;? data]) async {
-  final symbols = [
-    for (var i = 0; i &lt; options.length; i++)
-      Symbol(getRandomString(),
-          SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])
-  ];
+  <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Symbol&gt;&gt; addSymbols(List&lt;SymbolOptions&gt; options, [List&lt;Map&gt;? data]) async {
+  final symbols = [for (var i = 0; i &lt; options.length; i++) Symbol(getRandomString(), SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])];
   await symbolManager!.addAll(symbols);
 
   notifyListeners();
@@ -129,7 +124,7 @@ been notified.</p>
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

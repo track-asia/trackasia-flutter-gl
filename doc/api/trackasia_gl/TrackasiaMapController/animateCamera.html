@@ -64,7 +64,7 @@
       
 
 <span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span>&gt;</span></span>
-<span class="name ">animateCamera</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="animateCamera-param-cameraUpdate"><span class="type-annotation"><a href="../../trackasia_gl/CameraUpdate-class.html">CameraUpdate</a></span> <span class="parameter-name">cameraUpdate</span>, </span></li>
+<span class="name ">animateCamera</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="animateCamera-param-cameraUpdate"><span class="type-annotation"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/CameraUpdate-class.html">CameraUpdate</a></span> <span class="parameter-name">cameraUpdate</span>, </span></li>
 <li><span class="parameter" id="animateCamera-param-duration">{<span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Duration-class.html">Duration</a>?</span> <span class="parameter-name">duration</span>}</span></li>
 </ol>)
 
@@ -85,8 +85,7 @@ Note: this currently always returns immediately with a value of null on iOS</p>
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Future&lt;bool?&gt; animateCamera(CameraUpdate cameraUpdate,
-    {Duration? duration}) async {
+  <pre class="language-dart"><code class="language-dart">Future&lt;bool?&gt; animateCamera(CameraUpdate cameraUpdate, {Duration? duration}) async {
   return _mapboxGlPlatform.animateCamera(cameraUpdate, duration: duration);
 }</code></pre>
 </section>
@@ -121,7 +120,7 @@ Note: this currently always returns immediately with a value of null on iOS</p>
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   

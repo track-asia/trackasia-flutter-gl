@@ -62,8 +62,8 @@
 
     <section class="multi-line-signature">
       
-      <span class="name ">TrackasiaMapController</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-mapboxGlPlatform">{<span>required</span> <span class="type-annotation">MapLibreGlPlatform</span> <span class="parameter-name">mapboxGlPlatform</span>, </span></li>
-<li><span class="parameter" id="-param-initialCameraPosition"><span>required</span> <span class="type-annotation"><a href="../../trackasia_gl/CameraPosition-class.html">CameraPosition</a></span> <span class="parameter-name">initialCameraPosition</span>, </span></li>
+      <span class="name ">TrackasiaMapController</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="-param-mapboxGlPlatform">{<span>required</span> <span class="type-annotation"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/MapLibreGlPlatform-class.html">MapLibreGlPlatform</a></span> <span class="parameter-name">mapboxGlPlatform</span>, </span></li>
+<li><span class="parameter" id="-param-initialCameraPosition"><span>required</span> <span class="type-annotation"><a href="https://pub.dev/documentation/trackasia_gl_platform_interface/1.0.5/trackasia_gl_platform_interface/CameraPosition-class.html">CameraPosition</a></span> <span class="parameter-name">initialCameraPosition</span>, </span></li>
 <li><span class="parameter" id="-param-annotationOrder"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/AnnotationType.html">AnnotationType</a></span>&gt;</span></span> <span class="parameter-name">annotationOrder</span>, </span></li>
 <li><span class="parameter" id="-param-annotationConsumeTapEvents"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Iterable-class.html">Iterable</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../../trackasia_gl/AnnotationType.html">AnnotationType</a></span>&gt;</span></span> <span class="parameter-name">annotationConsumeTapEvents</span>, </span></li>
 <li><span class="parameter" id="-param-onStyleLoadedCallback"><span class="type-annotation"><a href="../../trackasia_gl/OnStyleLoadedCallback.html">OnStyleLoadedCallback</a>?</span> <span class="parameter-name">onStyleLoadedCallback</span>, </span></li>
@@ -101,22 +101,16 @@
   _cameraPosition = initialCameraPosition;
 
   _mapboxGlPlatform.onFeatureTappedPlatform.add((payload) {
-    for (final fun
-        in List&lt;OnFeatureInteractionCallback&gt;.from(onFeatureTapped)) {
+    for (final fun in List&lt;OnFeatureInteractionCallback&gt;.from(onFeatureTapped)) {
       fun(payload[&quot;id&quot;], payload[&quot;point&quot;], payload[&quot;latLng&quot;]);
     }
   });
 
   _mapboxGlPlatform.onFeatureDraggedPlatform.add((payload) {
     for (final fun in List&lt;OnFeatureDragnCallback&gt;.from(onFeatureDrag)) {
-      final DragEventType enmDragEventType = DragEventType.values
-          .firstWhere((element) =&gt; element.name == payload[&quot;eventType&quot;]);
+      final DragEventType enmDragEventType = DragEventType.values.firstWhere((element) =&gt; element.name == payload[&quot;eventType&quot;]);
       fun(payload[&quot;id&quot;],
-          point: payload[&quot;point&quot;],
-          origin: payload[&quot;origin&quot;],
-          current: payload[&quot;current&quot;],
-          delta: payload[&quot;delta&quot;],
-          eventType: enmDragEventType);
+          point: payload[&quot;point&quot;], origin: payload[&quot;origin&quot;], current: payload[&quot;current&quot;], delta: payload[&quot;delta&quot;], eventType: enmDragEventType);
     }
   });
 
@@ -147,20 +141,16 @@
       final enableInteraction = interactionEnabled.contains(type);
       switch (type) {
         case AnnotationType.fill:
-          fillManager = FillManager(this,
-              onTap: onFillTapped, enableInteraction: enableInteraction);
+          fillManager = FillManager(this, onTap: onFillTapped, enableInteraction: enableInteraction);
           break;
         case AnnotationType.line:
-          lineManager = LineManager(this,
-              onTap: onLineTapped, enableInteraction: enableInteraction);
+          lineManager = LineManager(this, onTap: onLineTapped, enableInteraction: enableInteraction);
           break;
         case AnnotationType.circle:
-          circleManager = CircleManager(this,
-              onTap: onCircleTapped, enableInteraction: enableInteraction);
+          circleManager = CircleManager(this, onTap: onCircleTapped, enableInteraction: enableInteraction);
           break;
         case AnnotationType.symbol:
-          symbolManager = SymbolManager(this,
-              onTap: onSymbolTapped, enableInteraction: enableInteraction);
+          symbolManager = SymbolManager(this, onTap: onSymbolTapped, enableInteraction: enableInteraction);
           break;
         default:
       }
@@ -235,7 +225,7 @@
 <footer>
   <span class="no-break">
     trackasia_gl
-      0.16.0
+      1.0.6
   </span>
 
   
