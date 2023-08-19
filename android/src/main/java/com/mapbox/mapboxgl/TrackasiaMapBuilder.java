@@ -21,7 +21,7 @@ class TrackasiaMapBuilder implements TrackasiaMapOptionsSink {
   private boolean dragEnabled = true;
   private int myLocationTrackingMode = 0;
   private int myLocationRenderMode = 0;
-  private String styleString = "https://demotiles.maplibre.org/style.json";
+  private String styleString = "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public";
   private LatLngBounds bounds = null;
 
   TrackasiaMapController build(

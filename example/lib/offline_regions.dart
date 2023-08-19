@@ -25,19 +25,19 @@ final List<OfflineRegionDefinition> regionDefinitions = [
     bounds: hawaiiBounds,
     minZoom: 3.0,
     maxZoom: 8.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
   ),
   OfflineRegionDefinition(
     bounds: santiagoBounds,
     minZoom: 10.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
   ),
   OfflineRegionDefinition(
     bounds: aucklandBounds,
     minZoom: 13.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
   ),
 ];
 
@@ -164,13 +164,9 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
                     )
                   : IconButton(
                       icon: Icon(
-                        _items[index].isDownloaded
-                            ? Icons.delete
-                            : Icons.file_download,
+                        _items[index].isDownloaded ? Icons.delete : Icons.file_download,
                       ),
-                      onPressed: _items[index].isDownloaded
-                          ? () => _deleteRegion(_items[index], index)
-                          : () => _downloadRegion(_items[index], index),
+                      onPressed: _items[index].isDownloaded ? () => _deleteRegion(_items[index], index) : () => _downloadRegion(_items[index], index),
                     ),
             ],
           ),
@@ -183,8 +179,7 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
     List<OfflineRegion> offlineRegions = await getListOfRegions();
     List<OfflineRegionListItem> regionItems = [];
     for (var item in allRegions) {
-      final offlineRegion = offlineRegions.firstWhereOrNull(
-          (offlineRegion) => offlineRegion.metadata['name'] == item.name);
+      final offlineRegion = offlineRegions.firstWhereOrNull((offlineRegion) => offlineRegion.metadata['name'] == item.name);
       if (offlineRegion != null) {
         regionItems.add(item.copyWith(downloadedId: offlineRegion.id));
       } else {
