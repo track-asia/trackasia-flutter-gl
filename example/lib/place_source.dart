@@ -6,12 +6,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
 class PlaceSourcePage extends ExamplePage {
-  PlaceSourcePage() : super(const Icon(Icons.place), 'Place source');
+  const PlaceSourcePage({super.key}) : super(const Icon(Icons.place), 'Place source');
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class PlaceSourcePage extends ExamplePage {
 }
 
 class PlaceSymbolBody extends StatefulWidget {
-  const PlaceSymbolBody();
+  const PlaceSymbolBody({super.key});
 
   @override
   State<StatefulWidget> createState() => PlaceSymbolBodyState();
@@ -29,8 +29,8 @@ class PlaceSymbolBody extends StatefulWidget {
 class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
   PlaceSymbolBodyState();
 
-  static const SOURCE_ID = 'sydney_source';
-  static const LAYER_ID = 'sydney_layer';
+  static const sourceId = 'sydney_source';
+  static const layerId = 'sydney_layer';
 
   bool sourceAdded = false;
   bool layerAdded = false;
@@ -46,8 +46,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
   }
 
   /// Adds an asset image as a source to the currently displayed style
-  Future<void> addImageSourceFromAsset(
-      String imageSourceId, String assetName) async {
+  Future<void> addImageSourceFromAsset(String imageSourceId, String assetName) async {
     final ByteData bytes = await rootBundle.load(assetName);
     final Uint8List list = bytes.buffer.asUint8List();
     return controller.addImageSource(
@@ -74,14 +73,12 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
     return controller.addImageLayer(imageLayerId, imageSourceId);
   }
 
-  Future<void> addLayerBelow(
-      String imageLayerId, String imageSourceId, String belowLayerId) {
+  Future<void> addLayerBelow(String imageLayerId, String imageSourceId, String belowLayerId) {
     if (layerAdded) {
       removeLayer(imageLayerId);
     }
     setState(() => layerAdded = true);
-    return controller.addImageLayerBelow(
-        imageLayerId, imageSourceId, belowLayerId);
+    return controller.addImageLayerBelow(imageLayerId, imageSourceId, belowLayerId);
   }
 
   Future<void> removeLayer(String imageLayerId) {
@@ -116,44 +113,37 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
                 Column(
                   children: <Widget>[
                     TextButton(
-                      child: const Text('Add source (asset image)'),
                       onPressed: sourceAdded
                           ? null
                           : () {
-                              addImageSourceFromAsset(
-                                      SOURCE_ID, 'assets/sydney.png')
-                                  .then((value) {
+                              addImageSourceFromAsset(sourceId, 'assets/sydney.png').then((value) {
                                 setState(() => sourceAdded = true);
                               });
                             },
+                      child: const Text('Add source (asset image)'),
                     ),
                     TextButton(
-                      child: const Text('Remove source (asset image)'),
                       onPressed: sourceAdded
                           ? () async {
-                              await removeLayer(LAYER_ID);
-                              removeImageSource(SOURCE_ID).then((value) {
+                              await removeLayer(layerId);
+                              removeImageSource(sourceId).then((value) {
                                 setState(() => sourceAdded = false);
                               });
                             }
                           : null,
+                      child: const Text('Remove source (asset image)'),
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => addLayer(layerId, sourceId) : null,
                       child: const Text('Show layer'),
-                      onPressed: sourceAdded
-                          ? () => addLayer(LAYER_ID, SOURCE_ID)
-                          : null,
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => addLayerBelow(layerId, sourceId, 'water') : null,
                       child: const Text('Show layer below water'),
-                      onPressed: sourceAdded
-                          ? () => addLayerBelow(LAYER_ID, SOURCE_ID, 'water')
-                          : null,
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => removeLayer(layerId) : null,
                       child: const Text('Hide layer'),
-                      onPressed:
-                          sourceAdded ? () => removeLayer(LAYER_ID) : null,
                     ),
                   ],
                 ),

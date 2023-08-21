@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
 class MoveCameraPage extends ExamplePage {
-  MoveCameraPage() : super(const Icon(Icons.map), 'Camera control');
+  const MoveCameraPage({super.key}) : super(const Icon(Icons.map), 'Camera control');
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,8 @@ class MoveCameraPage extends ExamplePage {
 }
 
 class MoveCamera extends StatefulWidget {
-  const MoveCamera();
+  const MoveCamera({super.key});
+
   @override
   State createState() => MoveCameraState();
 }
@@ -41,9 +42,8 @@ class MoveCameraState extends State<MoveCamera> {
             height: 200.0,
             child: TrackasiaMap(
               onMapCreated: _onMapCreated,
-              onCameraIdle: () => print("onCameraIdle"),
-              initialCameraPosition:
-                  const CameraPosition(target: LatLng(0.0, 0.0)),
+              onCameraIdle: () => debugPrint("onCameraIdle"),
+              initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
             ),
           ),
         ),

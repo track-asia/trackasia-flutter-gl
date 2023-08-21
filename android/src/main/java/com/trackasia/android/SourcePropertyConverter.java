@@ -1,4 +1,4 @@
-package com.mapbox.mapboxgl;
+package com.trackasia.android;
 
 import android.net.Uri;
 import com.google.gson.Gson;

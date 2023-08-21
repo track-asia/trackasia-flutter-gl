@@ -6,7 +6,7 @@ homepage: https://github.com/track-asia/trackasia-flutter-gl
 dependencies:
   flutter:
     sdk: flutter
-  trackasia_gl_platform_interface: 1.0.5
+  trackasia_gl_platform_interface: 1.0.7
   # trackasia_gl_platform_interface: 
   #   path: ../trackasia_gl_platform_interface
   trackasia_gl_web: 1.0.1
@@ -18,12 +18,12 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.mapbox.mapboxgl
+        package: com.trackasia.android
         pluginClass: TrackasiaMapsPlugin
       ios:
         pluginClass: TrackasiaMapsPlugin
       web:
-        default_package: mapbox_gl_web
+        default_package: trackasia_gl_web
 
 environment:
   sdk: '>=2.16.0 <3.0.0'

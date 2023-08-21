@@ -10,8 +10,7 @@ class InProgress extends DownloadRegionStatus {
   InProgress(this.progress);
 
   @override
-  String toString() =>
-      "Instance of 'DownloadRegionStatus.InProgress', progress = $progress";
+  String toString() => "Instance of 'DownloadRegionStatus.InProgress', progress = $progress";
 }
 
 class Error extends DownloadRegionStatus {
@@ -20,6 +19,5 @@ class Error extends DownloadRegionStatus {
   Error(this.cause);
 
   @override
-  String toString() =>
-      "Instance of 'DownloadRegionStatus.Error', cause = ${cause.toString()}";
+  String toString() => "Instance of 'DownloadRegionStatus.Error', cause = ${cause.toString()}";
 }

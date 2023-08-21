@@ -1,9 +1,10 @@
 # Uncomment this line to define a global platform for your project
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/track-asia/trackasia-flutter-podspecs.git'
+
 platform :ios, '11.0'
 
-pod 'Trackasia', :git => 'https://github.com/track-asia/trackasia-cocoapods.git', :tag => '1.0.0'
-pod 'TrackasiaAnnotationExtension', :git => 'https://github.com/track-asia/trackasia-annotation-extension.git', :tag => '1.0.0'
-
+pod 'Trackasia'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

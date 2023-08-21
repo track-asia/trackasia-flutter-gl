@@ -205,7 +205,7 @@ class SymbolLayerProperties implements LayerProperties {
   /// collisions. Recommended in layers that don't have enough padding in
   /// the vector tile to prevent collisions, or if it is a point symbol
   /// layer placed after a line symbol layer. When using a client that
-  /// supports global collision detection, like Mapbox GL JS version 0.42.0
+  /// supports global collision detection, like Trackasia GL JS version 0.42.0
   /// or greater, enabling this property is not needed to prevent clipped
   /// labels at tile boundaries.
   ///
@@ -863,8 +863,7 @@ class SymbolLayerProperties implements LayerProperties {
       iconAllowOverlap: changes.iconAllowOverlap ?? iconAllowOverlap,
       iconIgnorePlacement: changes.iconIgnorePlacement ?? iconIgnorePlacement,
       iconOptional: changes.iconOptional ?? iconOptional,
-      iconRotationAlignment:
-          changes.iconRotationAlignment ?? iconRotationAlignment,
+      iconRotationAlignment: changes.iconRotationAlignment ?? iconRotationAlignment,
       iconSize: changes.iconSize ?? iconSize,
       iconTextFit: changes.iconTextFit ?? iconTextFit,
       iconTextFitPadding: changes.iconTextFitPadding ?? iconTextFitPadding,
@@ -876,8 +875,7 @@ class SymbolLayerProperties implements LayerProperties {
       iconAnchor: changes.iconAnchor ?? iconAnchor,
       iconPitchAlignment: changes.iconPitchAlignment ?? iconPitchAlignment,
       textPitchAlignment: changes.textPitchAlignment ?? textPitchAlignment,
-      textRotationAlignment:
-          changes.textRotationAlignment ?? textRotationAlignment,
+      textRotationAlignment: changes.textRotationAlignment ?? textRotationAlignment,
       textField: changes.textField ?? textField,
       textFont: changes.textFont ?? textFont,
       textSize: changes.textSize ?? textSize,
@@ -1213,11 +1211,9 @@ class CircleLayerProperties implements LayerProperties {
       circleBlur: changes.circleBlur ?? circleBlur,
       circleOpacity: changes.circleOpacity ?? circleOpacity,
       circleTranslate: changes.circleTranslate ?? circleTranslate,
-      circleTranslateAnchor:
-          changes.circleTranslateAnchor ?? circleTranslateAnchor,
+      circleTranslateAnchor: changes.circleTranslateAnchor ?? circleTranslateAnchor,
       circlePitchScale: changes.circlePitchScale ?? circlePitchScale,
-      circlePitchAlignment:
-          changes.circlePitchAlignment ?? circlePitchAlignment,
+      circlePitchAlignment: changes.circlePitchAlignment ?? circlePitchAlignment,
       circleStrokeWidth: changes.circleStrokeWidth ?? circleStrokeWidth,
       circleStrokeColor: changes.circleStrokeColor ?? circleStrokeColor,
       circleStrokeOpacity: changes.circleStrokeOpacity ?? circleStrokeOpacity,
@@ -2022,18 +2018,12 @@ class HillshadeLayerProperties implements LayerProperties {
 
   HillshadeLayerProperties copyWith(HillshadeLayerProperties changes) {
     return HillshadeLayerProperties(
-      hillshadeIlluminationDirection: changes.hillshadeIlluminationDirection ??
-          hillshadeIlluminationDirection,
-      hillshadeIlluminationAnchor:
-          changes.hillshadeIlluminationAnchor ?? hillshadeIlluminationAnchor,
-      hillshadeExaggeration:
-          changes.hillshadeExaggeration ?? hillshadeExaggeration,
-      hillshadeShadowColor:
-          changes.hillshadeShadowColor ?? hillshadeShadowColor,
-      hillshadeHighlightColor:
-          changes.hillshadeHighlightColor ?? hillshadeHighlightColor,
-      hillshadeAccentColor:
-          changes.hillshadeAccentColor ?? hillshadeAccentColor,
+      hillshadeIlluminationDirection: changes.hillshadeIlluminationDirection ?? hillshadeIlluminationDirection,
+      hillshadeIlluminationAnchor: changes.hillshadeIlluminationAnchor ?? hillshadeIlluminationAnchor,
+      hillshadeExaggeration: changes.hillshadeExaggeration ?? hillshadeExaggeration,
+      hillshadeShadowColor: changes.hillshadeShadowColor ?? hillshadeShadowColor,
+      hillshadeHighlightColor: changes.hillshadeHighlightColor ?? hillshadeHighlightColor,
+      hillshadeAccentColor: changes.hillshadeAccentColor ?? hillshadeAccentColor,
       visibility: changes.visibility ?? visibility,
     );
   }
@@ -2047,8 +2037,7 @@ class HillshadeLayerProperties implements LayerProperties {
       }
     }
 
-    addIfPresent(
-        'hillshade-illumination-direction', hillshadeIlluminationDirection);
+    addIfPresent('hillshade-illumination-direction', hillshadeIlluminationDirection);
     addIfPresent('hillshade-illumination-anchor', hillshadeIlluminationAnchor);
     addIfPresent('hillshade-exaggeration', hillshadeExaggeration);
     addIfPresent('hillshade-shadow-color', hillshadeShadowColor);

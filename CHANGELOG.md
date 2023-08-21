@@ -59,7 +59,7 @@ Further improvements:
 * Add option to set maximum offline tile count [#549](https://github.com/tobrun/flutter-mapbox-gl/pull/549)
 * Fixed web build failure due to http package upgrade [#550](https://github.com/tobrun/flutter-mapbox-gl/pull/550)
 * Update OfflineRegion/OfflineRegionDefinition interfaces, synchronize with iOS and Android [#545](https://github.com/tobrun/flutter-mapbox-gl/pull/545)
-* Fix Mapbox GL JS CSS embedding on web [#551](https://github.com/tobrun/flutter-mapbox-gl/pull/551)
+* Fix Trackasia GL JS CSS embedding on web [#551](https://github.com/tobrun/flutter-mapbox-gl/pull/551)
 * Update Podfile to fix iOS CI [#565](https://github.com/tobrun/flutter-mapbox-gl/pull/565)
 * Update deprecated patterns to fix CI static analysis [#568](https://github.com/tobrun/flutter-mapbox-gl/pull/568)
 * Add setOffline method on Android [#537](https://github.com/tobrun/flutter-mapbox-gl/pull/537)
@@ -117,8 +117,8 @@ Further improvements:
 - Add line#getGeometry and symbol#getGeometry [#281](https://github.com/tobrun/flutter-mapbox-gl/pull/281)
 
 ## 0.7.0, June 6, 2020
-* Introduction of mapbox_gl_platform_interface library
-* Introduction of mapbox_gl_web library
+* Introduction of trackasia_gl_platform_interface library
+* Introduction of trackasia_gl_web library
 * Integrate web support through mapbox-gl-js
 * Add icon-allow-overlap configurations
 
@@ -156,7 +156,7 @@ Further improvements:
 * Camera API (iOS)
 * Line API (Android)
 * Update codebase to AndroidX
-* Update Mapbox Maps SDK for Android to v7.3.0
+* Update Trackasia Maps SDK for Android to v7.3.0
 
 ## v0.0.2, Mar 23, 2019
 * Support for iOS

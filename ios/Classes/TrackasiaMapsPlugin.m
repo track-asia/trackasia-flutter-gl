@@ -3,6 +3,6 @@
 
 @implementation TrackasiaMapsPlugin 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftMapboxGlFlutterPlugin registerWithRegistrar:registrar];
+  [SwiftTrackasiaGlFlutterPlugin registerWithRegistrar:registrar];
 }
 @end

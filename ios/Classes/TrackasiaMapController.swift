@@ -1,6 +1,5 @@
 import Flutter
 import Mapbox
-import TrackasiaAnnotationExtension
 
 class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, TrackasiaMapOptionsSink,
     UIGestureRecognizerDelegate
@@ -74,7 +73,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         mapView.addGestureRecognizer(longPress)
         
         if let args = args as? [String: Any] {
-            Convert.interpretTrackasiaMapOptions(options: args["options"], delegate: self)
+            Convert.interpretMapboxMapOptions(options: args["options"], delegate: self)
             if let initialCameraPosition = args["initialCameraPosition"] as? [String: Any],
                let camera = MGLMapCamera.fromDict(initialCameraPosition, mapView: mapView),
                let zoom = initialCameraPosition["zoom"] as? Double
@@ -85,6 +84,9 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
                     direction: camera.heading,
                     animated: false
                 )
+                if let bounds = cameraTargetBounds {
+                    mapView.setLatLngBounds(bounds)
+                }
                 initialTilt = camera.pitch
             }
             // if let onAttributionClickOverride = args["onAttributionClickOverride"] as? Bool {
@@ -105,11 +107,6 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             pan.delegate = self
             mapView.addGestureRecognizer(pan)
         }
-    }
-    func removeAllForController(controller: MGLAnnotationController, ids: [String]){
-        let idSet = Set(ids)
-        let annotations = controller.styleAnnotations()
-        controller.removeStyleAnnotations(annotations.filter { idSet.contains($0.identifier) })
     }
 
     func gestureRecognizer(
@@ -137,7 +134,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             }
         case "map#update":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
-            Convert.interpretTrackasiaMapOptions(options: arguments["options"], delegate: self)
+            Convert.interpretMapboxMapOptions(options: arguments["options"], delegate: self)
             if let camera = getCamera() {
                 result(camera.toDict(mapView: mapView))
             } else {
@@ -161,9 +158,10 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             }
             result(nil)
         case "map#matchMapLanguageWithDeviceDefault":
-            if let style = mapView.style {
-                style.localizeLabels(into: nil)
+            if let langStr = Locale.current.languageCode {
+                setMapLanguage(language: langStr)
             }
+            
             result(nil)
         case "map#updateContentInsets":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
@@ -195,9 +193,8 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             }
         case "map#setMapLanguage":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
-            if let localIdentifier = arguments["language"] as? String, let style = mapView.style {
-                let locale = Locale(identifier: localIdentifier)
-                style.localizeLabels(into: locale)
+            if let localIdentifier = arguments["language"] as? String {
+                setMapLanguage(language: localIdentifier)
             }
             result(nil)
         case "map#queryRenderedFeatures":
@@ -310,29 +307,31 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         case "camera#move":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let cameraUpdate = arguments["cameraUpdate"] as? [Any] else { return }
-            if let camera = Convert
-                .parseCameraUpdate(cameraUpdate: cameraUpdate, mapView: mapView)
-            {
+            
+            if let camera = Convert.parseCameraUpdate(cameraUpdate: cameraUpdate, mapView: mapView) {
                 mapView.setCamera(camera, animated: false)
             }
             result(nil)
         case "camera#animate":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let cameraUpdate = arguments["cameraUpdate"] as? [Any] else { return }
-            if let camera = Convert
-                .parseCameraUpdate(cameraUpdate: cameraUpdate, mapView: mapView)
-            {
-                if let duration = arguments["duration"] as? TimeInterval {
-                    mapView.setCamera(camera, withDuration: TimeInterval(duration / 1000),
-                                      animationTimingFunction: CAMediaTimingFunction(name: CAMediaTimingFunctionName
-                                          .easeInEaseOut))
-                    result(nil)
-                } else {
-                    mapView.setCamera(camera, animated: true)
-                }
+            guard let camera = Convert.parseCameraUpdate(cameraUpdate: cameraUpdate, mapView: mapView) else { return }
+            
+            
+            let completion = {
+                result(nil)
             }
-            result(nil)
-
+            
+            if let duration = arguments["duration"] as? TimeInterval {
+                if let padding = Convert.parseLatLngBoundsPadding(cameraUpdate) {
+                    mapView.fly(to: camera, edgePadding: padding, withDuration: duration / 1000, completionHandler: completion)
+                } else {
+                    mapView.fly(to: camera, withDuration: duration / 1000, completionHandler: completion)
+                }
+            } else {
+                mapView.setCamera(camera, animated: true)
+                completion()
+            }
         case "symbolLayer#add":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let sourceId = arguments["sourceId"] as? String else { return }
@@ -633,7 +632,6 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
             if let maxzoom = maxzoom {
                 layer.maximumZoomLevel = Float(maxzoom)
             }
-
             mapView.style?.insertLayer(layer, below: belowLayer)
             result(nil)
 
@@ -841,6 +839,10 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     private func getCamera() -> MGLMapCamera? {
         return trackCameraPosition ? mapView.camera : nil
     }
+    
+    private func setMapLanguage(language: String) {
+        self.mapView.setMapLanguage(language)
+    }
 
     /*
      *  Scan layers from top to bottom and return the first matching feature
@@ -1035,32 +1037,6 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
     // handle missing images
     func mapView(_: MGLMapView, didFailToLoadImage name: String) -> UIImage? {
         return loadIconImage(name: name)
-    }
-
-    func mapView(_ mapView: MGLMapView, shouldChangeFrom _: MGLMapCamera,
-                 to newCamera: MGLMapCamera) -> Bool
-    {
-        guard let bbox = cameraTargetBounds else { return true }
-
-        // Get the current camera to restore it after.
-        let currentCamera = mapView.camera
-
-        // From the new camera obtain the center to test if it’s inside the boundaries.
-        let newCameraCenter = newCamera.centerCoordinate
-
-        // Set the map’s visible bounds to newCamera.
-        mapView.camera = newCamera
-        let newVisibleCoordinates = mapView.visibleCoordinateBounds
-
-        // Revert the camera.
-        mapView.camera = currentCamera
-
-        // Test if the newCameraCenter and newVisibleCoordinates are inside bbox.
-        let inside = MGLCoordinateInCoordinateBounds(newCameraCenter, bbox)
-        let intersects = MGLCoordinateInCoordinateBounds(newVisibleCoordinates.ne, bbox) &&
-            MGLCoordinateInCoordinateBounds(newVisibleCoordinates.sw, bbox)
-
-        return inside && intersects
     }
 
     func mapView(_: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
@@ -1492,7 +1468,7 @@ class TrackasiaMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate,
         if styleString.isEmpty {
             NSLog("setStyleString - string empty")
         } else if styleString.hasPrefix("{") || styleString.hasPrefix("[") {
-            // Currently the iOS Mapbox SDK does not have a builder for json.
+            // Currently the iOS Trackasia SDK does not have a builder for json.
             NSLog("setStyleString - JSON style currently not supported")
         } else if styleString.hasPrefix("/") {
             // Absolute path

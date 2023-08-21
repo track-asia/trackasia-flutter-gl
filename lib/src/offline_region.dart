@@ -18,8 +18,7 @@ class OfflineRegionDefinition {
   final bool includeIdeographs;
 
   @override
-  String toString() =>
-      "$runtimeType, bounds = $bounds, mapStyleUrl = $mapStyleUrl, minZoom = $minZoom, maxZoom = $maxZoom";
+  String toString() => "$runtimeType, bounds = $bounds, mapStyleUrl = $mapStyleUrl, minZoom = $minZoom, maxZoom = $maxZoom";
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = Map<String, dynamic>();
@@ -71,6 +70,5 @@ class OfflineRegion {
   }
 
   @override
-  String toString() =>
-      "$runtimeType, id = $id, definition = $definition, metadata = $metadata";
+  String toString() => "$runtimeType, id = $id, definition = $definition, metadata = $metadata";
 }

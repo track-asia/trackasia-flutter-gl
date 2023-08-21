@@ -6,25 +6,25 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart'; // ignore: unnecessary_import
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 import 'package:trackasia_gl_example/util.dart';
 
 import 'page.dart';
 
 class ScrollingMapPage extends ExamplePage {
-  ScrollingMapPage() : super(const Icon(Icons.map), 'Scrolling map');
+  const ScrollingMapPage({super.key}) : super(const Icon(Icons.map), 'Scrolling map');
 
   @override
   Widget build(BuildContext context) {
-    return ScrollingMapBody();
+    return const ScrollingMapBody();
   }
 }
 
 class ScrollingMapBody extends StatefulWidget {
-  ScrollingMapBody();
+  const ScrollingMapBody({super.key});
 
   @override
-  _ScrollingMapBodyState createState() => _ScrollingMapBodyState();
+  State<ScrollingMapBody> createState() => _ScrollingMapBodyState();
 }
 
 class _ScrollingMapBodyState extends State<ScrollingMapBody> {
@@ -57,12 +57,11 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                         Factory<OneSequenceGestureRecognizer>(
                           () => EagerGestureRecognizer(),
                         ),
-                      ].toSet(),
+                      },
                     ),
                   ),
                 ),
@@ -78,8 +77,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                 const Text('This map doesn\'t consume the vertical drags.'),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12.0),
-                  child:
-                      Text('It still gets other gestures (e.g scale or tap).'),
+                  child: Text('It still gets other gestures (e.g scale or tap).'),
                 ),
                 Center(
                   child: SizedBox(
@@ -92,12 +90,11 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers:
-                          <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                         Factory<OneSequenceGestureRecognizer>(
                           () => ScaleGestureRecognizer(),
                         ),
-                      ].toSet(),
+                      },
                     ),
                   ),
                 ),
@@ -110,16 +107,15 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
   }
 
   void onMapCreatedOne(TrackasiaMapController controller) {
-    this.controllerOne = controller;
+    controllerOne = controller;
   }
 
   void onMapCreatedTwo(TrackasiaMapController controller) {
-    this.controllerTwo = controller;
+    controllerTwo = controller;
   }
 
   void onStyleLoaded(TrackasiaMapController controller) async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(SymbolOptions(
         geometry: LatLng(
           center.latitude,
@@ -127,7 +123,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
         ),
         iconImage: "custom-marker"));
     controller.addLine(
-      LineOptions(
+      const LineOptions(
         geometry: [
           LatLng(-33.86711, 151.1947171),
           LatLng(-33.86711, 151.1947171),

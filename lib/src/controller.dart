@@ -41,7 +41,7 @@ typedef void OnMapIdleCallback();
 /// Circle tap events can be received by adding callbacks to [onCircleTapped].
 class TrackasiaMapController extends ChangeNotifier {
   TrackasiaMapController({
-    required MapLibreGlPlatform mapboxGlPlatform,
+    required TrackAsiaGlPlatform mapboxGlPlatform,
     required CameraPosition initialCameraPosition,
     required Iterable<AnnotationType> annotationOrder,
     required Iterable<AnnotationType> annotationConsumeTapEvents,
@@ -219,7 +219,7 @@ class TrackasiaMapController extends ChangeNotifier {
   CameraPosition? get cameraPosition => _cameraPosition;
   CameraPosition? _cameraPosition;
 
-  final MapLibreGlPlatform _mapboxGlPlatform; //ignore: unused_field
+  final TrackAsiaGlPlatform _mapboxGlPlatform; //ignore: unused_field
 
   /// Updates configuration options of the map user interface.
   ///
@@ -538,7 +538,7 @@ class TrackasiaMapController extends ChangeNotifier {
   }
 
   /// Updates the language of the map labels to match the specified language.
-  /// Supported language strings are available here: https://github.com/mapbox/mapbox-plugins-android/blob/e29c18d25098eb023a831796ff807e30d8207c36/plugin-localization/src/main/java/com.trackasia.android.plugins/localization/MapLocale.java#L39-L87
+  /// Supported language strings are available here: https://github.com/mapbox/mapbox-plugins-android/blob/e29c18d25098eb023a831796ff807e30d8207c36/plugin-localization/src/main/java/com/mapbox/mapboxsdk/plugins/localization/MapLocale.java#L39-L87
   /// Attention: This may only be called after onStyleLoaded() has been invoked.
   ///
   /// The returned [Future] completes after the change has been made on the
@@ -1011,23 +1011,23 @@ class TrackasiaMapController extends ChangeNotifier {
     return _mapboxGlPlatform.removeSource(sourceId);
   }
 
-  /// Adds a Mapbox image layer to the map's style at render time.
+  /// Adds a Trackasia image layer to the map's style at render time.
   Future<void> addImageLayer(String layerId, String imageSourceId, {double? minzoom, double? maxzoom}) {
     return _mapboxGlPlatform.addLayer(layerId, imageSourceId, minzoom, maxzoom);
   }
 
-  /// Adds a Mapbox image layer below the layer provided with belowLayerId to the map's style at render time.
+  /// Adds a Trackasia image layer below the layer provided with belowLayerId to the map's style at render time.
   Future<void> addImageLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
     return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
-  /// Adds a Mapbox image layer below the layer provided with belowLayerId to the map's style at render time. Only works for image sources!
+  /// Adds a Trackasia image layer below the layer provided with belowLayerId to the map's style at render time. Only works for image sources!
   @Deprecated("This method was renamed to addImageLayerBelow for clarity.")
   Future<void> addLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
     return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
-  /// Removes a Mapbox style layer
+  /// Removes a Trackasia style layer
   Future<void> removeLayer(String layerId) {
     return _mapboxGlPlatform.removeLayer(layerId);
   }

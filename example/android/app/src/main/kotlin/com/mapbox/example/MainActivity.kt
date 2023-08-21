@@ -1,4 +1,4 @@
-package com.mapbox.example
+package com.trackasia.example
 
 import io.flutter.embedding.android.FlutterActivity
 

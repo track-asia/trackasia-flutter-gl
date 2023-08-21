@@ -6,12 +6,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
 
 class LinePage extends ExamplePage {
-  LinePage() : super(const Icon(Icons.share), 'Line');
+  const LinePage({super.key}) : super(const Icon(Icons.share), 'Line');
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class LinePage extends ExamplePage {
 }
 
 class LineBody extends StatefulWidget {
-  const LineBody();
+  const LineBody({super.key});
 
   @override
   State<StatefulWidget> createState() => LineBodyState();
@@ -29,7 +29,7 @@ class LineBody extends StatefulWidget {
 class LineBodyState extends State<LineBody> {
   LineBodyState();
 
-  static final LatLng center = const LatLng(-33.86711, 151.1947171);
+  static const LatLng center = LatLng(-33.86711, 151.1947171);
 
   TrackasiaMapController? controller;
   int _lineCount = 0;
@@ -56,13 +56,13 @@ class LineBodyState extends State<LineBody> {
 
   _onLineTapped(Line line) async {
     await _updateSelectedLine(
-      LineOptions(lineColor: "#ff0000"),
+      const LineOptions(lineColor: "#ff0000"),
     );
     setState(() {
       _selectedLine = line;
     });
     await _updateSelectedLine(
-      LineOptions(lineColor: "#ffe100"),
+      const LineOptions(lineColor: "#ffe100"),
     );
   }
 
@@ -72,17 +72,12 @@ class LineBodyState extends State<LineBody> {
 
   void _add() {
     controller!.addLine(
-      LineOptions(
-          geometry: [
-            LatLng(-33.86711, 151.1947171),
-            LatLng(-33.86711, 151.1947171),
-            LatLng(-32.86711, 151.1947171),
-            LatLng(-33.86711, 152.1947171),
-          ],
-          lineColor: "#ff0000",
-          lineWidth: 14.0,
-          lineOpacity: 0.5,
-          draggable: true),
+      const LineOptions(geometry: [
+        LatLng(-33.86711, 151.1947171),
+        LatLng(-33.86711, 151.1947171),
+        LatLng(-32.86711, 151.1947171),
+        LatLng(-33.86711, 152.1947171),
+      ], lineColor: "#ff0000", lineWidth: 14.0, lineOpacity: 0.5, draggable: true),
     );
     setState(() {
       _lineCount += 1;
@@ -92,12 +87,9 @@ class LineBodyState extends State<LineBody> {
   _move() async {
     final currentStart = _selectedLine!.options.geometry![0];
     final currentEnd = _selectedLine!.options.geometry![1];
-    final end =
-        LatLng(currentEnd.latitude + 0.001, currentEnd.longitude + 0.001);
-    final start =
-        LatLng(currentStart.latitude - 0.001, currentStart.longitude - 0.001);
-    await controller!
-        .updateLine(_selectedLine!, LineOptions(geometry: [start, end]));
+    final end = LatLng(currentEnd.latitude + 0.001, currentEnd.longitude + 0.001);
+    final start = LatLng(currentStart.latitude - 0.001, currentStart.longitude - 0.001);
+    await controller!.updateLine(_selectedLine!, LineOptions(geometry: [start, end]));
   }
 
   void _remove() {
@@ -109,8 +101,7 @@ class LineBodyState extends State<LineBody> {
   }
 
   Future<void> _changeLinePattern() async {
-    String? current =
-        _selectedLine!.options.linePattern == null ? "assetImage" : null;
+    String? current = _selectedLine!.options.linePattern == null ? "assetImage" : null;
     await _updateSelectedLine(
       LineOptions(linePattern: current),
     );
@@ -118,10 +109,7 @@ class LineBodyState extends State<LineBody> {
 
   Future<void> _changeAlpha() async {
     double? current = _selectedLine!.options.lineOpacity;
-    if (current == null) {
-      // default value
-      current = 1.0;
-    }
+    current ??= 1.0;
 
     await _updateSelectedLine(
       LineOptions(lineOpacity: current < 0.1 ? 1.0 : current * 0.75),
@@ -130,10 +118,7 @@ class LineBodyState extends State<LineBody> {
 
   Future<void> _toggleVisible() async {
     double? current = _selectedLine!.options.lineOpacity;
-    if (current == null) {
-      // default value
-      current = 1.0;
-    }
+    current ??= 1.0;
     await _updateSelectedLine(
       LineOptions(lineOpacity: current == 0.0 ? 1.0 : 0.0),
     );
@@ -142,7 +127,7 @@ class LineBodyState extends State<LineBody> {
   _onStyleLoadedCallback() async {
     addImageFromAsset("assetImage", _linePatternImage);
     await controller!.addLine(
-      LineOptions(
+      const LineOptions(
         geometry: [LatLng(37.4220, -122.0841), LatLng(37.4240, -122.0941)],
         lineColor: "#ff0000",
         lineWidth: 14.0,
@@ -180,52 +165,47 @@ class LineBodyState extends State<LineBody> {
                     Row(
                       children: <Widget>[
                         TextButton(
-                          child: const Text('add'),
                           onPressed: (_lineCount == 12) ? null : _add,
+                          child: const Text('add'),
                         ),
                         TextButton(
-                          child: const Text('remove'),
                           onPressed: (_selectedLine == null) ? null : _remove,
+                          child: const Text('remove'),
                         ),
                         TextButton(
-                          child: const Text('move'),
                           onPressed: (_selectedLine == null)
                               ? null
                               : () async {
                                   await _move();
                                 },
+                          child: const Text('move'),
                         ),
                         TextButton(
+                          onPressed: (_selectedLine == null) ? null : _changeLinePattern,
                           child: const Text('change line-pattern'),
-                          onPressed: (_selectedLine == null)
-                              ? null
-                              : _changeLinePattern,
                         ),
                       ],
                     ),
                     Row(
                       children: <Widget>[
                         TextButton(
+                          onPressed: (_selectedLine == null) ? null : _changeAlpha,
                           child: const Text('change alpha'),
-                          onPressed:
-                              (_selectedLine == null) ? null : _changeAlpha,
                         ),
                         TextButton(
+                          onPressed: (_selectedLine == null) ? null : _toggleVisible,
                           child: const Text('toggle visible'),
-                          onPressed:
-                              (_selectedLine == null) ? null : _toggleVisible,
                         ),
                         TextButton(
-                          child: const Text('print current LatLng'),
                           onPressed: (_selectedLine == null)
                               ? null
                               : () async {
-                                  var latLngs = await controller!
-                                      .getLineLatLngs(_selectedLine!);
+                                  var latLngs = await controller!.getLineLatLngs(_selectedLine!);
                                   for (var latLng in latLngs) {
-                                    print(latLng.toString());
+                                    debugPrint(latLng.toString());
                                   }
                                 },
+                          child: const Text('print current LatLng'),
                         ),
                       ],
                     ),

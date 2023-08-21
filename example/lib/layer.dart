@@ -2,25 +2,27 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 import 'package:trackasia_gl_example/page.dart';
 
 import 'util.dart';
 
 class LayerPage extends ExamplePage {
-  LayerPage() : super(const Icon(Icons.share), 'Layer');
+  const LayerPage({super.key}) : super(const Icon(Icons.share), 'Layer');
 
   @override
-  Widget build(BuildContext context) => LayerBody();
+  Widget build(BuildContext context) => const LayerBody();
 }
 
 class LayerBody extends StatefulWidget {
+  const LayerBody({super.key});
+
   @override
   State<StatefulWidget> createState() => LayerState();
 }
 
 class LayerState extends State {
-  static final LatLng center = const LatLng(-33.86711, 151.1947171);
+  static const LatLng center = LatLng(-33.86711, 151.1947171);
 
   late TrackasiaMapController controller;
   Timer? bikeTimer;
@@ -33,16 +35,14 @@ class LayerState extends State {
       dragEnabled: false,
       myLocationEnabled: true,
       onMapCreated: _onMapCreated,
-      onMapClick: (point, latLong) =>
-          print(point.toString() + latLong.toString()),
+      onMapClick: (point, latLong) => debugPrint(point.toString() + latLong.toString()),
       onStyleLoadedCallback: _onStyleLoadedCallback,
-      initialCameraPosition: CameraPosition(
+      initialCameraPosition: const CameraPosition(
         target: center,
         zoom: 11.0,
       ),
       annotationOrder: const [],
     );
-
   }
 
   void _onMapCreated(TrackasiaMapController controller) {
@@ -55,7 +55,7 @@ class LayerState extends State {
     final snackBar = SnackBar(
       content: Text(
         'Tapped feature with id $featureId',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
@@ -64,8 +64,7 @@ class LayerState extends State {
   }
 
   void _onStyleLoadedCallback() async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     await controller.addGeoJsonSource("points", _points);
     await controller.addGeoJsonSource("moving", _movingFeature(0));
 
@@ -75,7 +74,7 @@ class LayerState extends State {
     await controller.addFillLayer(
       "fills",
       "fills",
-      FillLayerProperties(fillColor: [
+      const FillLayerProperties(fillColor: [
         Expressions.interpolate,
         ['exponential', 0.5],
         [Expressions.zoom],
@@ -91,17 +90,15 @@ class LayerState extends State {
     await controller.addLineLayer(
       "fills",
       "lines",
-      LineLayerProperties(
-          lineColor: Colors.lightBlue.toHexStringRGB(),
-          lineWidth: [
-            Expressions.interpolate,
-            ["linear"],
-            [Expressions.zoom],
-            11.0,
-            2.0,
-            20.0,
-            10.0
-          ]),
+      LineLayerProperties(lineColor: Colors.lightBlue.toHexStringRGB(), lineWidth: [
+        Expressions.interpolate,
+        ["linear"],
+        [Expressions.zoom],
+        11.0,
+        2.0,
+        20.0,
+        10.0
+      ]),
     );
 
     await controller.addCircleLayer(
@@ -116,7 +113,7 @@ class LayerState extends State {
     await controller.addSymbolLayer(
       "points",
       "symbols",
-      SymbolLayerProperties(
+      const SymbolLayerProperties(
         iconImage: "custom-marker", //  "{type}-15",
         iconSize: 2,
         iconAllowOverlap: true,
@@ -135,7 +132,8 @@ class LayerState extends State {
           Expressions.literal,
           [0, 2]
         ],
-        iconImage: "custom-marker", // "bicycle-15",
+        iconImage: "custom-marker",
+        // "bicycle-15",
         iconSize: 2,
         iconAllowOverlap: true,
         textAllowOverlap: true,
@@ -143,11 +141,11 @@ class LayerState extends State {
       minzoom: 11,
     );
 
-    bikeTimer = Timer.periodic(Duration(milliseconds: 10), (t) {
+    bikeTimer = Timer.periodic(const Duration(milliseconds: 10), (t) {
       controller.setGeoJsonSource("moving", _movingFeature(t.tick / 2000));
     });
 
-    filterTimer = Timer.periodic(Duration(seconds: 3), (t) {
+    filterTimer = Timer.periodic(const Duration(seconds: 3), (t) {
       filteredId = filteredId == 0 ? 1 : 0;
       controller.setFilter('fills', ['==', 'id', filteredId]);
     });
@@ -165,11 +163,11 @@ Map<String, dynamic> _movingFeature(double t) {
   List<double> makeLatLong(double t) {
     final angle = t * 2 * pi;
     const r = 0.025;
-    const center_x = 151.1849;
-    const center_y = -33.8748;
+    const centerX = 151.1849;
+    const centerY = -33.8748;
     return [
-      center_x + r * sin(angle),
-      center_y + r * cos(angle),
+      centerX + r * sin(angle),
+      centerY + r * cos(angle),
     ];
   }
 

@@ -26,8 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.trackasia.example"
     compileSdkVersion 33
-    namespace "com.mapbox.example"
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -44,11 +44,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mapbox.mapboxglexample"
+        applicationId "com.trackasia.androidexample"
         minSdkVersion 21
-        targetSdkVersion 31
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        targetSdkVersion 33
+        versionCode 1
+        versionName '1.0.0'
     }
 
     buildTypes {

@@ -1,4 +1,4 @@
-package com.mapbox.mapboxgl;
+package com.trackasia.android;
 
 import android.content.Context;
 import com.trackasia.android.camera.CameraPosition;
@@ -25,7 +25,7 @@ public class TrackasiaMapFactory extends PlatformViewFactory {
     Map<String, Object> params = (Map<String, Object>) args;
     final TrackasiaMapBuilder builder = new TrackasiaMapBuilder();
 
-    Convert.interpretTrackasiaMapOptions(params.get("options"), builder, context);
+    Convert.interpretMapboxMapOptions(params.get("options"), builder, context);
     if (params.containsKey("initialCameraPosition")) {
       CameraPosition position = Convert.toCameraPosition(params.get("initialCameraPosition"));
       builder.setInitialCameraPosition(position);

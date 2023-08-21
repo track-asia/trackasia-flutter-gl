@@ -2,7 +2,6 @@
 // ./scripts/lib/generate.dart
 
 import Mapbox
-import TrackasiaAnnotationExtension
 
 class LayerPropertyConverter {
     class func addSymbolProperties(symbolLayer: MGLSymbolStyleLayer, properties: [String: String]) {

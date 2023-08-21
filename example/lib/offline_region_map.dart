@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:trackasia_gl/mapbox_gl.dart';
+import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'offline_regions.dart';
 
 class OfflineRegionMap extends StatefulWidget {
-  OfflineRegionMap(this.item);
+  const OfflineRegionMap(this.item, {super.key});
 
   final OfflineRegionListItem item;
 
   @override
-  _OfflineRegionMapState createState() => _OfflineRegionMapState();
+  State<OfflineRegionMap> createState() => _OfflineRegionMapState();
 }
 
 class _OfflineRegionMapState extends State<OfflineRegionMap> {

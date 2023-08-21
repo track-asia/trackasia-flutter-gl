@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package com.mapbox.mapboxgl;
+package com.trackasia.android;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Conversions between JSON-like values and TrackasiaMaps data types. */
+/** Conversions between JSON-like values and MapboxMaps data types. */
 class Convert {
 
   private static final String TAG = "Convert";
@@ -43,7 +43,7 @@ class Convert {
     return toString(toList(o).get(0)).equals("scrollBy");
   }
 
-  static CameraUpdate toCameraUpdate(Object o, TrackasiaMap trackasiaMap, float density) {
+  static CameraUpdate toCameraUpdate(Object o, TrackasiaMap mapboxMap, float density) {
     final List<?> data = toList(o);
     switch (toString(data.get(0))) {
       case "newCameraPosition":
@@ -60,7 +60,7 @@ class Convert {
       case "newLatLngZoom":
         return CameraUpdateFactory.newLatLngZoom(toLatLng(data.get(1)), toFloat(data.get(2)));
       case "scrollBy":
-        trackasiaMap.scrollBy(
+        mapboxMap.scrollBy(
             toFractionalPixels(data.get(1), density), toFractionalPixels(data.get(2), density));
         return null;
       case "zoomBy":
@@ -205,7 +205,7 @@ class Convert {
     return (String) o;
   }
 
-  static void interpretTrackasiaMapOptions(Object o, TrackasiaMapOptionsSink sink, Context context) {
+  static void interpretMapboxMapOptions(Object o, TrackasiaMapOptionsSink sink, Context context) {
     final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
     final Map<?, ?> data = toMap(o);
     final Object cameraTargetBounds = data.get("cameraTargetBounds");

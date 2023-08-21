@@ -97,7 +97,7 @@ class TrackasiaMap extends StatefulWidget {
   final CameraTargetBounds cameraTargetBounds;
 
   /// Style URL or Style JSON
-  /// Can be a MapboxStyle constant, any Mapbox Style URL,
+  /// Can be a MapboxStyle constant, any Trackasia Style URL,
   /// or a StyleJSON (https://docs.mapbox.com/mapbox-gl-js/style-spec/)
   final String? styleString;
 
@@ -164,19 +164,19 @@ class TrackasiaMap extends StatefulWidget {
   /// If this is set to a value other than [MyLocationRenderMode.NORMAL], [myLocationEnabled] needs to be true.
   final MyLocationRenderMode myLocationRenderMode;
 
-  /// Set the layout margins for the Mapbox Logo
+  /// Set the layout margins for the Trackasia Logo
   final Point? logoViewMargins;
 
-  /// Set the position for the Mapbox Compass
+  /// Set the position for the Trackasia Compass
   final CompassViewPosition? compassViewPosition;
 
-  /// Set the layout margins for the Mapbox Compass
+  /// Set the layout margins for the Trackasia Compass
   final Point? compassViewMargins;
 
-  /// Set the position for the Mapbox Attribution Button
+  /// Set the position for the Trackasia Attribution Button
   final AttributionButtonPosition? attributionButtonPosition;
 
-  /// Set the layout margins for the Mapbox Attribution Buttons. If you set this
+  /// Set the layout margins for the Trackasia Attribution Buttons. If you set this
   /// value, you may also want to set [attributionButtonPosition] to harmonize
   /// the layout between iOS and Android, since the underlying frameworks have
   /// different defaults.
@@ -220,9 +220,9 @@ class TrackasiaMap extends StatefulWidget {
   /// Set `TrackasiaMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
   /// or leave it `true` (default) to use Hybrid composition (Slower on Android 9 and below).
-  static bool get useHybridComposition => MethodChannelMaplibreGl.useHybridComposition;
+  static bool get useHybridComposition => MethodChannelTrackAsiaGl.useHybridComposition;
 
-  static set useHybridComposition(bool useHybridComposition) => MethodChannelMaplibreGl.useHybridComposition = useHybridComposition;
+  static set useHybridComposition(bool useHybridComposition) => MethodChannelTrackAsiaGl.useHybridComposition = useHybridComposition;
 
   @override
   State createState() => _TrackasiaMapState();
@@ -232,7 +232,7 @@ class _TrackasiaMapState extends State<TrackasiaMap> {
   final Completer<TrackasiaMapController> _controller = Completer<TrackasiaMapController>();
 
   late _TrackasiaMapOptions _mapboxMapOptions;
-  final MapLibreGlPlatform _mapboxGlPlatform = MapLibreGlPlatform.createInstance();
+  final TrackAsiaGlPlatform _mapboxGlPlatform = TrackAsiaGlPlatform.createInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +307,7 @@ class _TrackasiaMapState extends State<TrackasiaMap> {
   }
 }
 
-/// Configuration options for the TrackasiaMaps user interface.
+/// Configuration options for the MapboxMaps user interface.
 ///
 /// When used to change configuration, null values will be interpreted as
 /// "do not change this configuration option".

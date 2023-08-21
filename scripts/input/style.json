@@ -148,7 +148,7 @@
         180,
         85.051129
       ],
-      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL."
+      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Trackasia GL."
     },
     "scheme":{
       "type":"enum",
@@ -216,7 +216,7 @@
         180,
         85.051129
       ],
-      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL."
+      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Trackasia GL."
     },
     "minzoom":{
       "type":"number",
@@ -286,7 +286,7 @@
         180,
         85.051129
       ],
-      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Mapbox GL."
+      "doc":"An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by Trackasia GL."
     },
     "minzoom":{
       "type":"number",
@@ -315,11 +315,11 @@
           "doc":"Terrarium format PNG tiles. See https://aws.amazon.com/es/public-datasets/terrain/ for more info."
         },
         "mapbox":{
-          "doc":"Mapbox Terrain RGB tiles. See https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb for more info."
+          "doc":"Trackasia Terrain RGB tiles. See https://www.mapbox.com/help/access-elevation-data/#mapbox-terrain-rgb for more info."
         }
       },
       "default":"mapbox",
-      "doc":"The encoding used by this source. Mapbox Terrain RGB is used by default"
+      "doc":"The encoding used by this source. Trackasia Terrain RGB is used by default"
     },
     "*":{
       "type":"*",
@@ -542,7 +542,7 @@
           }
         },
         "hillshade":{
-          "doc":"Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.",
+          "doc":"Client-side hillshading visualization based on DEM data. Currently, the implementation only supports Trackasia Terrain RGB and Mapzen Terrarium tiles.",
           "sdk-support":{
             "basic functionality":{
               "js":"0.43.0",
@@ -1006,7 +1006,7 @@
     "symbol-avoid-edges":{
       "type":"boolean",
       "default":false,
-      "doc":"If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Mapbox GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.",
+      "doc":"If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer. When using a client that supports global collision detection, like Trackasia GL JS version 0.42.0 or greater, enabling this property is not needed to prevent clipped labels at tile boundaries.",
       "sdk-support":{
         "basic functionality":{
           "js":"0.10.0",
@@ -3455,7 +3455,7 @@
         }
       },
       "is-supported-script":{
-        "doc":"Returns `true` if the input string is expected to render legibly. Returns `false` if the input string contains sections that cannot be rendered without potential loss of meaning (e.g. Indic scripts that require complex text shaping, or right-to-left scripts if the the `mapbox-gl-rtl-text` plugin is not in use in Mapbox GL JS).",
+        "doc":"Returns `true` if the input string is expected to render legibly. Returns `false` if the input string contains sections that cannot be rendered without potential loss of meaning (e.g. Indic scripts that require complex text shaping, or right-to-left scripts if the the `mapbox-gl-rtl-text` plugin is not in use in Trackasia GL JS).",
         "group":"String",
         "sdk-support":{
           "basic functionality":{

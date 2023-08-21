@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package com.mapbox.mapboxgl;
+package com.trackasia.android;
 
 import android.content.Context;
 import android.view.Gravity;

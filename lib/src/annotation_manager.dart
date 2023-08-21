@@ -11,8 +11,7 @@ abstract class AnnotationManager<T extends Annotation> {
   /// base id of the manager. User [layerdIds] to get the actual ids.
   final String id;
 
-  List<String> get layerIds =>
-      [for (int i = 0; i < allLayerProperties.length; i++) _makeLayerId(i)];
+  List<String> get layerIds => [for (int i = 0; i < allLayerProperties.length; i++) _makeLayerId(i)];
 
   /// If disabled the manager offers no interaction for the created symbols
   final bool enableInteraction;
@@ -29,13 +28,10 @@ abstract class AnnotationManager<T extends Annotation> {
 
   Set<T> get annotations => _idToAnnotation.values.toSet();
 
-  AnnotationManager(this.controller,
-      {this.onTap, this.selectLayer, required this.enableInteraction})
-      : id = getRandomString() {
+  AnnotationManager(this.controller, {this.onTap, this.selectLayer, required this.enableInteraction}) : id = getRandomString() {
     for (var i = 0; i < allLayerProperties.length; i++) {
       final layerId = _makeLayerId(i);
-      controller.addGeoJsonSource(layerId, buildFeatureCollection([]),
-          promoteId: "id");
+      controller.addGeoJsonSource(layerId, buildFeatureCollection([]), promoteId: "id");
       controller.addLayer(layerId, layerId, allLayerProperties[i]);
     }
 
@@ -75,16 +71,10 @@ abstract class AnnotationManager<T extends Annotation> {
       }
 
       for (var i = 0; i < featureBuckets.length; i++) {
-        await controller.setGeoJsonSource(
-            _makeLayerId(i),
-            buildFeatureCollection(
-                [for (final l in featureBuckets[i]) l.toGeoJson()]));
+        await controller.setGeoJsonSource(_makeLayerId(i), buildFeatureCollection([for (final l in featureBuckets[i]) l.toGeoJson()]));
       }
     } else {
-      await controller.setGeoJsonSource(
-          _makeLayerId(0),
-          buildFeatureCollection(
-              [for (final l in _idToAnnotation.values) l.toGeoJson()]));
+      await controller.setGeoJsonSource(_makeLayerId(0), buildFeatureCollection([for (final l in _idToAnnotation.values) l.toGeoJson()]));
     }
   }
 
@@ -136,11 +126,7 @@ abstract class AnnotationManager<T extends Annotation> {
   }
 
   _onDrag(dynamic id,
-      {required Point<double> point,
-      required LatLng origin,
-      required LatLng current,
-      required LatLng delta,
-      required DragEventType eventType}) {
+      {required Point<double> point, required LatLng origin, required LatLng current, required LatLng delta, required DragEventType eventType}) {
     final annotation = byId(id);
     if (annotation != null) {
       annotation.translate(delta);
@@ -151,8 +137,7 @@ abstract class AnnotationManager<T extends Annotation> {
   /// Set an existing anntotation to the map. Use this to do a fast update for a
   /// single annotation
   Future<void> set(T anntotation) async {
-    assert(_idToAnnotation.containsKey(anntotation.id),
-        "you can only set existing annotations");
+    assert(_idToAnnotation.containsKey(anntotation.id), "you can only set existing annotations");
     _idToAnnotation[anntotation.id] = anntotation;
     final oldLayerIndex = _idToLayerIndex[anntotation.id];
     final layerIndex = selectLayer != null ? selectLayer!(anntotation) : 0;
@@ -161,15 +146,13 @@ abstract class AnnotationManager<T extends Annotation> {
       // set all
       await _setAll();
     } else {
-      await controller.setGeoJsonFeature(
-          _makeLayerId(layerIndex), anntotation.toGeoJson());
+      await controller.setGeoJsonFeature(_makeLayerId(layerIndex), anntotation.toGeoJson());
     }
   }
 }
 
 class LineManager extends AnnotationManager<Line> {
-  LineManager(TrackasiaMapController controller,
-      {void Function(Line)? onTap, bool enableInteraction = true})
+  LineManager(TrackasiaMapController controller, {void Function(Line)? onTap, bool enableInteraction = true})
       : super(
           controller,
           onTap: onTap,
@@ -189,8 +172,7 @@ class LineManager extends AnnotationManager<Line> {
   @override
   List<LayerProperties> get allLayerProperties => [
         _baseProperties,
-        _baseProperties.copyWith(
-            LineLayerProperties(linePattern: [Expressions.get, 'linePattern'])),
+        _baseProperties.copyWith(LineLayerProperties(linePattern: [Expressions.get, 'linePattern'])),
       ];
 }
 

@@ -9,7 +9,7 @@ This Flutter plugin allows to show **embedded interactive and customizable vecto
 For the Android and iOS integration, we use [trackasia-native](https://github.com/track-asia/trackasia-native). For web, we rely on [trackasia-gl-js](https://github.com/track-asia/trackasia-gl-js). This project only supports a subset of the API exposed by these libraries. 
 
 
-This project is a fork of [https://github.com/tobrun/flutter-mapbox-gl](https://github.com/tobrun/flutter-mapbox-gl), replacing its usage of Mapbox GL libraries with the open source [trackasia GL](https://github.com/trackasia) libraries.
+This project is a fork of [https://github.com/tobrun/flutter-mapbox-gl](https://github.com/tobrun/flutter-mapbox-gl), replacing its usage of Trackasia GL libraries with the open source [trackasia GL](https://github.com/trackasia) libraries.
 
 **Please note that this project is community driven and is not affiliated with the company Trackasia.** <br>
 It does use some of their amazing open source libraries/tools, though. Thank you, Mapbox, for all the open-source work you do!
