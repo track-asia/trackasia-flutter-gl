@@ -9,7 +9,11 @@ typedef void OnMapClickCallback(Point<double> point, LatLng coordinates);
 typedef void OnFeatureInteractionCallback(dynamic id, Point<double> point, LatLng coordinates);
 
 typedef void OnFeatureDragnCallback(dynamic id,
-    {required Point<double> point, required LatLng origin, required LatLng current, required LatLng delta, required DragEventType eventType});
+    {required Point<double> point,
+    required LatLng origin,
+    required LatLng current,
+    required LatLng delta,
+    required DragEventType eventType});
 
 typedef void OnMapLongClickCallback(Point<double> point, LatLng coordinates);
 
@@ -65,9 +69,14 @@ class TrackasiaMapController extends ChangeNotifier {
 
     _mapboxGlPlatform.onFeatureDraggedPlatform.add((payload) {
       for (final fun in List<OnFeatureDragnCallback>.from(onFeatureDrag)) {
-        final DragEventType enmDragEventType = DragEventType.values.firstWhere((element) => element.name == payload["eventType"]);
+        final DragEventType enmDragEventType =
+            DragEventType.values.firstWhere((element) => element.name == payload["eventType"]);
         fun(payload["id"],
-            point: payload["point"], origin: payload["origin"], current: payload["current"], delta: payload["delta"], eventType: enmDragEventType);
+            point: payload["point"],
+            origin: payload["origin"],
+            current: payload["current"],
+            delta: payload["delta"],
+            eventType: enmDragEventType);
       }
     });
 
@@ -336,7 +345,12 @@ class TrackasiaMapController extends ChangeNotifier {
   ///
   /// [expressions]: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
   Future<void> addSymbolLayer(String sourceId, String layerId, SymbolLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _mapboxGlPlatform.addSymbolLayer(
       sourceId,
       layerId,
@@ -370,7 +384,12 @@ class TrackasiaMapController extends ChangeNotifier {
   ///
   /// [expressions]: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
   Future<void> addLineLayer(String sourceId, String layerId, LineLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _mapboxGlPlatform.addLineLayer(
       sourceId,
       layerId,
@@ -404,7 +423,12 @@ class TrackasiaMapController extends ChangeNotifier {
   ///
   /// [expressions]: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
   Future<void> addFillLayer(String sourceId, String layerId, FillLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _mapboxGlPlatform.addFillLayer(
       sourceId,
       layerId,
@@ -438,7 +462,12 @@ class TrackasiaMapController extends ChangeNotifier {
   ///
   /// [expressions]: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
   Future<void> addCircleLayer(String sourceId, String layerId, CircleLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _mapboxGlPlatform.addCircleLayer(
       sourceId,
       layerId,
@@ -538,7 +567,7 @@ class TrackasiaMapController extends ChangeNotifier {
   }
 
   /// Updates the language of the map labels to match the specified language.
-  /// Supported language strings are available here: https://github.com/mapbox/mapbox-plugins-android/blob/e29c18d25098eb023a831796ff807e30d8207c36/plugin-localization/src/main/java/com/mapbox/mapboxsdk/plugins/localization/MapLocale.java#L39-L87
+  /// Supported language strings are available here: https://github.com/mapbox/mapbox-plugins-android/blob/e29c18d25098eb023a831796ff807e30d8207c36/plugin-localization/src/main/java/com/trackasia/android/plugins/localization/MapLocale.java#L39-L87
   /// Attention: This may only be called after onStyleLoaded() has been invoked.
   ///
   /// The returned [Future] completes after the change has been made on the
@@ -587,7 +616,10 @@ class TrackasiaMapController extends ChangeNotifier {
   /// The returned [Future] completes with the added symbol once listeners have
   /// been notified.
   Future<List<Symbol>> addSymbols(List<SymbolOptions> options, [List<Map>? data]) async {
-    final symbols = [for (var i = 0; i < options.length; i++) Symbol(getRandomString(), SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])];
+    final symbols = [
+      for (var i = 0; i < options.length; i++)
+        Symbol(getRandomString(), SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await symbolManager!.addAll(symbols);
 
     notifyListeners();
@@ -672,7 +704,10 @@ class TrackasiaMapController extends ChangeNotifier {
   /// The returned [Future] completes with the added line once listeners have
   /// been notified.
   Future<List<Line>> addLines(List<LineOptions> options, [List<Map>? data]) async {
-    final lines = [for (var i = 0; i < options.length; i++) Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]), data?[i])];
+    final lines = [
+      for (var i = 0; i < options.length; i++)
+        Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await lineManager!.addAll(lines);
 
     notifyListeners();
@@ -758,7 +793,10 @@ class TrackasiaMapController extends ChangeNotifier {
   /// The returned [Future] completes with the added circle once listeners have
   /// been notified.
   Future<List<Circle>> addCircles(List<CircleOptions> options, [List<Map>? data]) async {
-    final cricles = [for (var i = 0; i < options.length; i++) Circle(getRandomString(), CircleOptions.defaultOptions.copyWith(options[i]), data?[i])];
+    final cricles = [
+      for (var i = 0; i < options.length; i++)
+        Circle(getRandomString(), CircleOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await circleManager!.addAll(cricles);
 
     notifyListeners();
@@ -847,7 +885,10 @@ class TrackasiaMapController extends ChangeNotifier {
   /// The returned [Future] completes with the added fills once listeners have
   /// been notified.
   Future<List<Fill>> addFills(List<FillOptions> options, [List<Map>? data]) async {
-    final fills = [for (var i = 0; i < options.length; i++) Fill(getRandomString(), FillOptions.defaultOptions.copyWith(options[i]), data?[i])];
+    final fills = [
+      for (var i = 0; i < options.length; i++)
+        Fill(getRandomString(), FillOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await fillManager!.addAll(fills);
 
     notifyListeners();
@@ -1017,13 +1058,15 @@ class TrackasiaMapController extends ChangeNotifier {
   }
 
   /// Adds a Trackasia image layer below the layer provided with belowLayerId to the map's style at render time.
-  Future<void> addImageLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
+  Future<void> addImageLayerBelow(String layerId, String sourceId, String imageSourceId,
+      {double? minzoom, double? maxzoom}) {
     return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
   /// Adds a Trackasia image layer below the layer provided with belowLayerId to the map's style at render time. Only works for image sources!
   @Deprecated("This method was renamed to addImageLayerBelow for clarity.")
-  Future<void> addLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
+  Future<void> addLayerBelow(String layerId, String sourceId, String imageSourceId,
+      {double? minzoom, double? maxzoom}) {
     return _mapboxGlPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
@@ -1107,29 +1150,56 @@ class TrackasiaMapController extends ChangeNotifier {
   ///
   /// [expressions]: https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions
   Future<void> addLayer(String sourceId, String layerId, LayerProperties properties,
-      {String? belowLayerId, bool enableInteraction = true, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter}) async {
+      {String? belowLayerId,
+      bool enableInteraction = true,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter}) async {
     if (properties is FillLayerProperties) {
       addFillLayer(sourceId, layerId, properties,
-          belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is LineLayerProperties) {
       addLineLayer(sourceId, layerId, properties,
-          belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is SymbolLayerProperties) {
       addSymbolLayer(sourceId, layerId, properties,
-          belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is CircleLayerProperties) {
       addCircleLayer(sourceId, layerId, properties,
-          belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is RasterLayerProperties) {
       if (filter != null) {
         throw UnimplementedError("RasterLayer does not support filter");
       }
-      addRasterLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      addRasterLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
     } else if (properties is HillshadeLayerProperties) {
       if (filter != null) {
         throw UnimplementedError("HillShadeLayer does not support filter");
       }
-      addHillshadeLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      addHillshadeLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
     } else {
       throw UnimplementedError("Unknown layer type $properties");
     }

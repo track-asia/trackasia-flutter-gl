@@ -28,7 +28,6 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
   @NonNull private final BinaryMessenger messenger;
   @Nullable private PluginRegistry.Registrar registrar;
   @Nullable private FlutterPlugin.FlutterAssets flutterAssets;
-  @Nullable private OfflineChannelHandlerImpl downloadOfflineRegionChannelHandler;
 
   GlobalMethodHandler(@NonNull PluginRegistry.Registrar registrar) {
     this.registrar = registrar;
@@ -83,54 +82,44 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
         ConnectivityReceiver.instance(context).setConnected(offline ? false : null);
         result.success(null);
         break;
-      // case "mergeOfflineRegions":
-      //   OfflineManagerUtils.mergeRegions(result, context, methodCall.argument("path"));
-      //   break;
-      // case "setOfflineTileCountLimit":
-      //   OfflineManagerUtils.setOfflineTileCountLimit(
-      //       result, context, methodCall.<Number>argument("limit").longValue());
-      //   break;
+      case "mergeOfflineRegions":
+        OfflineManagerUtils.mergeRegions(result, context, methodCall.argument("path"));
+        break;
+      case "setOfflineTileCountLimit":
+        OfflineManagerUtils.setOfflineTileCountLimit(
+            result, context, methodCall.<Number>argument("limit").longValue());
+        break;
       case "setHttpHeaders":
         Map<String, String> headers = (Map<String, String>) methodCall.argument("headers");
         MapboxHttpRequestUtil.setHttpHeaders(headers, result);
         break;
-      // case "downloadOfflineRegion#setup":
-      //   String channelName = methodCall.argument("channelName");
-      //   // Prepare args
-      //   downloadOfflineRegionChannelHandler = new OfflineChannelHandlerImpl(messenger, channelName);
-      //   result.success(null);
-      //   break;
-      // case "downloadOfflineRegion":
-      //   // Get args from caller
-      //   Map<String, Object> definitionMap = (Map<String, Object>) methodCall.argument("definition");
-      //   Map<String, Object> metadataMap = (Map<String, Object>) methodCall.argument("metadata");
+      case "downloadOfflineRegion":
+        // Get args from caller
+        Map<String, Object> definitionMap = (Map<String, Object>) methodCall.argument("definition");
+        Map<String, Object> metadataMap = (Map<String, Object>) methodCall.argument("metadata");
+        String channelName = methodCall.argument("channelName");
 
-      //   if (downloadOfflineRegionChannelHandler == null) {
-      //     result.error(
-      //             "downloadOfflineRegion#setup NOT CALLED",
-      //             "The setup has not been called, please call downloadOfflineRegion#setup before",
-      //             null);
-      //     break;
-      //   }
+        // Prepare args
+        OfflineChannelHandlerImpl channelHandler =
+            new OfflineChannelHandlerImpl(messenger, channelName);
 
         // Start downloading
-        // OfflineManagerUtils.downloadRegion(
-        //     result, context, definitionMap, metadataMap, downloadOfflineRegionChannelHandler);
-        // downloadOfflineRegionChannelHandler = null;
-        // break;
-      // case "getListOfRegions":
-      //   OfflineManagerUtils.regionsList(result, context);
-      //   break;
-      // case "updateOfflineRegionMetadata":
-      //   // Get download region arguments from caller
-      //   Map<String, Object> metadata = (Map<String, Object>) methodCall.argument("metadata");
-      //   OfflineManagerUtils.updateRegionMetadata(
-      //       result, context, methodCall.<Number>argument("id").longValue(), metadata);
-      //   break;
-      // case "deleteOfflineRegion":
-      //   OfflineManagerUtils.deleteRegion(
-      //       result, context, methodCall.<Number>argument("id").longValue());
-      //   break;
+        OfflineManagerUtils.downloadRegion(
+            result, context, definitionMap, metadataMap, channelHandler);
+        break;
+      case "getListOfRegions":
+        OfflineManagerUtils.regionsList(result, context);
+        break;
+      case "updateOfflineRegionMetadata":
+        // Get download region arguments from caller
+        Map<String, Object> metadata = (Map<String, Object>) methodCall.argument("metadata");
+        OfflineManagerUtils.updateRegionMetadata(
+            result, context, methodCall.<Number>argument("id").longValue(), metadata);
+        break;
+      case "deleteOfflineRegion":
+        OfflineManagerUtils.deleteRegion(
+            result, context, methodCall.<Number>argument("id").longValue());
+        break;
       default:
         result.notImplemented();
         break;

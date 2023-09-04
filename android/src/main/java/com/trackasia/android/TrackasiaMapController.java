@@ -860,24 +860,24 @@ final class TrackasiaMapController
           result.success(false);
           break;
         }
-      // case "map#invalidateAmbientCache":
-      //   {
-      //     OfflineManager fileSource = OfflineManager.Companion.getInstance(context);
+      case "map#invalidateAmbientCache":
+        {
+          OfflineManager fileSource = OfflineManager.getInstance(context);
 
-      //     fileSource.invalidateAmbientCache(
-      //         new OfflineManager.FileSourceCallback() {
-      //           @Override
-      //           public void onSuccess() {
-      //             result.success(null);
-      //           }
+          fileSource.invalidateAmbientCache(
+              new OfflineManager.FileSourceCallback() {
+                @Override
+                public void onSuccess() {
+                  result.success(null);
+                }
 
-      //           @Override
-      //           public void onError(@NonNull String message) {
-      //             result.error("MAPBOX CACHE ERROR", message, null);
-      //           }
-      //         });
-      //     break;
-      //   }
+                @Override
+                public void onError(@NonNull String message) {
+                  result.error("MAPBOX CACHE ERROR", message, null);
+                }
+              });
+          break;
+        }
       case "source#addGeoJson":
         {
           final String sourceId = call.argument("sourceId");
