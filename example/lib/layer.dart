@@ -32,6 +32,7 @@ class LayerState extends State {
   @override
   Widget build(BuildContext context) {
     return TrackasiaMap(
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       dragEnabled: false,
       myLocationEnabled: true,
       onMapCreated: _onMapCreated,

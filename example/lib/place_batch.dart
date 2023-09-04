@@ -140,6 +140,7 @@ class BatchAddBodyState extends State<BatchAddBody> {
           child: SizedBox(
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: () => addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png"),
               initialCameraPosition: const CameraPosition(

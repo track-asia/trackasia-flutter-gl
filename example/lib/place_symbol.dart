@@ -268,6 +268,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
             width: 300.0,
             height: 200.0,
             child: TrackasiaMap(
+              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
               initialCameraPosition: const CameraPosition(

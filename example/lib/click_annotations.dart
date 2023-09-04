@@ -138,6 +138,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   @override
   Widget build(BuildContext context) {
     return TrackasiaMap(
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       annotationOrder: const [
         AnnotationType.fill,
         AnnotationType.line,

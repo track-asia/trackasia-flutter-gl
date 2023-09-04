@@ -76,6 +76,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
                     width: 250.0,
                     height: 250.0,
                     child: TrackasiaMap(
+                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(

@@ -52,7 +52,7 @@ class FullMapState extends State<FullMap> {
         // ),
         // ),
         body: TrackasiaMap(
-      // TODO: styleString: isLight ? MapboxStyles.LIGHT : MapboxStyles.DARK,
+      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       onMapCreated: _onMapCreated,
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
       onStyleLoadedCallback: _onStyleLoadedCallback,

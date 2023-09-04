@@ -90,6 +90,7 @@ class CustomMarkerState extends State<CustomMarker> {
     return Scaffold(
       body: Stack(children: [
         TrackasiaMap(
+          styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
           trackCameraPosition: true,
           onMapCreated: _onMapCreated,
           onMapLongClick: _onMapLongClickCallback,
