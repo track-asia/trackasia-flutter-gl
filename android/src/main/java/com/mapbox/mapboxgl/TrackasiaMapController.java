@@ -860,7 +860,7 @@ final class TrackasiaMapController
         }
       case "map#invalidateAmbientCache":
         {
-          OfflineManager fileSource = OfflineManager.Companion.getInstance(context);
+          OfflineManager fileSource = OfflineManager.getInstance(context);
 
           fileSource.invalidateAmbientCache(
               new OfflineManager.FileSourceCallback() {
