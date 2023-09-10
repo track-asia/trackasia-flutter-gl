@@ -4,8 +4,7 @@ source 'https://github.com/track-asia/trackasia-flutter-podspecs.git'
 # Uncomment this line to define a global platform for your project
 platform :ios, '11.0'
 
-pod 'Trackasia'
-pod 'TrackasiaAnnotationExtension'
+pod 'Trackasia', '1.0.1'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

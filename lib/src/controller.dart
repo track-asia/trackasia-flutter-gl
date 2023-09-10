@@ -41,7 +41,7 @@ typedef void OnMapIdleCallback();
 /// Circle tap events can be received by adding callbacks to [onCircleTapped].
 class TrackasiaMapController extends ChangeNotifier {
   TrackasiaMapController({
-    required MapLibreGlPlatform mapboxGlPlatform,
+    required TrackAsiaGlPlatform mapboxGlPlatform,
     required CameraPosition initialCameraPosition,
     required Iterable<AnnotationType> annotationOrder,
     required Iterable<AnnotationType> annotationConsumeTapEvents,
@@ -219,7 +219,7 @@ class TrackasiaMapController extends ChangeNotifier {
   CameraPosition? get cameraPosition => _cameraPosition;
   CameraPosition? _cameraPosition;
 
-  final MapLibreGlPlatform _mapboxGlPlatform; //ignore: unused_field
+  final TrackAsiaGlPlatform _mapboxGlPlatform; //ignore: unused_field
 
   /// Updates configuration options of the map user interface.
   ///

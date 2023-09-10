@@ -220,9 +220,10 @@ class TrackasiaMap extends StatefulWidget {
   /// Set `TrackasiaMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
   /// or leave it `true` (default) to use Hybrid composition (Slower on Android 9 and below).
-  static bool get useHybridComposition => MethodChannelMaplibreGl.useHybridComposition;
+  static bool get useHybridComposition => MethodChannelTrackAsiaGl.useHybridComposition;
 
-  static set useHybridComposition(bool useHybridComposition) => MethodChannelMaplibreGl.useHybridComposition = useHybridComposition;
+  static set useHybridComposition(bool useHybridComposition) =>
+      MethodChannelTrackAsiaGl.useHybridComposition = useHybridComposition;
 
   @override
   State createState() => _TrackasiaMapState();
@@ -232,11 +233,12 @@ class _TrackasiaMapState extends State<TrackasiaMap> {
   final Completer<TrackasiaMapController> _controller = Completer<TrackasiaMapController>();
 
   late _TrackasiaMapOptions _mapboxMapOptions;
-  final MapLibreGlPlatform _mapboxGlPlatform = MapLibreGlPlatform.createInstance();
+  final TrackAsiaGlPlatform _mapboxGlPlatform = TrackAsiaGlPlatform.createInstance();
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.annotationOrder.toSet().length == widget.annotationOrder.length, "annotationOrder must not have duplicate types");
+    assert(widget.annotationOrder.toSet().length == widget.annotationOrder.length,
+        "annotationOrder must not have duplicate types");
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'initialCameraPosition': widget.initialCameraPosition.toMap(),
       'options': _TrackasiaMapOptions.fromWidget(widget).toMap(),
@@ -392,7 +394,13 @@ class _TrackasiaMapOptions {
 
   final Point? attributionButtonMargins;
 
-  final _gestureGroup = {'rotateGesturesEnabled', 'scrollGesturesEnabled', 'tiltGesturesEnabled', 'zoomGesturesEnabled', 'doubleClickZoomEnabled'};
+  final _gestureGroup = {
+    'rotateGesturesEnabled',
+    'scrollGesturesEnabled',
+    'tiltGesturesEnabled',
+    'zoomGesturesEnabled',
+    'doubleClickZoomEnabled'
+  };
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> optionsMap = <String, dynamic>{};

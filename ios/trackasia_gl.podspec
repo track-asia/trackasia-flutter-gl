@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'trackasia_gl'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'A new Flutter plugin.'
   s.description      = <<-DESC
 A new Flutter plugin.
@@ -15,8 +15,8 @@ A new Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'TrackasiaAnnotationExtension', '~> 1.0.0'
-  s.dependency 'Trackasia', '~> 1.0.0'
+  s.dependency 'TrackasiaAnnotationExtension', '~> 1.0.1'
+  s.dependency 'Trackasia', '~> 1.0.1'
   s.swift_version = '4.2'
   s.ios.deployment_target = '11.0'
 end
