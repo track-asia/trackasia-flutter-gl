@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:trackasia_gl/trackasia_gl.dart';
@@ -16,7 +14,7 @@ final LatLngBounds sydneyBounds = LatLngBounds(
 );
 
 class MapUiPage extends ExamplePage {
-  MapUiPage() : super(const Icon(Icons.map), 'User interface');
+  const MapUiPage({super.key}) : super(const Icon(Icons.map), 'User interface');
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class MapUiPage extends ExamplePage {
 }
 
 class MapUiBody extends StatefulWidget {
-  const MapUiBody();
+  const MapUiBody({super.key});
 
   @override
   State<StatefulWidget> createState() => MapUiBodyState();
@@ -34,12 +32,12 @@ class MapUiBody extends StatefulWidget {
 class MapUiBodyState extends State<MapUiBody> {
   MapUiBodyState();
 
-  static final CameraPosition _kInitialPosition = const CameraPosition(
+  static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(-33.852, 151.211),
     zoom: 11.0,
   );
 
-  TrackasiaMapController? mapController;
+  TrackAsiaMapController? mapController;
   CameraPosition _position = _kInitialPosition;
   bool _isMoving = false;
   bool _compassEnabled = true;
@@ -47,10 +45,11 @@ class MapUiBodyState extends State<MapUiBody> {
   CameraTargetBounds _cameraTargetBounds = CameraTargetBounds.unbounded;
   MinMaxZoomPreference _minMaxZoomPreference = MinMaxZoomPreference.unbounded;
   int _styleStringIndex = 0;
+
   // Style string can a reference to a local or remote resources.
   // On Android the raw JSON can also be passed via a styleString, on iOS this is not supported.
-  List<String> _styleStrings = ["https://demotiles.trackasia.org/style.json", "assets/style.json"];
-  List<String> _styleStringLabels = ["trackasia demo style", "Local style file"];
+  final List<String> _styleStrings = [TrackAsiaStyles.demo, "assets/style.json"];
+  final List<String> _styleStringLabels = ["TrackAsia demo style", "Local style file"];
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool? _doubleClickToZoomEnabled;
@@ -59,14 +58,10 @@ class MapUiBodyState extends State<MapUiBody> {
   bool _myLocationEnabled = true;
   bool _telemetryEnabled = true;
   bool _countriesVisible = true;
-  MyLocationTrackingMode _myLocationTrackingMode = MyLocationTrackingMode.None;
+  MyLocationTrackingMode _myLocationTrackingMode = MyLocationTrackingMode.none;
+  MyLocationRenderMode _myLocationRenderMode = MyLocationRenderMode.normal;
   List<Object>? _featureQueryFilter;
   Fill? _selectedFill;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void _onMapChanged() {
     setState(() {
@@ -87,7 +82,7 @@ class MapUiBodyState extends State<MapUiBody> {
   }
 
   Widget _myLocationTrackingModeCycler() {
-    final MyLocationTrackingMode nextType = MyLocationTrackingMode.values[(_myLocationTrackingMode.index + 1) % MyLocationTrackingMode.values.length];
+    final nextType = MyLocationTrackingMode.values[(_myLocationTrackingMode.index + 1) % MyLocationTrackingMode.values.length];
     return TextButton(
       child: Text('change to $nextType'),
       onPressed: () {
@@ -95,6 +90,20 @@ class MapUiBodyState extends State<MapUiBody> {
           _myLocationTrackingMode = nextType;
         });
       },
+    );
+  }
+
+  Widget _myLocationRenderModeCycler() {
+    final nextType = MyLocationRenderMode.values[(_myLocationRenderMode.index + 1) % MyLocationRenderMode.values.length];
+    return TextButton(
+      onPressed: _myLocationEnabled == true || nextType == MyLocationRenderMode.normal
+          ? () {
+              setState(() {
+                _myLocationRenderMode = nextType;
+              });
+            }
+          : null,
+      child: Text('change to $nextType'),
     );
   }
 
@@ -242,12 +251,14 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _myLocationToggler() {
     return TextButton(
+      onPressed: _myLocationRenderMode == MyLocationRenderMode.normal
+          ? () {
+              setState(() {
+                _myLocationEnabled = !_myLocationEnabled;
+              });
+            }
+          : null,
       child: Text('${_myLocationEnabled ? 'disable' : 'enable'} my location'),
-      onPressed: () {
-        setState(() {
-          _myLocationEnabled = !_myLocationEnabled;
-        });
-      },
     );
   }
 
@@ -265,11 +276,13 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _visibleRegionGetter() {
     return TextButton(
-      child: Text('get currently visible region'),
+      child: const Text('get currently visible region'),
       onPressed: () async {
-        var result = await mapController!.getVisibleRegion();
+        final result = await mapController!.getVisibleRegion();
+        if (!mounted) return;
+
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("SW: ${result.southwest.toString()} NE: ${result.northeast.toString()}"),
+          content: Text("SW: ${result.southwest} NE: ${result.northeast}"),
         ));
       },
     );
@@ -277,17 +290,17 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _sourceFeaturesGetter() {
     return TextButton(
-      child: Text('get source features (trackasia)'),
+      child: const Text('get source features (trackasia)'),
       onPressed: () async {
-        var result = await mapController!.querySourceFeatures("trackasia", "centroids", null);
-        print(result);
+        final result = await mapController!.querySourceFeatures("trackasia", "centroids", null);
+        debugPrint(result.toString());
       },
     );
   }
 
   Widget _layerVisibilityToggler() {
     return TextButton(
-      child: Text('toggle layer visibility'),
+      child: const Text('toggle layer visibility'),
       onPressed: () async {
         _countriesVisible = !_countriesVisible;
         mapController?.setLayerVisibility('countries-fill', _countriesVisible);
@@ -305,12 +318,11 @@ class MapUiBodyState extends State<MapUiBody> {
   }
 
   _drawFill(List<dynamic> features) async {
-    Map<String, dynamic>? feature = features.firstWhereOrNull((f) => f['geometry']['type'] == 'Polygon');
+    final Map<String, dynamic>? feature = features.firstWhereOrNull((f) => f['geometry']['type'] == 'Polygon');
 
     if (feature != null) {
-      List<List<LatLng>> geometry =
-          feature['geometry']['coordinates'].map((ll) => ll.map((l) => LatLng(l[1], l[0])).toList().cast<LatLng>()).toList().cast<List<LatLng>>();
-      Fill fill = await mapController!.addFill(FillOptions(
+      final List<List<LatLng>> geometry = feature['geometry']['coordinates'].map((ll) => ll.map((l) => LatLng(l[1], l[0])).toList().cast<LatLng>()).toList().cast<List<LatLng>>();
+      final fill = await mapController!.addFill(FillOptions(
         geometry: geometry,
         fillColor: "#FF0000",
         fillOutlineColor: "#FF0000",
@@ -324,14 +336,14 @@ class MapUiBodyState extends State<MapUiBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TrackasiaMap trackasiaMap = TrackasiaMap(
-      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+    final trackasiaMap = TrackAsiaMap(
       onMapCreated: onMapCreated,
       initialCameraPosition: _kInitialPosition,
       trackCameraPosition: true,
       compassEnabled: _compassEnabled,
       cameraTargetBounds: _cameraTargetBounds,
       minMaxZoomPreference: _minMaxZoomPreference,
+      styleString: _styleStrings[_styleStringIndex],
       rotateGesturesEnabled: _rotateGesturesEnabled,
       scrollGesturesEnabled: _scrollGesturesEnabled,
       tiltGesturesEnabled: _tiltGesturesEnabled,
@@ -339,45 +351,49 @@ class MapUiBodyState extends State<MapUiBody> {
       doubleClickZoomEnabled: _doubleClickToZoomEnabled,
       myLocationEnabled: _myLocationEnabled,
       myLocationTrackingMode: _myLocationTrackingMode,
-      myLocationRenderMode: MyLocationRenderMode.GPS,
+      myLocationRenderMode: _myLocationRenderMode,
       onMapClick: (point, latLng) async {
-        print("Map click: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
-        print("Filter $_featureQueryFilter");
-        List features = await mapController!.queryRenderedFeatures(point, [], _featureQueryFilter);
-        print('# features: ${features.length}');
+        debugPrint("Map click: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
+        debugPrint("Filter $_featureQueryFilter");
+        final features = await mapController!.queryRenderedFeatures(point, [], _featureQueryFilter);
+        if (!mounted) return;
+
+        debugPrint('# features: ${features.length}');
         _clearFill();
         if (features.isEmpty && _featureQueryFilter != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('QueryRenderedFeatures: No features found!')));
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('QueryRenderedFeatures: No features found!')));
+          }
         } else if (features.isNotEmpty) {
           _drawFill(features);
         }
       },
       onMapLongClick: (point, latLng) async {
-        print("Map long press: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
-        Point convertedPoint = await mapController!.toScreenLocation(latLng);
-        LatLng convertedLatLng = await mapController!.toLatLng(point);
-        print("Map long press converted: ${convertedPoint.x},${convertedPoint.y}   ${convertedLatLng.latitude}/${convertedLatLng.longitude}");
-        double metersPerPixel = await mapController!.getMetersPerPixelAtLatitude(latLng.latitude);
+        debugPrint("Map long press: ${point.x},${point.y}   ${latLng.latitude}/${latLng.longitude}");
+        final convertedPoint = await mapController!.toScreenLocation(latLng);
+        final convertedLatLng = await mapController!.toLatLng(point);
+        debugPrint("Map long press converted: ${convertedPoint.x},${convertedPoint.y}   ${convertedLatLng.latitude}/${convertedLatLng.longitude}");
+        final metersPerPixel = await mapController!.getMetersPerPixelAtLatitude(latLng.latitude);
 
-        print("Map long press The distance measured in meters at latitude ${latLng.latitude} is $metersPerPixel m");
+        debugPrint("Map long press The distance measured in meters at latitude ${latLng.latitude} is $metersPerPixel m");
 
-        List features = await mapController!.queryRenderedFeatures(point, [], null);
-        if (features.length > 0) {
-          print(features[0]);
+        final features = await mapController!.queryRenderedFeatures(point, [], null);
+        if (features.isNotEmpty) {
+          debugPrint(features[0]);
         }
       },
       onCameraTrackingDismissed: () {
-        this.setState(() {
-          _myLocationTrackingMode = MyLocationTrackingMode.None;
+        setState(() {
+          _myLocationTrackingMode = MyLocationTrackingMode.none;
         });
       },
       onUserLocationUpdated: (location) {
-        print(
+        debugPrint(
             "new location: ${location.position}, alt.: ${location.altitude}, bearing: ${location.bearing}, speed: ${location.speed}, horiz. accuracy: ${location.horizontalAccuracy}, vert. accuracy: ${location.verticalAccuracy}");
       },
     );
 
-    final List<Widget> listViewChildren = <Widget>[];
+    final listViewChildren = <Widget>[];
 
     if (mapController != null) {
       listViewChildren.addAll(
@@ -392,6 +408,7 @@ class MapUiBodyState extends State<MapUiBody> {
           _queryFilterToggler(),
           _compassToggler(),
           _myLocationTrackingModeCycler(),
+          _myLocationRenderModeCycler(),
           _latLngBoundsToggler(),
           _setStyleToSatellite(),
           _zoomBoundsToggler(),
@@ -427,7 +444,7 @@ class MapUiBodyState extends State<MapUiBody> {
     );
   }
 
-  void onMapCreated(TrackasiaMapController controller) {
+  void onMapCreated(TrackAsiaMapController controller) {
     mapController = controller;
     mapController!.addListener(_onMapChanged);
     _extractMapInfo();

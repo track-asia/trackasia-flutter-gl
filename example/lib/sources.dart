@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:trackasia_gl/trackasia_gl.dart';
 
 import 'page.dart';
-import 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.dart';
 
 class StyleInfo {
   final String name;
   final String baseStyle;
-  final Future<void> Function(TrackasiaMapController) addDetails;
+  final Future<void> Function(TrackAsiaMapController) addDetails;
   final CameraPosition position;
 
   const StyleInfo({required this.name, required this.baseStyle, required this.addDetails, required this.position});
 }
 
 class Sources extends ExamplePage {
-  Sources() : super(const Icon(Icons.map), 'Various Sources');
+  const Sources({super.key}) : super(const Icon(Icons.map), 'Various Sources');
 
   @override
   Widget build(BuildContext context) {
@@ -24,37 +23,37 @@ class Sources extends ExamplePage {
 }
 
 class FullMap extends StatefulWidget {
-  const FullMap();
+  const FullMap({super.key});
 
   @override
   State createState() => FullMapState();
 }
 
 class FullMapState extends State<FullMap> {
-  TrackasiaMapController? controller;
+  TrackAsiaMapController? controller;
   final watercolorRasterId = "watercolorRaster";
   int selectedStyleId = 0;
 
-  _onMapCreated(TrackasiaMapController controller) {
+  _onMapCreated(TrackAsiaMapController controller) {
     this.controller = controller;
   }
 
-  static Future<void> addRaster(TrackasiaMapController controller) async {
+  static Future<void> addRaster(TrackAsiaMapController controller) async {
     await controller.addSource(
       "watercolor",
-      RasterSourceProperties(
+      const RasterSourceProperties(
           tiles: ['https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg'],
           tileSize: 256,
           attribution:
               'Map tiles by <a target="_top" rel="noopener" href="http://stamen.com">Stamen Design</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" rel="noopener" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>'),
     );
-    await controller.addLayer("watercolor", "watercolor", RasterLayerProperties());
+    await controller.addLayer("watercolor", "watercolor", const RasterLayerProperties());
   }
 
-  static Future<void> addGeojsonCluster(TrackasiaMapController controller) async {
+  static Future<void> addGeojsonCluster(TrackAsiaMapController controller) async {
     await controller.addSource(
         "earthquakes",
-        GeojsonSourceProperties(
+        const GeojsonSourceProperties(
             data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
             cluster: true,
             clusterMaxZoom: 14, // Max zoom to cluster points on
@@ -63,7 +62,7 @@ class FullMapState extends State<FullMap> {
     await controller.addLayer(
         "earthquakes",
         "earthquakes-circles",
-        CircleLayerProperties(circleColor: [
+        const CircleLayerProperties(circleColor: [
           Expressions.step,
           [Expressions.get, 'point_count'],
           '#51bbd6',
@@ -83,24 +82,24 @@ class FullMapState extends State<FullMap> {
     await controller.addLayer(
         "earthquakes",
         "earthquakes-count",
-        SymbolLayerProperties(
+        const SymbolLayerProperties(
           textField: [Expressions.get, 'point_count_abbreviated'],
           textFont: ['Open Sans Semibold'],
           textSize: 12,
         ));
   }
 
-  static Future<void> addVector(TrackasiaMapController controller) async {
+  static Future<void> addVector(TrackAsiaMapController controller) async {
     await controller.addSource(
         "terrain",
-        VectorSourceProperties(
-          url: "https://demotiles.maplibre.org/tiles/tiles.json",
+        const VectorSourceProperties(
+          url: TrackAsiaStyles.demo,
         ));
 
     await controller.addLayer(
         "terrain",
         "contour",
-        LineLayerProperties(
+        const LineLayerProperties(
           lineColor: "#ff69b4",
           lineWidth: 1,
           lineCap: "round",
@@ -109,10 +108,10 @@ class FullMapState extends State<FullMap> {
         sourceLayer: "countries");
   }
 
-  static Future<void> addImage(TrackasiaMapController controller) async {
+  static Future<void> addImage(TrackAsiaMapController controller) async {
     await controller.addSource(
         "radar",
-        ImageSourceProperties(url: "https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif", coordinates: [
+        const ImageSourceProperties(url: "https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif", coordinates: [
           [-80.425, 46.437],
           [-71.516, 46.437],
           [-71.516, 37.936],
@@ -122,14 +121,14 @@ class FullMapState extends State<FullMap> {
     await controller.addRasterLayer(
       "radar",
       "radar",
-      RasterLayerProperties(rasterFadeDuration: 0),
+      const RasterLayerProperties(rasterFadeDuration: 0),
     );
   }
 
-  static Future<void> addVideo(TrackasiaMapController controller) async {
+  static Future<void> addVideo(TrackAsiaMapController controller) async {
     await controller.addSource(
         "video",
-        VideoSourceProperties(urls: [
+        const VideoSourceProperties(urls: [
           'https://static-assets.mapbox.com/mapbox-gl-js/drone.mp4',
           'https://static-assets.mapbox.com/mapbox-gl-js/drone.webm'
         ], coordinates: [
@@ -142,11 +141,84 @@ class FullMapState extends State<FullMap> {
     await controller.addRasterLayer(
       "video",
       "video",
-      RasterLayerProperties(),
+      const RasterLayerProperties(),
     );
   }
 
-  static Future<void> addDem(TrackasiaMapController controller) async {
+  static Future<void> addHeatMap(TrackAsiaMapController controller) async {
+    await controller.addSource('earthquakes-heatmap-source', const GeojsonSourceProperties(data: 'https://track-asia.com/trackasia-gl-js/docs/assets/earthquakes.geojson'));
+
+    await controller.addLayer(
+      'earthquakes-heatmap-source',
+      'earthquakes-heatmap-layer',
+      const HeatmapLayerProperties(
+        // Increase the heatmap weight based on frequency and property magnitude
+        heatmapWeight: [
+          Expressions.interpolate,
+          ['linear'],
+          [Expressions.get, 'mag'],
+          0,
+          0,
+          6,
+          1,
+        ],
+        // Increase the heatmap color weight weight by zoom level
+        // heatmap-intensity is a multiplier on top of heatmap-weight
+        heatmapIntensity: [
+          Expressions.interpolate,
+          ['linear'],
+          [Expressions.zoom],
+          0,
+          1,
+          9,
+          3
+        ],
+        // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+        // Begin color ramp at 0-stop with a 0-transparancy color
+        // to create a blur-like effect.
+        heatmapColor: [
+          Expressions.interpolate,
+          ['linear'],
+          ['heatmap-density'],
+          0,
+          'rgba(33.0, 102.0, 172.0, 0.0)',
+          0.2,
+          'rgb(103.0, 169.0, 207.0)',
+          0.4,
+          'rgb(209.0, 229.0, 240.0)',
+          0.6,
+          'rgb(253.0, 219.0, 119.0)',
+          0.8,
+          'rgb(239.0, 138.0, 98.0)',
+          1,
+          'rgb(178.0, 24.0, 43.0)',
+        ],
+        // Adjust the heatmap radius by zoom level
+        heatmapRadius: [
+          Expressions.interpolate,
+          ['linear'],
+          [Expressions.zoom],
+          0,
+          2,
+          9,
+          20,
+        ],
+        // Transition from heatmap to circle layer by zoom level
+        heatmapOpacity: [
+          Expressions.interpolate,
+          ['linear'],
+          [Expressions.zoom],
+          7,
+          1,
+          9,
+          0
+        ],
+      ),
+      maxzoom: 9,
+    );
+  }
+
+  static Future<void> addDem(TrackAsiaMapController controller) async {
     // TODO: adapt example?
     // await controller.addSource(
     //     "dem",
@@ -162,45 +234,51 @@ class FullMapState extends State<FullMap> {
     // );
   }
 
-  static const _stylesAndLoaders = [
-    StyleInfo(
+  final _stylesAndLoaders = [
+    const StyleInfo(
       name: "Vector",
-      baseStyle: TrackasiaStyles.DEMO,
+      baseStyle: TrackAsiaStyles.demo,
       addDetails: addVector,
       position: CameraPosition(target: LatLng(33.3832, -118.4333), zoom: 6),
     ),
-    StyleInfo(
+    const StyleInfo(
       name: "Default style",
-      // Using the raw github file version of TrackasiaStyles.DEMO here, because we need to
+      // Using the raw github file version of TrackAsiaStyles.DEMO here, because we need to
       // specify a different baseStyle for consecutive elements in this list,
       // otherwise the map will not update
-      baseStyle: "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json",
+      baseStyle: "https://raw.githubusercontent.com/trackasia/demotiles/gh-pages/style.json",
       addDetails: addDem,
       position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 8),
     ),
-    StyleInfo(
+    const StyleInfo(
       name: "Geojson cluster",
-      baseStyle: TrackasiaStyles.DEMO,
+      baseStyle: TrackAsiaStyles.demo,
       addDetails: addGeojsonCluster,
       position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 5),
     ),
-    StyleInfo(
+    const StyleInfo(
       name: "Raster",
-      baseStyle: "https://raw.githubusercontent.com/maplibre/demotiles/gh-pages/style.json",
+      baseStyle: "https://raw.githubusercontent.com/trackasia/demotiles/gh-pages/style.json",
       addDetails: addRaster,
       position: CameraPosition(target: LatLng(40, -100), zoom: 3),
     ),
-    StyleInfo(
+    const StyleInfo(
       name: "Image",
-      baseStyle: "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json?",
+      baseStyle: "https://raw.githubusercontent.com/trackasia/demotiles/gh-pages/style.json?",
       addDetails: addImage,
       position: CameraPosition(target: LatLng(43, -75), zoom: 6),
     ),
+    const StyleInfo(
+      name: "Heatmap",
+      baseStyle: "https://raw.githubusercontent.com/trackasia/demotiles/gh-pages/style.json",
+      addDetails: addHeatMap,
+      position: CameraPosition(target: LatLng(33.5, -118.1), zoom: 2),
+    ),
     //video only supported on web
     if (kIsWeb)
-      StyleInfo(
+      const StyleInfo(
         name: "Video",
-        baseStyle: "https://raw.githubusercontent.com/track-asia/demotiles/gh-pages/style.json",
+        baseStyle: "https://raw.githubusercontent.com/trackasia/demotiles/gh-pages/style.json",
         addDetails: addVideo,
         position: CameraPosition(target: LatLng(37.562984, -122.514426), zoom: 17, bearing: -96),
       ),
@@ -216,11 +294,11 @@ class FullMapState extends State<FullMap> {
   Widget build(BuildContext context) {
     final styleInfo = _stylesAndLoaders[selectedStyleId];
     final nextName = _stylesAndLoaders[(selectedStyleId + 1) % _stylesAndLoaders.length].name;
-    return new Scaffold(
+    return Scaffold(
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(32.0),
           child: FloatingActionButton.extended(
-            icon: Icon(Icons.swap_horiz),
+            icon: const Icon(Icons.swap_horiz),
             label: SizedBox(width: 120, child: Center(child: Text("To $nextName"))),
             onPressed: () => setState(
               () => selectedStyleId = (selectedStyleId + 1) % _stylesAndLoaders.length,
@@ -229,21 +307,21 @@ class FullMapState extends State<FullMap> {
         ),
         body: Stack(
           children: [
-            TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            TrackAsiaMap(
+              styleString: styleInfo.baseStyle,
               onMapCreated: _onMapCreated,
               initialCameraPosition: styleInfo.position,
               onStyleLoadedCallback: _onStyleLoadedCallback,
             ),
             Container(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               alignment: Alignment.topCenter,
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Current source ${styleInfo.name}",
-                    textScaleFactor: 1.4,
+                    "Current source: ${styleInfo.name}",
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ),

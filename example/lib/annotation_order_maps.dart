@@ -6,22 +6,22 @@ import 'page.dart';
 import 'util.dart';
 
 class AnnotationOrderPage extends ExamplePage {
-  AnnotationOrderPage() : super(const Icon(Icons.layers), 'Annotation order maps');
+  const AnnotationOrderPage({super.key}) : super(const Icon(Icons.layers), 'Annotation order maps');
 
   @override
-  Widget build(BuildContext context) => AnnotationOrderBody();
+  Widget build(BuildContext context) => const AnnotationOrderBody();
 }
 
 class AnnotationOrderBody extends StatefulWidget {
-  AnnotationOrderBody();
+  const AnnotationOrderBody({super.key});
 
   @override
-  _AnnotationOrderBodyState createState() => _AnnotationOrderBodyState();
+  State<AnnotationOrderBody> createState() => _AnnotationOrderBodyState();
 }
 
 class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
-  late TrackasiaMapController controllerOne;
-  late TrackasiaMapController controllerTwo;
+  late TrackAsiaMapController controllerOne;
+  late TrackAsiaMapController controllerTwo;
 
   final LatLng center = const LatLng(36.580664, 32.5563837);
 
@@ -30,86 +30,78 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
     return Column(
       children: <Widget>[
         Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0.0),
-            child: Column(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 5.0),
-                  child: Text('This map has polygones (fill) above all other anotations (default behavior)'),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 250.0,
-                    child: TrackasiaMap(
-                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
-                      onMapCreated: onMapCreatedOne,
-                      onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
-                      initialCameraPosition: CameraPosition(
-                        target: center,
-                        zoom: 5.0,
-                      ),
-                      annotationOrder: const [
-                        AnnotationType.line,
-                        AnnotationType.symbol,
-                        AnnotationType.circle,
-                        AnnotationType.fill,
-                      ],
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 5.0),
+                child: Text('This map has polygones (fill) above all other anotations (default behavior)'),
+              ),
+              Center(
+                child: SizedBox(
+                  width: 250.0,
+                  height: 250.0,
+                  child: TrackAsiaMap(
+                    onMapCreated: onMapCreatedOne,
+                    onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
+                    initialCameraPosition: CameraPosition(
+                      target: center,
+                      zoom: 5.0,
                     ),
+                    annotationOrder: const [
+                      AnnotationType.line,
+                      AnnotationType.symbol,
+                      AnnotationType.circle,
+                      AnnotationType.fill,
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0.0),
-            child: Column(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 5.0, top: 5.0),
-                  child: Text('This map has polygones (fill) under all other anotations'),
-                ),
-                Center(
-                  child: SizedBox(
-                    width: 250.0,
-                    height: 250.0,
-                    child: TrackasiaMap(
-                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
-                      onMapCreated: onMapCreatedTwo,
-                      onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
-                      initialCameraPosition: CameraPosition(
-                        target: center,
-                        zoom: 5.0,
-                      ),
-                      annotationOrder: const [
-                        AnnotationType.fill,
-                        AnnotationType.line,
-                        AnnotationType.symbol,
-                        AnnotationType.circle,
-                      ],
+          child: Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.only(bottom: 5.0, top: 5.0),
+                child: Text('This map has polygones (fill) under all other anotations'),
+              ),
+              Center(
+                child: SizedBox(
+                  width: 250.0,
+                  height: 250.0,
+                  child: TrackAsiaMap(
+                    onMapCreated: onMapCreatedTwo,
+                    onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
+                    initialCameraPosition: CameraPosition(
+                      target: center,
+                      zoom: 5.0,
                     ),
+                    annotationOrder: const [
+                      AnnotationType.fill,
+                      AnnotationType.line,
+                      AnnotationType.symbol,
+                      AnnotationType.circle,
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  void onMapCreatedOne(TrackasiaMapController controller) {
-    this.controllerOne = controller;
+  void onMapCreatedOne(TrackAsiaMapController controller) {
+    controllerOne = controller;
   }
 
-  void onMapCreatedTwo(TrackasiaMapController controller) {
-    this.controllerTwo = controller;
+  void onMapCreatedTwo(TrackAsiaMapController controller) {
+    controllerTwo = controller;
   }
 
-  void onStyleLoaded(TrackasiaMapController controller) async {
+  Future<void> onStyleLoaded(TrackAsiaMapController controller) async {
     await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(
       SymbolOptions(
@@ -121,7 +113,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
       ),
     );
     controller.addLine(
-      LineOptions(
+      const LineOptions(
         draggable: false,
         lineColor: "#ff0000",
         lineWidth: 7.0,
@@ -137,7 +129,7 @@ class _AnnotationOrderBodyState extends State<AnnotationOrderBody> {
       ),
     );
     controller.addFill(
-      FillOptions(
+      const FillOptions(
         draggable: false,
         fillColor: "#008888",
         fillOpacity: 0.3,

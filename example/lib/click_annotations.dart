@@ -9,7 +9,7 @@ import 'page.dart';
 import 'util.dart';
 
 class ClickAnnotationPage extends ExamplePage {
-  ClickAnnotationPage() : super(const Icon(Icons.check_circle), 'Annotation tap');
+  const ClickAnnotationPage({super.key}) : super(const Icon(Icons.check_circle), 'Annotation tap');
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ClickAnnotationPage extends ExamplePage {
 }
 
 class ClickAnnotationBody extends StatefulWidget {
-  const ClickAnnotationBody();
+  const ClickAnnotationBody({super.key});
 
   @override
   State<StatefulWidget> createState() => ClickAnnotationBodyState();
@@ -26,11 +26,12 @@ class ClickAnnotationBody extends StatefulWidget {
 
 class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
   ClickAnnotationBodyState();
-  static const LatLng center = const LatLng(-33.88, 151.16);
 
-  TrackasiaMapController? controller;
+  static const LatLng center = LatLng(-33.88, 151.16);
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  TrackAsiaMapController? controller;
+
+  void _onMapCreated(TrackAsiaMapController controller) {
     this.controller = controller;
     controller.onFillTapped.add(_onFillTapped);
     controller.onCircleTapped.add(_onCircleTapped);
@@ -49,7 +50,14 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
 
   _showSnackBar(String type, String id) {
     final snackBar = SnackBar(
-        content: Text('Tapped $type $id', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)), backgroundColor: Theme.of(context).primaryColor);
+        content: Text(
+          'Tapped $type $id',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -70,10 +78,10 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
     _showSnackBar('symbol', symbol.id);
   }
 
-  void _onStyleLoaded() async {
+  Future<void> _onStyleLoaded() async {
     await addImageFromAsset(controller!, "custom-marker", "assets/symbols/custom-marker.png");
     controller!.addCircle(
-      CircleOptions(
+      const CircleOptions(
         geometry: LatLng(-33.881979408447314, 151.171361438502117),
         circleStrokeColor: "#00FF00",
         circleStrokeWidth: 2,
@@ -81,7 +89,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
       ),
     );
     controller!.addCircle(
-      CircleOptions(
+      const CircleOptions(
         geometry: LatLng(-33.894372606072309, 151.17576679759523),
         circleStrokeColor: "#00FF00",
         circleStrokeWidth: 2,
@@ -89,13 +97,13 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
       ),
     );
     controller!.addSymbol(
-      SymbolOptions(
+      const SymbolOptions(
           geometry: LatLng(-33.894372606072309, 151.17576679759523),
           iconImage: "custom-marker", //"fast-food-15",
           iconSize: 2),
     );
     controller!.addLine(
-      LineOptions(
+      const LineOptions(
         geometry: [
           LatLng(-33.874867744475786, 151.170627211986584),
           LatLng(-33.881979408447314, 151.171361438502117),
@@ -109,7 +117,7 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
     );
 
     controller!.addFill(
-      FillOptions(
+      const FillOptions(
         geometry: [
           [
             LatLng(-33.901517742631846, 151.178099204457737),
@@ -129,9 +137,8 @@ class ClickAnnotationBodyState extends State<ClickAnnotationBody> {
 
   @override
   Widget build(BuildContext context) {
-    return TrackasiaMap(
-      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
-      annotationOrder: [
+    return TrackAsiaMap(
+      annotationOrder: const [
         AnnotationType.fill,
         AnnotationType.line,
         AnnotationType.circle,

@@ -11,7 +11,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class PlaceSourcePage extends ExamplePage {
-  PlaceSourcePage() : super(const Icon(Icons.place), 'Place source');
+  const PlaceSourcePage({super.key}) : super(const Icon(Icons.place), 'Place source');
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class PlaceSourcePage extends ExamplePage {
 }
 
 class PlaceSymbolBody extends StatefulWidget {
-  const PlaceSymbolBody();
+  const PlaceSymbolBody({super.key});
 
   @override
   State<StatefulWidget> createState() => PlaceSymbolBodyState();
@@ -29,14 +29,15 @@ class PlaceSymbolBody extends StatefulWidget {
 class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
   PlaceSymbolBodyState();
 
-  static const SOURCE_ID = 'sydney_source';
-  static const LAYER_ID = 'sydney_layer';
+  static const sourceId = 'sydney_source';
+  static const layerId = 'sydney_layer';
 
   bool sourceAdded = false;
   bool layerAdded = false;
-  late TrackasiaMapController controller;
+  bool imageFlag = false;
+  late TrackAsiaMapController controller;
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  void _onMapCreated(TrackAsiaMapController controller) {
     this.controller = controller;
   }
 
@@ -47,8 +48,8 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
 
   /// Adds an asset image as a source to the currently displayed style
   Future<void> addImageSourceFromAsset(String imageSourceId, String assetName) async {
-    final ByteData bytes = await rootBundle.load(assetName);
-    final Uint8List list = bytes.buffer.asUint8List();
+    final bytes = await rootBundle.load(assetName);
+    final list = bytes.buffer.asUint8List();
     return controller.addImageSource(
       imageSourceId,
       list,
@@ -86,6 +87,16 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
     return controller.removeLayer(imageLayerId);
   }
 
+  Future<void> updateImageSourceFromAsset(String imageSourceId, String assetName) async {
+    final bytes = await rootBundle.load(assetName);
+    final list = bytes.buffer.asUint8List();
+    return controller.updateImageSource(imageSourceId, list, null);
+  }
+
+  String pickImage() {
+    return imageFlag ? 'assets/sydney0.png' : 'assets/sydney1.png';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -96,8 +107,7 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),
@@ -114,37 +124,46 @@ class PlaceSymbolBodyState extends State<PlaceSymbolBody> {
                 Column(
                   children: <Widget>[
                     TextButton(
-                      child: const Text('Add source (asset image)'),
                       onPressed: sourceAdded
                           ? null
                           : () {
-                              addImageSourceFromAsset(SOURCE_ID, 'assets/sydney.png').then((value) {
+                              addImageSourceFromAsset(sourceId, pickImage()).then((value) {
                                 setState(() => sourceAdded = true);
                               });
                             },
+                      child: const Text('Add source (asset image)'),
                     ),
                     TextButton(
-                      child: const Text('Remove source (asset image)'),
                       onPressed: sourceAdded
                           ? () async {
-                              await removeLayer(LAYER_ID);
-                              removeImageSource(SOURCE_ID).then((value) {
+                              await removeLayer(layerId);
+                              removeImageSource(sourceId).then((value) {
                                 setState(() => sourceAdded = false);
                               });
                             }
                           : null,
+                      child: const Text('Remove source (asset image)'),
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => addLayer(layerId, sourceId) : null,
                       child: const Text('Show layer'),
-                      onPressed: sourceAdded ? () => addLayer(LAYER_ID, SOURCE_ID) : null,
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => addLayerBelow(layerId, sourceId, 'water') : null,
                       child: const Text('Show layer below water'),
-                      onPressed: sourceAdded ? () => addLayerBelow(LAYER_ID, SOURCE_ID, 'water') : null,
                     ),
                     TextButton(
+                      onPressed: sourceAdded ? () => removeLayer(layerId) : null,
                       child: const Text('Hide layer'),
-                      onPressed: sourceAdded ? () => removeLayer(LAYER_ID) : null,
+                    ),
+                    TextButton(
+                      onPressed: sourceAdded
+                          ? () async {
+                              setState(() => imageFlag = !imageFlag);
+                              updateImageSourceFromAsset(sourceId, pickImage());
+                            }
+                          : null,
+                      child: const Text('Change image'),
                     ),
                   ],
                 ),

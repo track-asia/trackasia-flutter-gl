@@ -9,7 +9,7 @@
 	"sources": {
 		"demotiles": {
 			"type": "vector",
-			"url": "https://demotiles.maplibre.org/tiles/tiles.json"
+			"url": "https://maps.track-asia.com/tiles/tiles.json"
 		}
 	},
 	"sprite": "",

@@ -8,7 +8,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class AnimateCameraPage extends ExamplePage {
-  AnimateCameraPage() : super(const Icon(Icons.map), 'Camera control, animated');
+  const AnimateCameraPage({super.key}) : super(const Icon(Icons.map), 'Camera control, animated');
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +17,16 @@ class AnimateCameraPage extends ExamplePage {
 }
 
 class AnimateCamera extends StatefulWidget {
-  const AnimateCamera();
+  const AnimateCamera({super.key});
+
   @override
   State createState() => AnimateCameraState();
 }
 
 class AnimateCameraState extends State<AnimateCamera> {
-  late TrackasiaMapController mapController;
+  late TrackAsiaMapController mapController;
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  void _onMapCreated(TrackAsiaMapController controller) {
     mapController = controller;
   }
 
@@ -39,8 +40,7 @@ class AnimateCameraState extends State<AnimateCamera> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
             ),
@@ -64,7 +64,9 @@ class AnimateCameraState extends State<AnimateCamera> {
                             ),
                           ),
                         )
-                        .then((result) => print("mapController.animateCamera() returned $result"));
+                        .then(
+                          (result) => debugPrint("mapController.animateCamera() returned $result"),
+                        );
                   },
                   child: const Text('newCameraPosition'),
                 ),
@@ -75,9 +77,9 @@ class AnimateCameraState extends State<AnimateCamera> {
                           CameraUpdate.newLatLng(
                             const LatLng(56.1725505, 10.1850512),
                           ),
-                          duration: Duration(seconds: 5),
+                          duration: const Duration(seconds: 5),
                         )
-                        .then((result) => print("mapController.animateCamera() returned $result"));
+                        .then((result) => debugPrint("mapController.animateCamera() returned $result"));
                   },
                   child: const Text('newLatLng'),
                 ),
@@ -130,6 +132,15 @@ class AnimateCameraState extends State<AnimateCamera> {
                     );
                   },
                   child: const Text('zoomBy with focus'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    mapController.animateCamera(
+                      CameraUpdate.newLatLngZoom(const LatLng(48, 11), 5),
+                      duration: const Duration(milliseconds: 300),
+                    );
+                  },
+                  child: const Text('latlngZoom'),
                 ),
                 TextButton(
                   onPressed: () {

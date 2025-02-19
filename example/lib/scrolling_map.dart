@@ -12,24 +12,24 @@ import 'package:trackasia_gl_example/util.dart';
 import 'page.dart';
 
 class ScrollingMapPage extends ExamplePage {
-  ScrollingMapPage() : super(const Icon(Icons.map), 'Scrolling map');
+  const ScrollingMapPage({super.key}) : super(const Icon(Icons.map), 'Scrolling map');
 
   @override
   Widget build(BuildContext context) {
-    return ScrollingMapBody();
+    return const ScrollingMapBody();
   }
 }
 
 class ScrollingMapBody extends StatefulWidget {
-  ScrollingMapBody();
+  const ScrollingMapBody({super.key});
 
   @override
-  _ScrollingMapBodyState createState() => _ScrollingMapBodyState();
+  State<ScrollingMapBody> createState() => _ScrollingMapBodyState();
 }
 
 class _ScrollingMapBodyState extends State<ScrollingMapBody> {
-  late TrackasiaMapController controllerOne;
-  late TrackasiaMapController controllerTwo;
+  late TrackAsiaMapController controllerOne;
+  late TrackAsiaMapController controllerTwo;
 
   final LatLng center = const LatLng(32.080664, 34.9563837);
 
@@ -50,19 +50,18 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                   child: SizedBox(
                     width: 300.0,
                     height: 300.0,
-                    child: TrackasiaMap(
-                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+                    child: TrackAsiaMap(
                       onMapCreated: onMapCreatedOne,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerOne),
                       initialCameraPosition: CameraPosition(
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                         Factory<OneSequenceGestureRecognizer>(
                           () => EagerGestureRecognizer(),
                         ),
-                      ].toSet(),
+                      },
                     ),
                   ),
                 ),
@@ -75,7 +74,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
             padding: const EdgeInsets.symmetric(vertical: 30.0),
             child: Column(
               children: <Widget>[
-                const Text('This map doesn\'t consume the vertical drags.'),
+                const Text("This map doesn't consume the vertical drags."),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12.0),
                   child: Text('It still gets other gestures (e.g scale or tap).'),
@@ -84,19 +83,18 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
                   child: SizedBox(
                     width: 300.0,
                     height: 300.0,
-                    child: TrackasiaMap(
-                      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+                    child: TrackAsiaMap(
                       onMapCreated: onMapCreatedTwo,
                       onStyleLoadedCallback: () => onStyleLoaded(controllerTwo),
                       initialCameraPosition: CameraPosition(
                         target: center,
                         zoom: 11.0,
                       ),
-                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                         Factory<OneSequenceGestureRecognizer>(
                           () => ScaleGestureRecognizer(),
                         ),
-                      ].toSet(),
+                      },
                     ),
                   ),
                 ),
@@ -108,15 +106,15 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
     );
   }
 
-  void onMapCreatedOne(TrackasiaMapController controller) {
-    this.controllerOne = controller;
+  void onMapCreatedOne(TrackAsiaMapController controller) {
+    controllerOne = controller;
   }
 
-  void onMapCreatedTwo(TrackasiaMapController controller) {
-    this.controllerTwo = controller;
+  void onMapCreatedTwo(TrackAsiaMapController controller) {
+    controllerTwo = controller;
   }
 
-  void onStyleLoaded(TrackasiaMapController controller) async {
+  Future<void> onStyleLoaded(TrackAsiaMapController controller) async {
     await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     controller.addSymbol(SymbolOptions(
         geometry: LatLng(
@@ -125,7 +123,7 @@ class _ScrollingMapBodyState extends State<ScrollingMapBody> {
         ),
         iconImage: "custom-marker"));
     controller.addLine(
-      LineOptions(
+      const LineOptions(
         geometry: [
           LatLng(-33.86711, 151.1947171),
           LatLng(-33.86711, 151.1947171),

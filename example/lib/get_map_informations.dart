@@ -4,46 +4,46 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class GetMapInfoPage extends ExamplePage {
-  GetMapInfoPage() : super(const Icon(Icons.info), 'Get map state');
+  const GetMapInfoPage({super.key}) : super(const Icon(Icons.info), 'Get map state');
 
   @override
   Widget build(BuildContext context) {
-    return GetMapInfoBody();
+    return const GetMapInfoBody();
   }
 }
 
 class GetMapInfoBody extends StatefulWidget {
-  const GetMapInfoBody();
+  const GetMapInfoBody({super.key});
 
   @override
   State<GetMapInfoBody> createState() => _GetMapInfoBodyState();
 }
 
 class _GetMapInfoBodyState extends State<GetMapInfoBody> {
-  TrackasiaMapController? controller;
+  TrackAsiaMapController? controller;
   String data = '';
 
-  void onMapCreated(TrackasiaMapController controller) {
+  void onMapCreated(TrackAsiaMapController controller) {
     setState(() {
       this.controller = controller;
     });
   }
 
-  void displaySources() async {
+  Future<void> displaySources() async {
     if (controller == null) {
       return;
     }
-    List<String> sources = await controller!.getSourceIds();
+    final sources = await controller!.getSourceIds();
     setState(() {
       data = 'Sources: ${sources.map((e) => '"$e"').join(', ')}';
     });
   }
 
-  void displayLayers() async {
+  Future<void> displayLayers() async {
     if (controller == null) {
       return;
     }
-    List<String> layers = (await controller!.getLayerIds()).cast<String>();
+    final layers = (await controller!.getLayerIds()).cast<String>();
     setState(() {
       data = 'Layers: ${layers.map((e) => '"$e"').join(', ')}';
     });
@@ -59,29 +59,49 @@ class _GetMapInfoBodyState extends State<GetMapInfoBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               initialCameraPosition: const CameraPosition(
                 target: LatLng(-33.852, 151.211),
                 zoom: 11.0,
               ),
               onMapCreated: onMapCreated,
               compassEnabled: false,
-              annotationOrder: [],
+              annotationOrder: const [],
               myLocationEnabled: false,
+              styleString: '''{
+                "version": 8,
+                "sources": {
+                  "OSM": {
+                    "type": "raster",
+                    "tiles": [
+                      "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    ],
+                    "tileSize": 256,
+                    "attribution": "© OpenStreetMap contributors",
+                    "maxzoom": 18
+                  }
+                },
+                "layers": [
+                  {
+                    "id": "OSM-layer",
+                    "source": "OSM",
+                    "type": "raster"
+                  }
+                ]
+              }''',
             ),
           ),
         ),
-        Center(
-          child: const Text('© OpenStreetMap contributors'),
-        ),
+        const Center(child: Text('© OpenStreetMap contributors')),
         Expanded(
             child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Center(child: Text(data)),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: controller == null ? null : displayLayers,
                 child: const Text('Get map layers'),

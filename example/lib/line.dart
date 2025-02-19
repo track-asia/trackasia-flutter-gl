@@ -11,7 +11,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class LinePage extends ExamplePage {
-  LinePage() : super(const Icon(Icons.share), 'Line');
+  const LinePage({super.key}) : super(const Icon(Icons.share), 'Line');
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class LinePage extends ExamplePage {
 }
 
 class LineBody extends StatefulWidget {
-  const LineBody();
+  const LineBody({super.key});
 
   @override
   State<StatefulWidget> createState() => LineBodyState();
@@ -29,14 +29,14 @@ class LineBody extends StatefulWidget {
 class LineBodyState extends State<LineBody> {
   LineBodyState();
 
-  static final LatLng center = const LatLng(-33.86711, 151.1947171);
+  static const LatLng center = LatLng(-33.86711, 151.1947171);
 
-  TrackasiaMapController? controller;
+  TrackAsiaMapController? controller;
   int _lineCount = 0;
   Line? _selectedLine;
   final String _linePatternImage = "assets/fill/cat_silhouette_pattern.png";
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  void _onMapCreated(TrackAsiaMapController controller) {
     this.controller = controller;
     controller.onLineTapped.add(_onLineTapped);
   }
@@ -49,20 +49,20 @@ class LineBodyState extends State<LineBody> {
 
   /// Adds an asset image to the currently displayed style
   Future<void> addImageFromAsset(String name, String assetName) async {
-    final ByteData bytes = await rootBundle.load(assetName);
-    final Uint8List list = bytes.buffer.asUint8List();
+    final bytes = await rootBundle.load(assetName);
+    final list = bytes.buffer.asUint8List();
     return controller!.addImage(name, list);
   }
 
   _onLineTapped(Line line) async {
     await _updateSelectedLine(
-      LineOptions(lineColor: "#ff0000"),
+      const LineOptions(lineColor: "#ff0000"),
     );
     setState(() {
       _selectedLine = line;
     });
     await _updateSelectedLine(
-      LineOptions(lineColor: "#ffe100"),
+      const LineOptions(lineColor: "#ffe100"),
     );
   }
 
@@ -72,7 +72,7 @@ class LineBodyState extends State<LineBody> {
 
   void _add() {
     controller!.addLine(
-      LineOptions(geometry: [
+      const LineOptions(geometry: [
         LatLng(-33.86711, 151.1947171),
         LatLng(-33.86711, 151.1947171),
         LatLng(-32.86711, 151.1947171),
@@ -101,18 +101,15 @@ class LineBodyState extends State<LineBody> {
   }
 
   Future<void> _changeLinePattern() async {
-    String? current = _selectedLine!.options.linePattern == null ? "assetImage" : null;
+    final current = _selectedLine!.options.linePattern == null ? "assetImage" : null;
     await _updateSelectedLine(
       LineOptions(linePattern: current),
     );
   }
 
   Future<void> _changeAlpha() async {
-    double? current = _selectedLine!.options.lineOpacity;
-    if (current == null) {
-      // default value
-      current = 1.0;
-    }
+    var current = _selectedLine!.options.lineOpacity;
+    current ??= 1.0;
 
     await _updateSelectedLine(
       LineOptions(lineOpacity: current < 0.1 ? 1.0 : current * 0.75),
@@ -120,11 +117,8 @@ class LineBodyState extends State<LineBody> {
   }
 
   Future<void> _toggleVisible() async {
-    double? current = _selectedLine!.options.lineOpacity;
-    if (current == null) {
-      // default value
-      current = 1.0;
-    }
+    var current = _selectedLine!.options.lineOpacity;
+    current ??= 1.0;
     await _updateSelectedLine(
       LineOptions(lineOpacity: current == 0.0 ? 1.0 : 0.0),
     );
@@ -133,7 +127,7 @@ class LineBodyState extends State<LineBody> {
   _onStyleLoadedCallback() async {
     addImageFromAsset("assetImage", _linePatternImage);
     await controller!.addLine(
-      LineOptions(
+      const LineOptions(
         geometry: [LatLng(37.4220, -122.0841), LatLng(37.4240, -122.0941)],
         lineColor: "#ff0000",
         lineWidth: 14.0,
@@ -151,8 +145,7 @@ class LineBodyState extends State<LineBody> {
         Center(
           child: SizedBox(
             height: 400.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoadedCallback,
               initialCameraPosition: const CameraPosition(
@@ -172,47 +165,47 @@ class LineBodyState extends State<LineBody> {
                     Row(
                       children: <Widget>[
                         TextButton(
-                          child: const Text('add'),
                           onPressed: (_lineCount == 12) ? null : _add,
+                          child: const Text('add'),
                         ),
                         TextButton(
-                          child: const Text('remove'),
                           onPressed: (_selectedLine == null) ? null : _remove,
+                          child: const Text('remove'),
                         ),
                         TextButton(
-                          child: const Text('move'),
                           onPressed: (_selectedLine == null)
                               ? null
                               : () async {
                                   await _move();
                                 },
+                          child: const Text('move'),
                         ),
                         TextButton(
-                          child: const Text('change line-pattern'),
                           onPressed: (_selectedLine == null) ? null : _changeLinePattern,
+                          child: const Text('change line-pattern'),
                         ),
                       ],
                     ),
                     Row(
                       children: <Widget>[
                         TextButton(
-                          child: const Text('change alpha'),
                           onPressed: (_selectedLine == null) ? null : _changeAlpha,
+                          child: const Text('change alpha'),
                         ),
                         TextButton(
-                          child: const Text('toggle visible'),
                           onPressed: (_selectedLine == null) ? null : _toggleVisible,
+                          child: const Text('toggle visible'),
                         ),
                         TextButton(
-                          child: const Text('print current LatLng'),
                           onPressed: (_selectedLine == null)
                               ? null
                               : () async {
-                                  var latLngs = await controller!.getLineLatLngs(_selectedLine!);
-                                  for (var latLng in latLngs) {
-                                    print(latLng.toString());
+                                  final latLngs = await controller!.getLineLatLngs(_selectedLine!);
+                                  for (final latLng in latLngs) {
+                                    debugPrint(latLng.toString());
                                   }
                                 },
+                          child: const Text('print current LatLng'),
                         ),
                       ],
                     ),

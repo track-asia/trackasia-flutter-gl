@@ -7,23 +7,33 @@ import 'package:recase/recase.dart';
 import 'conversions.dart';
 
 main() async {
-  var styleJson = jsonDecode(await new File('scripts/input/style.json').readAsString());
+  final styleJson = jsonDecode(await File('scripts/input/style.json').readAsString());
 
-  final layerTypes = ["symbol", "circle", "line", "fill", "raster", "hillshade"];
+  final layerTypes = [
+    "symbol",
+    "circle",
+    "line",
+    "fill",
+    "fill-extrusion",
+    "raster",
+    "hillshade",
+    "heatmap",
+  ];
   final sourceTypes = ["vector", "raster", "raster_dem", "geojson", "video", "image"];
 
   final renderContext = {
     "layerTypes": [
-      for (var type in layerTypes)
+      for (final type in layerTypes)
         {
           "type": type,
           "typePascal": ReCase(type).pascalCase,
+          "typeCamel": ReCase(type).camelCase,
           "paint_properties": buildStyleProperties(styleJson, "paint_$type"),
           "layout_properties": buildStyleProperties(styleJson, "layout_$type"),
         },
     ],
     "sourceTypes": [
-      for (var type in sourceTypes)
+      for (final type in sourceTypes)
         {
           "type": type.replaceAll("_", "-"),
           "typePascal": ReCase(type).pascalCase,
@@ -34,21 +44,20 @@ main() async {
   };
 
   // required for deduplication
-  renderContext["all_layout_properties"] = [for (final type in renderContext["layerTypes"]!) ...type["layout_properties"].map((p) => p["value"]).toList()]
-      .toSet()
-      .map((p) => {"property": p})
-      .toList();
+  renderContext["all_layout_properties"] = <dynamic>{for (final type in renderContext["layerTypes"]!) ...type["layout_properties"].map((p) => p["value"])}.map((p) => {"property": p}).toList();
 
   const templates = [
-    "android/src/main/java/com.trackasia.trackasiagl/LayerPropertyConverter.java",
-    "ios/Classes/LayerPropertyConverter.swift",
-    "lib/src/layer_expressions.dart",
-    "lib/src/layer_properties.dart",
+    "trackasia_gl/android/src/main/java/com/mapbox/mapboxgl/LayerPropertyConverter.java",
+    "trackasia_gl/ios/Classes/LayerPropertyConverter.swift",
+    "trackasia_gl/lib/src/layer_expressions.dart",
+    "trackasia_gl/lib/src/layer_properties.dart",
     "trackasia_gl_web/lib/src/layer_tools.dart",
     "trackasia_gl_platform_interface/lib/src/source_properties.dart",
   ];
 
-  for (var template in templates) await render(renderContext, template);
+  for (final template in templates) {
+    await render(renderContext, template);
+  }
 }
 
 Future<void> render(
@@ -60,10 +69,10 @@ Future<void> render(
   final outputPath = pathItems.join("/");
 
   print("Rendering $filename");
-  var templateFile = await File('./scripts/templates/$filename.template').readAsString();
+  final templateFile = await File('./scripts/templates/$filename.template').readAsString();
 
-  var template = Template(templateFile);
-  var outputFile = File('$outputPath/$filename');
+  final template = Template(templateFile);
+  final outputFile = File('$outputPath/$filename');
 
   outputFile.writeAsString(template.renderString(renderContext));
 }
@@ -98,12 +107,12 @@ Map<String, dynamic> buildSourceProperty(String key, Map<String, dynamic> value)
   final camelCase = ReCase(key).camelCase;
   final typeDart = dartTypeMappingTable[value["type"]];
   final typeSwift = swiftTypeMappingTable[value["type"]];
-  final nestedTypeDart = dartTypeMappingTable[value["value"]] ?? dartTypeMappingTable[value["value"]["type"]];
-  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ?? swiftTypeMappingTable[value["value"]["type"]];
+  final nestedTypeDart = dartTypeMappingTable[value["value"]] ?? dartTypeMappingTable[value["value"]?["type"]];
+  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ?? swiftTypeMappingTable[value["value"]?["type"]];
 
   var defaultValue = value["default"];
   if (defaultValue is List) {
-    defaultValue = "const" + defaultValue.toString();
+    defaultValue = "const$defaultValue";
   } else if (defaultValue is String) {
     defaultValue = '"$defaultValue"';
   }
@@ -137,8 +146,8 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
     if (maxValue != null) result.add("  maximum: $maxValue");
     if (values != null) {
       result.add("Options:");
-      for (var value in values.entries) {
-        result.add("  \"${value.key}\"");
+      for (final value in values.entries) {
+        result.add('  "${value.key}"');
         result.addAll(splitIntoChunks("${value.value["doc"]}", 70, prefix: "     "));
       }
     }
@@ -150,10 +159,10 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
     result.add("");
     result.add("Sdk Support:");
     if (basic != null && basic.isNotEmpty) {
-      result.add("  basic functionality with " + basic.keys.join(", "));
+      result.add("  basic functionality with ${basic.keys.join(", ")}");
     }
     if (dataDriven != null && dataDriven.isNotEmpty) {
-      result.add("  data-driven styling with " + dataDriven.keys.join(", "));
+      result.add("  data-driven styling with ${dataDriven.keys.join(", ")}");
     }
   }
 
@@ -164,9 +173,9 @@ List<String> splitIntoChunks(String input, int lineLength, {String prefix = ""})
   final words = input.split(" ");
   final chunks = <String>[];
 
-  String chunk = "";
-  for (var word in words) {
-    final nextChunk = chunk.length == 0 ? prefix + word : chunk + " " + word;
+  var chunk = "";
+  for (final word in words) {
+    final nextChunk = chunk.isEmpty ? prefix + word : "$chunk $word";
     if (nextChunk.length > lineLength || chunk.endsWith("\n")) {
       chunks.add(chunk.replaceAll("\n", ""));
       chunk = prefix + word;
@@ -207,7 +216,7 @@ List<Map<String, dynamic>> buildExpressionProperties(Map<String, dynamic> styleJ
             'value': e.key,
             'doc': e.value["doc"],
             'docSplit': buildDocSplit(e.value).map((s) => {"part": s}).toList(),
-            'valueAsCamelCase': new ReCase(renamed[e.key] ?? e.key).camelCase
+            'valueAsCamelCase': ReCase(renamed[e.key] ?? e.key).camelCase
           })
       .toList();
 }

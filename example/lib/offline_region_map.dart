@@ -4,12 +4,12 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'offline_regions.dart';
 
 class OfflineRegionMap extends StatefulWidget {
-  OfflineRegionMap(this.item);
+  const OfflineRegionMap(this.item, {super.key});
 
   final OfflineRegionListItem item;
 
   @override
-  _OfflineRegionMapState createState() => _OfflineRegionMapState();
+  State<OfflineRegionMap> createState() => _OfflineRegionMapState();
 }
 
 class _OfflineRegionMapState extends State<OfflineRegionMap> {
@@ -19,7 +19,7 @@ class _OfflineRegionMapState extends State<OfflineRegionMap> {
       appBar: AppBar(
         title: Text('Offline Region: ${widget.item.name}'),
       ),
-      body: TrackasiaMap(
+      body: TrackAsiaMap(
         initialCameraPosition: CameraPosition(
           target: _center,
           zoom: widget.item.offlineRegionDefinition.minZoom,
@@ -28,7 +28,7 @@ class _OfflineRegionMapState extends State<OfflineRegionMap> {
           widget.item.offlineRegionDefinition.minZoom,
           widget.item.offlineRegionDefinition.maxZoom,
         ),
-        styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+        styleString: widget.item.offlineRegionDefinition.mapStyleUrl,
         cameraTargetBounds: CameraTargetBounds(
           widget.item.offlineRegionDefinition.bounds,
         ),

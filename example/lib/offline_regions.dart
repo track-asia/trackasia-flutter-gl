@@ -25,19 +25,19 @@ final List<OfflineRegionDefinition> regionDefinitions = [
     bounds: hawaiiBounds,
     minZoom: 3.0,
     maxZoom: 8.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: TrackAsiaStyles.demo,
   ),
   OfflineRegionDefinition(
     bounds: santiagoBounds,
     minZoom: 10.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: TrackAsiaStyles.demo,
   ),
   OfflineRegionDefinition(
     bounds: aucklandBounds,
     minZoom: 13.0,
     maxZoom: 16.0,
-    mapStyleUrl: "https://demotiles.maplibre.org/style.json",
+    mapStyleUrl: TrackAsiaStyles.demo,
   ),
 ];
 
@@ -98,7 +98,7 @@ final List<OfflineRegionListItem> allRegions = [
 ];
 
 class OfflineRegionsPage extends ExamplePage {
-  OfflineRegionsPage() : super(const Icon(Icons.map), 'Offline Regions');
+  const OfflineRegionsPage({super.key}) : super(const Icon(Icons.map), 'Offline Regions');
 
   @override
   Widget build(BuildContext context) {
@@ -107,14 +107,14 @@ class OfflineRegionsPage extends ExamplePage {
 }
 
 class OfflineRegionBody extends StatefulWidget {
-  const OfflineRegionBody();
+  const OfflineRegionBody({super.key});
 
   @override
-  _OfflineRegionsBodyState createState() => _OfflineRegionsBodyState();
+  State<OfflineRegionBody> createState() => _OfflineRegionsBodyState();
 }
 
 class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
-  List<OfflineRegionListItem> _items = [];
+  final List<OfflineRegionListItem> _items = [];
 
   @override
   void initState() {
@@ -133,7 +133,7 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.map),
+                icon: const Icon(Icons.map),
                 onPressed: () => _goToMap(_items[index]),
               ),
               Column(
@@ -142,32 +142,33 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
                 children: <Widget>[
                   Text(
                     _items[index].name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
                   Text(
                     'Est. tiles: ${_items[index].estimatedTiles}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
                 ],
               ),
               const Spacer(),
-              _items[index].isDownloading
-                  ? Container(
-                      child: CircularProgressIndicator(),
-                      height: 16,
-                      width: 16,
-                    )
-                  : IconButton(
-                      icon: Icon(
-                        _items[index].isDownloaded ? Icons.delete : Icons.file_download,
-                      ),
-                      onPressed: _items[index].isDownloaded ? () => _deleteRegion(_items[index], index) : () => _downloadRegion(_items[index], index),
-                    ),
+              if (_items[index].isDownloading)
+                const SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(),
+                )
+              else
+                IconButton(
+                  icon: Icon(
+                    _items[index].isDownloaded ? Icons.delete : Icons.file_download,
+                  ),
+                  onPressed: _items[index].isDownloaded ? () => _deleteRegion(_items[index], index) : () => _downloadRegion(_items[index], index),
+                ),
             ],
           ),
         ),
@@ -175,10 +176,10 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
     );
   }
 
-  void _updateListOfRegions() async {
-    List<OfflineRegion> offlineRegions = await getListOfRegions();
-    List<OfflineRegionListItem> regionItems = [];
-    for (var item in allRegions) {
+  Future<void> _updateListOfRegions() async {
+    final offlineRegions = await getListOfRegions();
+    final regionItems = <OfflineRegionListItem>[];
+    for (final item in allRegions) {
       final offlineRegion = offlineRegions.firstWhereOrNull((offlineRegion) => offlineRegion.metadata['name'] == item.name);
       if (offlineRegion != null) {
         regionItems.add(item.copyWith(downloadedId: offlineRegion.id));
@@ -192,7 +193,7 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
     });
   }
 
-  void _downloadRegion(OfflineRegionListItem item, int index) async {
+  Future<void> _downloadRegion(OfflineRegionListItem item, int index) async {
     setState(() {
       _items.removeAt(index);
       _items.insert(index, item.copyWith(isDownloading: true));
@@ -228,7 +229,7 @@ class _OfflineRegionsBodyState extends State<OfflineRegionBody> {
     }
   }
 
-  void _deleteRegion(OfflineRegionListItem item, int index) async {
+  Future<void> _deleteRegion(OfflineRegionListItem item, int index) async {
     setState(() {
       _items.removeAt(index);
       _items.insert(index, item.copyWith(isDownloading: true));

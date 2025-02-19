@@ -8,7 +8,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class GivenBoundsPage extends ExamplePage {
-  GivenBoundsPage() : super(const Icon(Icons.map_sharp), 'Changing given bounds');
+  const GivenBoundsPage({super.key}) : super(const Icon(Icons.map_sharp), 'Changing given bounds');
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +17,16 @@ class GivenBoundsPage extends ExamplePage {
 }
 
 class GivenBounds extends StatefulWidget {
-  const GivenBounds();
+  const GivenBounds({super.key});
+
   @override
   State createState() => GivenBoundsState();
 }
 
 class GivenBoundsState extends State<GivenBounds> {
-  late TrackasiaMapController mapController;
+  late TrackAsiaMapController mapController;
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  void _onMapCreated(TrackAsiaMapController controller) {
     mapController = controller;
   }
 
@@ -39,8 +40,7 @@ class GivenBoundsState extends State<GivenBounds> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
             ),

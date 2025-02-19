@@ -11,7 +11,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class PlaceFillPage extends ExamplePage {
-  PlaceFillPage() : super(const Icon(Icons.check_circle), 'Place fill');
+  const PlaceFillPage({super.key}) : super(const Icon(Icons.check_circle), 'Place fill');
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class PlaceFillPage extends ExamplePage {
 }
 
 class PlaceFillBody extends StatefulWidget {
-  const PlaceFillBody();
+  const PlaceFillBody({super.key});
 
   @override
   State<StatefulWidget> createState() => PlaceFillBodyState();
@@ -29,37 +29,37 @@ class PlaceFillBody extends StatefulWidget {
 class PlaceFillBodyState extends State<PlaceFillBody> {
   PlaceFillBodyState();
 
-  static final LatLng center = const LatLng(-33.86711, 151.1947171);
+  static const LatLng center = LatLng(-33.86711, 151.1947171);
   final String _fillPatternImage = "assets/fill/cat_silhouette_pattern.png";
 
   final List<List<LatLng>> _defaultGeometry = [
     [
-      LatLng(-33.719, 151.150),
-      LatLng(-33.858, 151.150),
-      LatLng(-33.866, 151.401),
-      LatLng(-33.747, 151.328),
-      LatLng(-33.719, 151.150),
+      const LatLng(-33.719, 151.150),
+      const LatLng(-33.858, 151.150),
+      const LatLng(-33.866, 151.401),
+      const LatLng(-33.747, 151.328),
+      const LatLng(-33.719, 151.150),
     ],
     [
-      LatLng(-33.762, 151.250),
-      LatLng(-33.827, 151.250),
-      LatLng(-33.833, 151.347),
-      LatLng(-33.762, 151.250),
+      const LatLng(-33.762, 151.250),
+      const LatLng(-33.827, 151.250),
+      const LatLng(-33.833, 151.347),
+      const LatLng(-33.762, 151.250),
     ]
   ];
 
-  TrackasiaMapController? controller;
+  TrackAsiaMapController? controller;
   int _fillCount = 0;
   Fill? _selectedFill;
 
-  void _onMapCreated(TrackasiaMapController controller) {
+  void _onMapCreated(TrackAsiaMapController controller) {
     this.controller = controller;
     controller.onFillTapped.add(_onFillTapped);
     this.controller!.onFeatureDrag.add(_onFeatureDrag);
   }
 
   void _onFeatureDrag(id, {required current, required delta, required origin, required point, required eventType}) {
-    DragEventType type = eventType;
+    final DragEventType type = eventType;
     switch (type) {
       case DragEventType.start:
         // TODO: Handle this case.
@@ -79,8 +79,8 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
 
   /// Adds an asset image to the currently displayed style
   Future<void> addImageFromAsset(String name, String assetName) async {
-    final ByteData bytes = await rootBundle.load(assetName);
-    final Uint8List list = bytes.buffer.asUint8List();
+    final bytes = await rootBundle.load(assetName);
+    final list = bytes.buffer.asUint8List();
     return controller!.addImage(name, list);
   }
 
@@ -118,11 +118,9 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
   }
 
   void _changePosition() {
-    List<List<LatLng>>? geometry = _selectedFill!.options.geometry;
+    var geometry = _selectedFill!.options.geometry;
 
-    if (geometry == null) {
-      geometry = _defaultGeometry;
-    }
+    geometry ??= _defaultGeometry;
 
     _updateSelectedFill(FillOptions(geometry: geometry.map((list) => list.map(
         // Move to right with 0.1 degree on longitude
@@ -130,22 +128,16 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
   }
 
   void _changeDraggable() {
-    bool? draggable = _selectedFill!.options.draggable;
-    if (draggable == null) {
-      // default value
-      draggable = false;
-    }
+    var draggable = _selectedFill!.options.draggable;
+    draggable ??= false;
     _updateSelectedFill(
       FillOptions(draggable: !draggable),
     );
   }
 
   Future<void> _changeFillOpacity() async {
-    double? current = _selectedFill!.options.fillOpacity;
-    if (current == null) {
-      // default value
-      current = 1.0;
-    }
+    var current = _selectedFill!.options.fillOpacity;
+    current ??= 1.0;
 
     _updateSelectedFill(
       FillOptions(fillOpacity: current < 0.1 ? 1.0 : current * 0.75),
@@ -153,31 +145,25 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
   }
 
   Future<void> _changeFillColor() async {
-    String? current = _selectedFill!.options.fillColor;
-    if (current == null) {
-      // default value
-      current = "#FF0000";
-    }
+    var current = _selectedFill!.options.fillColor;
+    current ??= "#FF0000";
 
     _updateSelectedFill(
-      FillOptions(fillColor: "#FFFF00"),
+      const FillOptions(fillColor: "#FFFF00"),
     );
   }
 
   Future<void> _changeFillOutlineColor() async {
-    String? current = _selectedFill!.options.fillOutlineColor;
-    if (current == null) {
-      // default value
-      current = "#FF0000";
-    }
+    var current = _selectedFill!.options.fillOutlineColor;
+    current ??= "#FF0000";
 
     _updateSelectedFill(
-      FillOptions(fillOutlineColor: "#FFFF00"),
+      const FillOptions(fillOutlineColor: "#FFFF00"),
     );
   }
 
   Future<void> _changeFillPattern() async {
-    String? current = _selectedFill!.options.fillPattern == null ? "assetImage" : null;
+    final current = _selectedFill!.options.fillPattern == null ? "assetImage" : null;
     _updateSelectedFill(
       FillOptions(fillPattern: current),
     );
@@ -193,8 +179,7 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
           child: SizedBox(
             width: 300.0,
             height: 200.0,
-            child: TrackasiaMap(
-              styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+            child: TrackAsiaMap(
               onMapCreated: _onMapCreated,
               onStyleLoadedCallback: _onStyleLoaded,
               initialCameraPosition: const CameraPosition(
@@ -214,40 +199,40 @@ class PlaceFillBodyState extends State<PlaceFillBody> {
                     Column(
                       children: <Widget>[
                         TextButton(
-                          child: const Text('add'),
                           onPressed: (_fillCount == 12) ? null : _add,
+                          child: const Text('add'),
                         ),
                         TextButton(
-                          child: const Text('remove'),
                           onPressed: (_selectedFill == null) ? null : _remove,
+                          child: const Text('remove'),
                         ),
                       ],
                     ),
                     Column(
                       children: <Widget>[
                         TextButton(
-                          child: const Text('change fill-opacity'),
                           onPressed: (_selectedFill == null) ? null : _changeFillOpacity,
+                          child: const Text('change fill-opacity'),
                         ),
                         TextButton(
-                          child: const Text('change fill-color'),
                           onPressed: (_selectedFill == null) ? null : _changeFillColor,
+                          child: const Text('change fill-color'),
                         ),
                         TextButton(
-                          child: const Text('change fill-outline-color'),
                           onPressed: (_selectedFill == null) ? null : _changeFillOutlineColor,
+                          child: const Text('change fill-outline-color'),
                         ),
                         TextButton(
-                          child: const Text('change fill-pattern'),
                           onPressed: (_selectedFill == null) ? null : _changeFillPattern,
+                          child: const Text('change fill-pattern'),
                         ),
                         TextButton(
-                          child: const Text('change position'),
                           onPressed: (_selectedFill == null) ? null : _changePosition,
+                          child: const Text('change position'),
                         ),
                         TextButton(
-                          child: const Text('toggle draggable'),
                           onPressed: (_selectedFill == null) ? null : _changeDraggable,
+                          child: const Text('toggle draggable'),
                         ),
                       ],
                     ),

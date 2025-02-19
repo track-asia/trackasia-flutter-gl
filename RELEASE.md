@@ -1,30 +1,43 @@
-## Release
-
-Current process: for each release we also create a separate branch (`release-x.y.z`), tag (`x.y.z`) and Github release (`x.y.z`).
-
-This document describes the steps needed to make a release:
-
-For each supported library:
- - `trackasia_gl_platform_interface`
- - `trackasia_gl_web`
- - `trackasia-flutter-gl`
-
-Perform the following actions (these changes should also be on `main`):
- - Update `CHANGELOG.md` with the commits associated since previous release.
- - Update library version in `pubspec.yaml`
 
 
-**Only on the release branch:** Repeat this action for `trackasia-flutter-gl` and `trackasia_gl_web` for the dependency_overrides:
+# Release Process
 
-```
-Comment out:
-dependency_overrides:
-  trackasia_gl_platform_interface:
-    path: ../trackasia_gl_platform_interface
-```
+This document describes the steps needed to make a release.
+All packages are versioned and released together.
 
-and for the trackasia git dependencies, change ref from `main` to `release-x.y.z`.
+## Preparing a release
 
-Finally, create a Github release and git tag from the release branch.
+### Define the release version number
 
-The only difference between the release branch and `main` directly after the release are the `dependency_overrides` (these are useful for development and should therefore only be removed in the release branches) and the git ref for the intra-package dependencies.
+As long as we are on major version 0 (i.e. version number 0.xx.xx), we increase
+the minor component (e.g. from 0.16.0 to 0.17.0) for every breaking/significant
+release.
+
+We may want to make releases where we only increase the patch version (the final
+digits) for small bug-fix-releases or similar.
+
+### Update the version number
+
+Update the library version in `pubspec.yaml` for each library:
+   - `trackasia_gl_platform_interface`
+   - `trackasia_gl_web`
+   - `trackasia_gl` (root directory)
+
+Ensure that also the dependent sub-packages are updated to the new version.
+
+### Update the changelog
+
+Update the `trackasia_gl` (root directory) `CHANGELOG.md` with the commits/PRs since the previous
+release (the changelogs for the other two packages link there). Ideally at
+least PRs with breaking changes should already have modified the changelog to
+list their breaking change.
+
+### Create a PR
+
+Commit all changes and create a PR targeting the main branch.
+
+## Creating a release
+
+After the release PR has been merged, the release can be created
+by creating & pushing a tag on the main branch in the format `vVERSION`,
+for example `v0.20.0`.

@@ -4,7 +4,7 @@ import 'package:trackasia_gl/trackasia_gl.dart';
 import 'page.dart';
 
 class FullMapPage extends ExamplePage {
-  FullMapPage() : super(const Icon(Icons.map), 'Full screen map');
+  const FullMapPage({super.key}) : super(const Icon(Icons.map), 'Full screen map');
 
   @override
   Widget build(BuildContext context) {
@@ -13,34 +13,46 @@ class FullMapPage extends ExamplePage {
 }
 
 class FullMap extends StatefulWidget {
-  const FullMap();
+  const FullMap({super.key});
 
   @override
   State createState() => FullMapState();
 }
 
 class FullMapState extends State<FullMap> {
-  TrackasiaMapController? mapController;
+  TrackAsiaMapController? mapController;
   var isLight = true;
 
-  _onMapCreated(TrackasiaMapController controller) {
+  _onMapCreated(TrackAsiaMapController controller) {
     mapController = controller;
   }
 
   _onStyleLoadedCallback() {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("Style loaded :)"),
-      backgroundColor: Theme.of(context).primaryColor,
-      duration: Duration(seconds: 1),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Style loaded :)"),
+        backgroundColor: Theme.of(context).primaryColor,
+        duration: const Duration(seconds: 1),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        body: TrackasiaMap(
+    return Scaffold(
+        // TODO: commented out when cherry-picking https://github.com/flutter-mapbox-gl/maps/pull/775
+        // needs different dark and light styles in this repo
+        // floatingActionButton: Padding(
+        // padding: const EdgeInsets.all(32.0),
+        // child: FloatingActionButton(
+        // child: Icon(Icons.swap_horiz),
+        // onPressed: () => setState(
+        // () => isLight = !isLight,
+        // ),
+        // ),
+        // ),
+        body: TrackAsiaMap(
       onMapCreated: _onMapCreated,
-      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
       initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
       onStyleLoadedCallback: _onStyleLoadedCallback,
     ));
