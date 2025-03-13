@@ -48,7 +48,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
     dependencies {
-        implementation 'io.github.track-asia:android-sdk:2.0.1'
+        implementation 'io.github.track-asia:android-sdk:2.0.2'
         implementation 'io.github.track-asia:android-plugin-annotation-v9:2.0.1'
         implementation 'io.github.track-asia:android-plugin-offline-v9:2.0.1'
         implementation 'com.squareup.okhttp3:okhttp:4.12.0'
