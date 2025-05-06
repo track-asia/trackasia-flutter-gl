@@ -7,6 +7,8 @@ package com.trackasia.trackasiagl;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import com.trackasia.android.location.engine.LocationEngineRequest;
 import com.trackasia.geojson.Polygon;
 import com.trackasia.android.camera.CameraPosition;
 import com.trackasia.android.camera.CameraUpdate;
@@ -133,6 +135,17 @@ class Convert {
     return builder.build();
   }
 
+static LocationEngineRequest toLocationEngineRequest(Object o) {
+  if (o == null) {
+    return null;
+  }
+  List<?> data = toList(o);
+  return new LocationEngineRequest.Builder(toInt(data.get(0)))
+          .setPriority(toInt(data.get(1)))
+          .setDisplacement(toInt(data.get(2)))
+          .build();
+}
+
   static List<LatLng> toLatLngList(Object o, boolean flippedOrder) {
     if (o == null) {
       return null;
@@ -208,6 +221,12 @@ class Convert {
   static void interpretTrackAsiaMapOptions(Object o, TrackAsiaMapOptionsSink sink, Context context) {
     final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
     final Map<?, ?> data = toMap(o);
+
+    final Object locationEngineProperties = data.get("locationEngineProperties");
+    if (locationEngineProperties != null) {
+      final List<?> locationEnginePropertiesList = toList(locationEngineProperties);
+        sink.setLocationEngineProperties(toLocationEngineRequest(locationEnginePropertiesList));
+    }
     final Object cameraTargetBounds = data.get("cameraTargetBounds");
     if (cameraTargetBounds != null) {
       final List<?> targetData = toList(cameraTargetBounds);

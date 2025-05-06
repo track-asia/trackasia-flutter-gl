@@ -44,7 +44,7 @@ import 'package:trackasia_gl_web/src/interop/ui/handler/touch_zoom_rotate_intero
 /// });
 
 ///  ```
-///  @see [Display a map](https://track-asia.com/trackasia-gl-js/docs/examples/simple-map/)
+///  @see [Display a map](https://track-asia.io.github.track-asia-js/docs/examples/simple-map/)
 @JS('Map')
 class TrackAsiaMapJsImpl extends CameraJsImpl {
   external factory TrackAsiaMapJsImpl(MapOptionsJsImpl options);
@@ -90,8 +90,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @example
   ///  // Add zoom and rotation controls to the map.
   ///  map.addControl(new NavigationControl());
-  ///  @see [Display map navigation controls](https://track-asia.com/trackasia-gl-js/docs/examples/navigation/)
-  external TrackAsiaMapJsImpl addControl(IControlJsImpl? control, [String? position]);
+  ///  @see [Display map navigation controls](https://track-asia.io.github.track-asia-js/docs/examples/navigation/)
+  external TrackAsiaMapJsImpl addControl(IControlJsImpl? control,
+      [String? position]);
 
   ///  Removes the control from the map.
   ///
@@ -233,7 +234,7 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @returns {boolean} renderWorldCopies
   ///  @example
   ///  var worldCopiesRendered = map.getRenderWorldCopies();
-  ///  @see [Render world copies](https://track-asia.com/trackasia-gl-js/docs/examples/render-world-copies/)
+  ///  @see [Render world copies](https://track-asia.io.github.track-asia-js/docs/examples/render-world-copies/)
   external bool getRenderWorldCopies();
 
   ///  Sets the state of `renderWorldCopies`.
@@ -248,7 +249,7 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setRenderWorldCopies(true);
-  ///  @see [Render world copies](https://track-asia.com/trackasia-gl-js/docs/examples/render-world-copies/)
+  ///  @see [Render world copies](https://track-asia.io.github.track-asia-js/docs/examples/render-world-copies/)
   external TrackAsiaMapJsImpl setRenderWorldCopies([bool? renderWorldCopies]);
 
   ///  Returns a {@link Point} representing pixel coordinates, relative to the map's `container`,
@@ -387,10 +388,11 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @example
   ///  // Query all rendered features from a single layer
   ///  var features = map.queryRenderedFeatures({ layers: ['my-layer-name'] });
-  ///  @see [Get features under the mouse pointer](https://track-asia.com/trackasia-gl-js/docs/examples/queryrenderedfeatures/)
-  ///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
-  ///  @see [Filter features within map view](https://track-asia.com/trackasia-gl-js/docs/examples/filter-features-within-map-view/)
-  external List<FeatureJsImpl> queryRenderedFeatures(dynamic geometry, [dynamic options]);
+  ///  @see [Get features under the mouse pointer](https://track-asia.io.github.track-asia-js/docs/examples/queryrenderedfeatures/)
+  ///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
+  ///  @see [Filter features within map view](https://track-asia.io.github.track-asia-js/docs/examples/filter-features-within-map-view/)
+  external List<FeatureJsImpl> queryRenderedFeatures(dynamic geometry,
+      [dynamic options]);
 
   ///  Returns an array of [GeoJSON](http://geojson.org/)
   ///  [Feature objects](https://tools.ietf.org/html/rfc7946#section-3.2)
@@ -426,8 +428,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///    sourceLayer: 'your-source-layer'
   ///  });
   ///
-  ///  @see [Highlight features containing similar data](https://track-asia.com/trackasia-gl-js/docs/examples/query-similar-features/)
-  external List<dynamic> querySourceFeatures(String sourceId, dynamic parameters);
+  ///  @see [Highlight features containing similar data](https://track-asia.io.github.track-asia-js/docs/examples/query-similar-features/)
+  external List<dynamic> querySourceFeatures(
+      String sourceId, dynamic parameters);
 
   ///  Updates the map's TrackAsia style object with a new value.
   ///
@@ -450,7 +453,7 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///    Forces a full update.
   ///  @returns {TrackAsiaMap} `this`
   ///
-  ///  @see [Change a map's style](https://track-asia.com/trackasia-gl-js/docs/examples/setstyle/)
+  ///  @see [Change a map's style](https://track-asia.io.github.track-asia-js/docs/examples/setstyle/)
   external TrackAsiaMapJsImpl setStyle(dynamic style, [dynamic options]);
 
   ///  Returns the map's TrackAsia style object, which can be used to recreate the map's style.
@@ -477,9 +480,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  [CanvasSourceOptions].
   ///  @fires source.add
   ///  @returns {TrackAsiaMap} `this`
-  ///  @see Vector source: [Show and hide layers](https://track-asia.com/trackasia-gl-js/docs/examples/toggle-layers/)
-  ///  @see GeoJSON source: [Add live realtime data](https://track-asia.com/trackasia-gl-js/docs/examples/live-geojson/)
-  ///  @see Raster DEM source: [Add hillshading](https://track-asia.com/trackasia-gl-js/docs/examples/hillshade/)
+  ///  @see Vector source: [Show and hide layers](https://track-asia.io.github.track-asia-js/docs/examples/toggle-layers/)
+  ///  @see GeoJSON source: [Add live realtime data](https://track-asia.io.github.track-asia-js/docs/examples/live-geojson/)
+  ///  @see Raster DEM source: [Add hillshading](https://track-asia.io.github.track-asia-js/docs/examples/hillshade/)
   external TrackAsiaMapJsImpl addSource(String id, dynamic source);
 
   ///  Returns a Boolean indicating whether the source is loaded.
@@ -521,9 +524,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///    if the ID corresponds to no existing sources.
   ///  @example
   ///  var sourceObject = map.getSource('points');
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  ///  @see [Animate a point](https://track-asia.com/trackasia-gl-js/docs/examples/animate-point-along-line/)
-  ///  @see [Add live realtime data](https://track-asia.com/trackasia-gl-js/docs/examples/live-geojson/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  ///  @see [Animate a point](https://track-asia.io.github.track-asia-js/docs/examples/animate-point-along-line/)
+  ///  @see [Add live realtime data](https://track-asia.io.github.track-asia-js/docs/examples/live-geojson/)
   external dynamic getSource(String id);
 
   ///  Add an image to the style. This image can be displayed on the map like any other icon in the style's
@@ -567,8 +570,8 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  });
   ///
   ///
-  ///  @see Use `HTMLImageElement`: [Add an icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image/)
-  ///  @see Use `ImageData`: [Add a generated icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image-generated/)
+  ///  @see Use `HTMLImageElement`: [Add an icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image/)
+  ///  @see Use `ImageData`: [Add a generated icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image-generated/)
   external addImage(String id, dynamic image, [dynamic options]);
 
   ///  Update an existing image in a style. This image can be displayed on the map like any other icon in the style's
@@ -627,7 +630,7 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///    map.addImage('kitten', image);
   ///  });
   ///
-  ///  @see [Add an icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image/)
+  ///  @see [Add an icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image/)
   external loadImage(String url, dynamic callback);
 
   //////
@@ -655,9 +658,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///
   ///  @returns {TrackAsiaMap} `this`
   ///
-  ///  @see [Create and style clusters](https://track-asia.com/trackasia-gl-js/docs/examples/cluster/)
-  ///  @see [Add a vector tile source](https://track-asia.com/trackasia-gl-js/docs/examples/vector-source/)
-  ///  @see [Add a WMS source](https://track-asia.com/trackasia-gl-js/docs/examples/wms/)
+  ///  @see [Create and style clusters](https://track-asia.io.github.track-asia-js/docs/examples/cluster/)
+  ///  @see [Add a vector tile source](https://track-asia.io.github.track-asia-js/docs/examples/vector-source/)
+  ///  @see [Add a WMS source](https://track-asia.io.github.track-asia-js/docs/examples/wms/)
   external TrackAsiaMapJsImpl addLayer(dynamic layer, [String? beforeId]);
 
   ///  Moves a layer to a different z-position.
@@ -693,8 +696,8 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @example
   ///  var stateDataLayer = map.getLayer('state-data');
   ///
-  ///  @see [Filter symbols by toggling a list](https://track-asia.com/trackasia-gl-js/docs/examples/filter-markers/)
-  ///  @see [Filter symbols by text input](https://track-asia.com/trackasia-gl-js/docs/examples/filter-markers-by-input/)
+  ///  @see [Filter symbols by toggling a list](https://track-asia.io.github.track-asia-js/docs/examples/filter-markers/)
+  ///  @see [Filter symbols by text input](https://track-asia.io.github.track-asia-js/docs/examples/filter-markers-by-input/)
   external dynamic getLayer(String id);
 
   ///  Sets the zoom extent for the specified style layer. The zoom extent includes the
@@ -714,7 +717,8 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///
   ///  @example
   ///  map.setLayerZoomRange('my-layer', 2, 5);
-  external TrackAsiaMapJsImpl setLayerZoomRange(String layerId, num minzoom, num maxzoom);
+  external TrackAsiaMapJsImpl setLayerZoomRange(
+      String layerId, num minzoom, num maxzoom);
 
   ///  Sets the filter for the specified style layer.
   ///
@@ -728,10 +732,11 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @example
   ///  map.setFilter('my-layer', ['==', 'name', 'USA']);
   ///
-  ///  @see [Filter features within map view](https://track-asia.com/trackasia-gl-js/docs/examples/filter-features-within-map-view/)
-  ///  @see [Highlight features containing similar data](https://track-asia.com/trackasia-gl-js/docs/examples/query-similar-features/)
-  ///  @see [Create a timeline animation](https://track-asia.com/trackasia-gl-js/docs/examples/timeline-animation/)
-  external TrackAsiaMapJsImpl setFilter(String layerId, dynamic filter, [StyleSetterOptionsJsImpl? options]);
+  ///  @see [Filter features within map view](https://track-asia.io.github.track-asia-js/docs/examples/filter-features-within-map-view/)
+  ///  @see [Highlight features containing similar data](https://track-asia.io.github.track-asia-js/docs/examples/query-similar-features/)
+  ///  @see [Create a timeline animation](https://track-asia.io.github.track-asia-js/docs/examples/timeline-animation/)
+  external TrackAsiaMapJsImpl setFilter(String layerId, dynamic filter,
+      [StyleSetterOptionsJsImpl? options]);
 
   ///  Returns the filter applied to the specified style layer.
   ///
@@ -750,10 +755,11 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setPaintProperty('my-layer', 'fill-color', '#faafee');
-  ///  @see [Change a layer's color with buttons](https://track-asia.com/trackasia-gl-js/docs/examples/color-switcher/)
-  ///  @see [Adjust a layer's opacity](https://track-asia.com/trackasia-gl-js/docs/examples/adjust-layer-opacity/)
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  external setPaintProperty(String layerId, String name, dynamic value, [StyleSetterOptionsJsImpl? options]);
+  ///  @see [Change a layer's color with buttons](https://track-asia.io.github.track-asia-js/docs/examples/color-switcher/)
+  ///  @see [Adjust a layer's opacity](https://track-asia.io.github.track-asia-js/docs/examples/adjust-layer-opacity/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  external setPaintProperty(String layerId, String name, dynamic value,
+      [StyleSetterOptionsJsImpl? options]);
 
   ///  Returns the value of a paint property in the specified style layer.
   ///
@@ -772,7 +778,9 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setLayoutProperty('my-layer', 'visibility', 'none');
-  external TrackAsiaMapJsImpl setLayoutProperty(String layerId, String name, dynamic value, [StyleSetterOptionsJsImpl? options]);
+  external TrackAsiaMapJsImpl setLayoutProperty(
+      String layerId, String name, dynamic value,
+      [StyleSetterOptionsJsImpl? options]);
 
   ///  Returns the value of a layout property in the specified style layer.
   ///
@@ -787,7 +795,8 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  @param {Object} [options]
   ///  @param {boolean} [options.validate=true] Whether to check if the filter conforms to the TrackAsia JS Style Specification. Disabling validation is a performance optimization that should only be used if you have previously validated the values you will be passing to this function.
   ///  @returns {TrackAsiaMap} `this`
-  external TrackAsiaMapJsImpl setLight(dynamic light, StyleSetterOptionsJsImpl options);
+  external TrackAsiaMapJsImpl setLight(
+      dynamic light, StyleSetterOptionsJsImpl options);
 
   ///  Returns the value of the light object.
   ///
@@ -855,16 +864,16 @@ class TrackAsiaMapJsImpl extends CameraJsImpl {
   ///  map controls.
   ///
   ///  @returns {HTMLElement} The container of the map's `<canvas>`.
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  ///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  ///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
   external HtmlElement getCanvasContainer();
 
   ///  Returns the map's `<canvas>` element.
   ///
   ///  @returns {HTMLCanvasElement} The map's `<canvas>` element.
-  ///  @see [Measure distances](https://track-asia.com/trackasia-gl-js/docs/examples/measure/)
-  ///  @see [Display a popup on hover](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-hover/)
-  ///  @see [Center the map on a clicked symbol](https://track-asia.com/trackasia-gl-js/docs/examples/center-on-symbol/)
+  ///  @see [Measure distances](https://track-asia.io.github.track-asia-js/docs/examples/measure/)
+  ///  @see [Display a popup on hover](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-hover/)
+  ///  @see [Center the map on a clicked symbol](https://track-asia.io.github.track-asia-js/docs/examples/center-on-symbol/)
   external CanvasElement getCanvas();
 
   ///  Returns a Boolean indicating whether the map is fully loaded.
@@ -1080,12 +1089,13 @@ class MapOptionsJsImpl {
   /// font-family for locally overriding generation of glyphs in the 'CJK Unified Ideographs', 'Hiragana', 'Katakana' and 'Hangul Syllables' ranges.
   /// In these ranges, font settings from the map's style will be ignored, except for font-weight keywords (light/regular/medium/bold).
   /// Set to `false`, to enable font settings from the map's style for these glyph ranges.
-  /// The purpose of this option is to avoid bandwidth-intensive glyph server requests. (See [Use locally generated ideographs](https://track-asia.com/trackasia-gl-js/docs/examples/local-ideographs).)
+  /// The purpose of this option is to avoid bandwidth-intensive glyph server requests. (See [Use locally generated ideographs](https://track-asia.io.github.track-asia-js/docs/examples/local-ideographs).)
   external String get localIdeographFontFamily;
 
   /// A callback run before the TrackAsiaMap makes a request for an external URL. The callback can be used to modify the url, set headers, or set the credentials property for cross-origin requests.
   /// Expected to return an object with a `url` property and optionally `headers` and `credentials` properties.
-  external RequestTransformFunctionJsImpl get transformRequest; //TODO: Remove JsImpl
+  external RequestTransformFunctionJsImpl
+      get transformRequest; //TODO: Remove JsImpl
 
   /// If `true`, Resource Timing API information will be collected for requests made by GeoJSON and Vector Tile web workers (this information is normally inaccessible from the main Javascript thread). Information will be returned in a `resourceTiming` property of relevant `data` events.
   external bool get collectResourceTiming;
@@ -1148,7 +1158,8 @@ class MapOptionsJsImpl {
   });
 }
 
-typedef RequestTransformFunctionJsImpl = RequestParametersJsImpl Function(String url, String resourceType);
+typedef RequestTransformFunctionJsImpl = RequestParametersJsImpl Function(
+    String url, String resourceType);
 
 @JS()
 @anonymous

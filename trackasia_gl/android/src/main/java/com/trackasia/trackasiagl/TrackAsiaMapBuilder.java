@@ -9,6 +9,7 @@ import android.view.Gravity;
 import androidx.annotation.NonNull;
 import com.trackasia.android.camera.CameraPosition;
 import com.trackasia.android.geometry.LatLngBounds;
+import com.trackasia.android.location.engine.LocationEngineRequest;
 import com.trackasia.android.maps.TrackAsiaMapOptions;
 import io.flutter.plugin.common.BinaryMessenger;
 
@@ -23,6 +24,7 @@ class TrackAsiaMapBuilder implements TrackAsiaMapOptionsSink {
   private int myLocationRenderMode = 0;
   private String styleString = "";
   private LatLngBounds bounds = null;
+  private LocationEngineRequest locationEngineRequest = null;
 
   TrackAsiaMapController build(
       int id,
@@ -41,6 +43,10 @@ class TrackAsiaMapBuilder implements TrackAsiaMapOptionsSink {
 
     if (null != bounds) {
       controller.setCameraTargetBounds(bounds);
+    }
+
+    if(null != locationEngineRequest ){
+      controller.setLocationEngineProperties(locationEngineRequest);
     }
 
     return controller;
@@ -205,5 +211,10 @@ class TrackAsiaMapBuilder implements TrackAsiaMapOptionsSink {
 
   public void setDragEnabled(boolean enabled) {
     this.dragEnabled = enabled;
+  }
+
+  @Override
+  public void setLocationEngineProperties(@NonNull LocationEngineRequest locationEngineRequest) {
+    this.locationEngineRequest = locationEngineRequest;
   }
 }

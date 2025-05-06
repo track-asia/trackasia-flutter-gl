@@ -447,7 +447,7 @@ class GeojsonSourceProperties implements SourceProperties {
   /// * `cluster` Is `true` if the point is a cluster
   /// * `cluster_id` A unqiue id for the cluster to be used in conjunction
   /// with the [cluster inspection
-  /// methods](https://track-asia.com/trackasia-gl-js/docs/API/classes/trackasiagl.GeoJSONSource/#getclusterexpansionzoom)
+  /// methods](https://track-asia.io.github.track-asia-js/docs/API/classes/trackasiagl.GeoJSONSource/#getclusterexpansionzoom)
   /// * `point_count` Number of original points grouped into this cluster
   /// * `point_count_abbreviated` An abbreviated point count
   ///

@@ -15,7 +15,8 @@ class LatLng {
   /// The longitude is normalized to the half-open interval from -180.0
   /// (inclusive) to +180.0 (exclusive)
   const LatLng(double latitude, double longitude)
-      : latitude = (latitude < -90.0 ? -90.0 : (90.0 < latitude ? 90.0 : latitude)),
+      : latitude =
+            (latitude < -90.0 ? -90.0 : (90.0 < latitude ? 90.0 : latitude)),
         longitude = (longitude + 180.0) % 360.0 - 180.0;
 
   /// The latitude in degrees between -90.0 and 90.0, both inclusive.
@@ -47,7 +48,9 @@ class LatLng {
 
   @override
   bool operator ==(Object other) {
-    return other is LatLng && other.latitude == latitude && other.longitude == longitude;
+    return other is LatLng &&
+        other.latitude == latitude &&
+        other.longitude == longitude;
   }
 
   @override
@@ -68,7 +71,8 @@ class LatLngBounds {
   ///
   /// The latitude of the southwest corner cannot be larger than the
   /// latitude of the northeast corner.
-  LatLngBounds({required this.southwest, required this.northeast}) : assert(southwest.latitude <= northeast.latitude);
+  LatLngBounds({required this.southwest, required this.northeast})
+      : assert(southwest.latitude <= northeast.latitude);
 
   /// The southwest corner of the rectangle.
   final LatLng southwest;
@@ -85,14 +89,17 @@ class LatLngBounds {
   /// and `northeast` (upper-right corner).
   ///
   bool contains(LatLng point) {
-    final isLatitudeInBounds = point.latitude >= southwest.latitude && point.latitude <= northeast.latitude;
+    final isLatitudeInBounds = point.latitude >= southwest.latitude &&
+        point.latitude <= northeast.latitude;
 
     final bool isLongitudeInBounds;
 
     if (southwest.longitude <= northeast.longitude) {
-      isLongitudeInBounds = point.longitude >= southwest.longitude && point.longitude <= northeast.longitude;
+      isLongitudeInBounds = point.longitude >= southwest.longitude &&
+          point.longitude <= northeast.longitude;
     } else {
-      isLongitudeInBounds = point.longitude >= southwest.longitude || point.longitude <= northeast.longitude;
+      isLongitudeInBounds = point.longitude >= southwest.longitude ||
+          point.longitude <= northeast.longitude;
     }
     return isLatitudeInBounds && isLongitudeInBounds;
   }
@@ -115,7 +122,9 @@ class LatLngBounds {
 
   @override
   bool operator ==(Object other) {
-    return other is LatLngBounds && other.southwest == southwest && other.northeast == northeast;
+    return other is LatLngBounds &&
+        other.southwest == southwest &&
+        other.northeast == northeast;
   }
 
   @override
@@ -142,7 +151,12 @@ class LatLngQuad {
   final LatLng bottomLeft;
 
   dynamic toList() {
-    return <dynamic>[topLeft.toJson(), topRight.toJson(), bottomRight.toJson(), bottomLeft.toJson()];
+    return <dynamic>[
+      topLeft.toJson(),
+      topRight.toJson(),
+      bottomRight.toJson(),
+      bottomLeft.toJson()
+    ];
   }
 
   @visibleForTesting
@@ -165,7 +179,11 @@ class LatLngQuad {
 
   @override
   bool operator ==(Object other) {
-    return other is LatLngQuad && other.topLeft == topLeft && other.topRight == topRight && other.bottomRight == bottomRight && other.bottomLeft == bottomLeft;
+    return other is LatLngQuad &&
+        other.topLeft == topLeft &&
+        other.topRight == topRight &&
+        other.bottomRight == bottomRight &&
+        other.bottomLeft == bottomLeft;
   }
 
   @override
@@ -239,5 +257,12 @@ class UserHeading {
   /// Returns a timestamp for when the magnetic heading was determined.
   final DateTime timestamp;
 
-  const UserHeading({required this.magneticHeading, required this.trueHeading, required this.headingAccuracy, required this.x, required this.y, required this.z, required this.timestamp});
+  const UserHeading(
+      {required this.magneticHeading,
+      required this.trueHeading,
+      required this.headingAccuracy,
+      required this.x,
+      required this.y,
+      required this.z,
+      required this.timestamp});
 }

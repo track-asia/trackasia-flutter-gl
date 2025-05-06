@@ -48,12 +48,13 @@ import 'package:trackasia_gl_web/src/ui/handler/touch_zoom_rotate.dart';
 ///    ),
 ///  );
 ///  ```
-///  @see [Display a map](https://track-asia.com/trackasia-gl-js/docs/examples/simple-map/)
+///  @see [Display a map](https://track-asia.io.github.track-asia-js/docs/examples/simple-map/)
 class TrackAsiaMap extends Camera {
   @override
   final TrackAsiaMapJsImpl jsObject;
 
-  factory TrackAsiaMap(MapOptions options) => TrackAsiaMap.fromJsObject(TrackAsiaMapJsImpl(options.jsObject));
+  factory TrackAsiaMap(MapOptions options) =>
+      TrackAsiaMap.fromJsObject(TrackAsiaMapJsImpl(options.jsObject));
 
   Style get style => Style.fromJsObject(jsObject.style);
 
@@ -61,7 +62,8 @@ class TrackAsiaMap extends Camera {
 
   ///  The map's {@link ScrollZoomHandler}, which implements zooming in and out with a scroll wheel or trackpad.
   ///  Find more details and examples using `scrollZoom` in the {@link ScrollZoomHandler} section.
-  ScrollZoomHandler get scrollZoom => ScrollZoomHandler.fromJsObject(jsObject.scrollZoom);
+  ScrollZoomHandler get scrollZoom =>
+      ScrollZoomHandler.fromJsObject(jsObject.scrollZoom);
 
   ///  The map's {@link BoxZoomHandler}, which implements zooming using a drag gesture with the Shift key pressed.
   ///  Find more details and examples using `boxZoom` in the {@link BoxZoomHandler} section.
@@ -70,7 +72,8 @@ class TrackAsiaMap extends Camera {
   ///  The map's {@link DragRotateHandler}, which implements rotating the map while dragging with the right
   ///  mouse button or with the Control key pressed. Find more details and examples using `dragRotate`
   ///  in the {@link DragRotateHandler} section.
-  DragRotateHandler get dragRotate => DragRotateHandler.fromJsObject(jsObject.dragRotate);
+  DragRotateHandler get dragRotate =>
+      DragRotateHandler.fromJsObject(jsObject.dragRotate);
 
   ///  The map's {@link DragPanHandler}, which implements dragging the map with a mouse or touch gesture.
   ///  Find more details and examples using `dragPan` in the {@link DragPanHandler} section.
@@ -78,15 +81,18 @@ class TrackAsiaMap extends Camera {
 
   ///  The map's {@link KeyboardHandler}, which allows the user to zoom, rotate, and pan the map using keyboard
   ///  shortcuts. Find more details and examples using `keyboard` in the {@link KeyboardHandler} section.
-  KeyboardHandler get keyboard => KeyboardHandler.fromJsObject(jsObject.keyboard);
+  KeyboardHandler get keyboard =>
+      KeyboardHandler.fromJsObject(jsObject.keyboard);
 
   ///  The map's {@link DoubleClickZoomHandler}, which allows the user to zoom by double clicking.
   ///  Find more details and examples using `doubleClickZoom` in the {@link DoubleClickZoomHandler} section.
-  DoubleClickZoomHandler get doubleClickZoom => DoubleClickZoomHandler.fromJsObject(jsObject.doubleClickZoom);
+  DoubleClickZoomHandler get doubleClickZoom =>
+      DoubleClickZoomHandler.fromJsObject(jsObject.doubleClickZoom);
 
   ///  The map's {@link TouchZoomRotateHandler}, which allows the user to zoom or rotate the map with touch gestures.
   ///  Find more details and examples using `touchZoomRotate` in the {@link TouchZoomRotateHandler} section.
-  TouchZoomRotateHandler get touchZoomRotate => TouchZoomRotateHandler.fromJsObject(jsObject.touchZoomRotate);
+  TouchZoomRotateHandler get touchZoomRotate =>
+      TouchZoomRotateHandler.fromJsObject(jsObject.touchZoomRotate);
 
   ///  Adds an {@link IControl} to the map, calling `control.onAdd(this)`.
   ///
@@ -97,10 +103,11 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  // Add zoom and rotation controls to the map.
   ///  map.addControl(new NavigationControl());
-  ///  @see [Display map navigation controls](https://track-asia.com/trackasia-gl-js/docs/examples/navigation/)
+  ///  @see [Display map navigation controls](https://track-asia.io.github.track-asia-js/docs/examples/navigation/)
   TrackAsiaMap addControl(dynamic control, [String? position]) {
     if (position != null) {
-      return TrackAsiaMap.fromJsObject(jsObject.addControl(control.jsObject, position));
+      return TrackAsiaMap.fromJsObject(
+          jsObject.addControl(control.jsObject, position));
     }
     return TrackAsiaMap.fromJsObject(jsObject.addControl(control.jsObject));
   }
@@ -116,7 +123,8 @@ class TrackAsiaMap extends Camera {
   ///  map.addControl(navigation);
   ///  // Remove zoom and rotation controls from the map.
   ///  map.removeControl(navigation);
-  TrackAsiaMap removeControl(dynamic control) => TrackAsiaMap.fromJsObject(jsObject.removeControl(control.jsObject));
+  TrackAsiaMap removeControl(dynamic control) =>
+      TrackAsiaMap.fromJsObject(jsObject.removeControl(control.jsObject));
 
   ///  Resizes the map according to the dimensions of its
   ///  `container` element.
@@ -134,7 +142,8 @@ class TrackAsiaMap extends Camera {
   ///  // after being initially hidden with CSS.
   ///  var mapDiv = document.getElementById('map');
   ///  if (mapDiv.style.visibility === true) map.resize();
-  TrackAsiaMap resize([dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.resize());
+  TrackAsiaMap resize([dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.resize());
 
   ///  Returns the map's geographical bounds. When the bearing or pitch is non-zero, the visible region is not
   ///  an axis-aligned rectangle, and the result is the smallest bounds that encompasses the visible region.
@@ -145,7 +154,8 @@ class TrackAsiaMap extends Camera {
   ///  Returns the maximum geographical bounds the map is constrained to, or `null` if none set.
   ///  @example
   ///  var maxBounds = map.getMaxBounds();
-  LngLatBounds getMaxBounds() => LngLatBounds.fromJsObject(jsObject.getMaxBounds());
+  LngLatBounds getMaxBounds() =>
+      LngLatBounds.fromJsObject(jsObject.getMaxBounds());
 
   ///  Sets or clears the map's geographical bounds.
   ///
@@ -166,7 +176,8 @@ class TrackAsiaMap extends Camera {
   ///  ];
   ///  // Set the map's max bounds.
   ///  map.setMaxBounds(bounds);
-  TrackAsiaMap setMaxBounds(LngLatBounds? bounds) => TrackAsiaMap.fromJsObject(jsObject.setMaxBounds(bounds?.jsObject));
+  TrackAsiaMap setMaxBounds(LngLatBounds? bounds) =>
+      TrackAsiaMap.fromJsObject(jsObject.setMaxBounds(bounds?.jsObject));
 
   ///  Sets or clears the map's minimum zoom level.
   ///  If the map's current zoom level is lower than the new minimum,
@@ -182,7 +193,8 @@ class TrackAsiaMap extends Camera {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setMinZoom(12.25);
-  TrackAsiaMap setMinZoom([num? minZoom]) => TrackAsiaMap.fromJsObject(jsObject.setMinZoom(minZoom));
+  TrackAsiaMap setMinZoom([num? minZoom]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setMinZoom(minZoom));
 
   ///  Returns the map's minimum allowable zoom level.
   ///
@@ -200,7 +212,8 @@ class TrackAsiaMap extends Camera {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setMaxZoom(18.75);
-  TrackAsiaMap setMaxZoom([num? maxZoom]) => TrackAsiaMap.fromJsObject(jsObject.setMaxZoom(maxZoom));
+  TrackAsiaMap setMaxZoom([num? maxZoom]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setMaxZoom(maxZoom));
 
   ///  Returns the map's maximum allowable zoom level.
   ///
@@ -216,7 +229,8 @@ class TrackAsiaMap extends Camera {
   ///  @param {number | null | undefined} minPitch The minimum pitch to set (0-60).
   ///    If `null` or `undefined` is provided, the function removes the current minimum pitch (i.e. sets it to 0).
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap setMinPitch([num? minPitch]) => TrackAsiaMap.fromJsObject(jsObject.setMinPitch());
+  TrackAsiaMap setMinPitch([num? minPitch]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setMinPitch());
 
   ///  Returns the map's minimum allowable pitch.
   ///
@@ -230,7 +244,8 @@ class TrackAsiaMap extends Camera {
   ///  @param {number | null | undefined} maxPitch The maximum pitch to set.
   ///    If `null` or `undefined` is provided, the function removes the current maximum pitch (sets it to 60).
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap setMaxPitch([num? maxPitch]) => TrackAsiaMap.fromJsObject(jsObject.setMaxPitch());
+  TrackAsiaMap setMaxPitch([num? maxPitch]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setMaxPitch());
 
   ///  Returns the map's maximum allowable pitch.
   ///
@@ -245,7 +260,7 @@ class TrackAsiaMap extends Camera {
   ///  @returns {boolean} renderWorldCopies
   ///  @example
   ///  var worldCopiesRendered = map.getRenderWorldCopies();
-  ///  @see [Render world copies](https://track-asia.com/trackasia-gl-js/docs/examples/render-world-copies/)
+  ///  @see [Render world copies](https://track-asia.io.github.track-asia-js/docs/examples/render-world-copies/)
   bool getRenderWorldCopies() => jsObject.getRenderWorldCopies();
 
   ///  Sets the state of `renderWorldCopies`.
@@ -260,8 +275,10 @@ class TrackAsiaMap extends Camera {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setRenderWorldCopies(true);
-  ///  @see [Render world copies](https://track-asia.com/trackasia-gl-js/docs/examples/render-world-copies/)
-  TrackAsiaMap setRenderWorldCopies([bool? renderWorldCopies]) => TrackAsiaMap.fromJsObject(jsObject.setRenderWorldCopies(renderWorldCopies));
+  ///  @see [Render world copies](https://track-asia.io.github.track-asia-js/docs/examples/render-world-copies/)
+  TrackAsiaMap setRenderWorldCopies([bool? renderWorldCopies]) =>
+      TrackAsiaMap.fromJsObject(
+          jsObject.setRenderWorldCopies(renderWorldCopies));
 
   ///  Returns a {@link Point} representing pixel coordinates, relative to the map's `container`,
   ///  that correspond to the specified geographical location.
@@ -271,7 +288,8 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  var coordinate = [-122.420679, 37.772537];
   ///  var point = map.project(coordinate);
-  Point project(LngLat lnglat) => Point.fromJsObject(jsObject.project(lnglat.jsObject));
+  Point project(LngLat lnglat) =>
+      Point.fromJsObject(jsObject.project(lnglat.jsObject));
 
   ///  Returns a {@link LngLat} representing geographical coordinates that correspond
   ///  to the specified pixel coordinates.
@@ -283,7 +301,8 @@ class TrackAsiaMap extends Camera {
   ///    // When the map is clicked, get the geographic coordinate.
   ///    var coordinate = map.unproject(e.point);
   ///  });
-  LngLat unproject(Point point) => LngLat.fromJsObject(jsObject.unproject(point.jsObject));
+  LngLat unproject(Point point) =>
+      LngLat.fromJsObject(jsObject.unproject(point.jsObject));
 
   ///  Returns true if the map is panning, zooming, rotating, or pitching due to a camera animation or user gesture.
   ///  @example
@@ -399,14 +418,21 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  // Query all rendered features from a single layer
   ///  var features = map.queryRenderedFeatures({ layers: ['my-layer-name'] });
-  ///  @see [Get features under the mouse pointer](https://track-asia.com/trackasia-gl-js/docs/examples/queryrenderedfeatures/)
-  ///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
-  ///  @see [Filter features within map view](https://track-asia.com/trackasia-gl-js/docs/examples/filter-features-within-map-view/)
-  List<Feature> queryRenderedFeatures(dynamic geometry, [Map<String, dynamic>? options]) {
+  ///  @see [Get features under the mouse pointer](https://track-asia.io.github.track-asia-js/docs/examples/queryrenderedfeatures/)
+  ///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
+  ///  @see [Filter features within map view](https://track-asia.io.github.track-asia-js/docs/examples/filter-features-within-map-view/)
+  List<Feature> queryRenderedFeatures(dynamic geometry,
+      [Map<String, dynamic>? options]) {
     if (options == null) {
-      return jsObject.queryRenderedFeatures(geometry).map((dynamic f) => Feature.fromJsObject(f)).toList();
+      return jsObject
+          .queryRenderedFeatures(geometry)
+          .map((dynamic f) => Feature.fromJsObject(f))
+          .toList();
     }
-    return jsObject.queryRenderedFeatures(geometry, jsify(options)).map((dynamic f) => Feature.fromJsObject(f)).toList();
+    return jsObject
+        .queryRenderedFeatures(geometry, jsify(options))
+        .map((dynamic f) => Feature.fromJsObject(f))
+        .toList();
   }
 
   ///  Returns an array of [GeoJSON](http://geojson.org/)
@@ -443,8 +469,9 @@ class TrackAsiaMap extends Camera {
   ///    sourceLayer: 'your-source-layer'
   ///  });
   ///
-  ///  @see [Highlight features containing similar data](https://track-asia.com/trackasia-gl-js/docs/examples/query-similar-features/)
-  List<dynamic> querySourceFeatures(String sourceId, dynamic parameters) => jsObject.querySourceFeatures(sourceId, parameters);
+  ///  @see [Highlight features containing similar data](https://track-asia.io.github.track-asia-js/docs/examples/query-similar-features/)
+  List<dynamic> querySourceFeatures(String sourceId, dynamic parameters) =>
+      jsObject.querySourceFeatures(sourceId, parameters);
 
   ///  Updates the map's TrackAsia style object with a new value.
   ///
@@ -466,8 +493,9 @@ class TrackAsiaMap extends Camera {
   ///    Set to `false`, to enable font settings from the map's style for these glyph ranges.
   ///    Forces a full update.
   ///  @returns {TrackAsiaMap} `this`
-  ///  @see [Change a map's style](https://track-asia.com/trackasia-gl-js/docs/examples/setstyle/)
-  TrackAsiaMap setStyle(dynamic style, [dynamic options]) => TrackAsiaMap.fromJsObject(jsObject.setStyle(style));
+  ///  @see [Change a map's style](https://track-asia.io.github.track-asia-js/docs/examples/setstyle/)
+  TrackAsiaMap setStyle(dynamic style, [dynamic options]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setStyle(style));
 
   ///  Returns the map's TrackAsia style object, which can be used to recreate the map's style.
   ///
@@ -497,9 +525,9 @@ class TrackAsiaMap extends Camera {
   ///  @fires source.add
   ///  @returns {TrackAsiaMap} `this`
   ///  });
-  ///  @see Vector source: [Show and hide layers](https://track-asia.com/trackasia-gl-js/docs/examples/toggle-layers/)
-  ///  @see GeoJSON source: [Add live realtime data](https://track-asia.com/trackasia-gl-js/docs/examples/live-geojson/)
-  ///  @see Raster DEM source: [Add hillshading](https://track-asia.com/trackasia-gl-js/docs/examples/hillshade/)
+  ///  @see Vector source: [Show and hide layers](https://track-asia.io.github.track-asia-js/docs/examples/toggle-layers/)
+  ///  @see GeoJSON source: [Add live realtime data](https://track-asia.io.github.track-asia-js/docs/examples/live-geojson/)
+  ///  @see Raster DEM source: [Add hillshading](https://track-asia.io.github.track-asia-js/docs/examples/hillshade/)
   TrackAsiaMap addSource(String id, dynamic source) {
     if (source is Source) {
       return TrackAsiaMap.fromJsObject(jsObject.addSource(id, source.jsObject));
@@ -529,7 +557,8 @@ class TrackAsiaMap extends Camera {
   ///  @param {string} name The name of the source type; source definition objects use this name in the `{type: ...}` field.
   ///  @param {Function} SourceType A {@link Source} constructor.
   ///  @param {Function} callback Called when the source type is ready or with an error argument if there is an error.
-  addSourceType(String name, dynamic sourceType, Function callback) => jsObject.addSourceType(name, sourceType, callback);
+  addSourceType(String name, dynamic sourceType, Function callback) =>
+      jsObject.addSourceType(name, sourceType, callback);
 
   ///  Removes a source from the map's style.
   ///
@@ -546,9 +575,9 @@ class TrackAsiaMap extends Camera {
   ///    if the ID corresponds to no existing sources.
   ///  @example
   ///  var sourceObject = map.getSource('points');
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  ///  @see [Animate a point](https://track-asia.com/trackasia-gl-js/docs/examples/animate-point-along-line/)
-  ///  @see [Add live realtime data](https://track-asia.com/trackasia-gl-js/docs/examples/live-geojson/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  ///  @see [Animate a point](https://track-asia.io.github.track-asia-js/docs/examples/animate-point-along-line/)
+  ///  @see [Add live realtime data](https://track-asia.io.github.track-asia-js/docs/examples/live-geojson/)
   dynamic getSource(String id) {
     final source = jsObject.getSource(id);
     if (source is GeoJsonSourceJsImpl) {
@@ -601,13 +630,15 @@ class TrackAsiaMap extends Camera {
   ///  });
   ///
   ///
-  ///  @see Use `HTMLImageElement`: [Add an icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image/)
-  ///  @see Use `ImageData`: [Add a generated icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image-generated/)
+  ///  @see Use `HTMLImageElement`: [Add an icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image/)
+  ///  @see Use `ImageData`: [Add a generated icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image-generated/)
   addImage(String id, dynamic image, [Map<String, dynamic>? options]) {
     if (image is Map) {
       image = jsify(image);
     }
-    return options == null ? jsObject.addImage(id, image) : jsObject.addImage(id, image, jsify(options));
+    return options == null
+        ? jsObject.addImage(id, image)
+        : jsObject.addImage(id, image, jsify(options));
   }
 
   ///  Update an existing image in a style. This image can be displayed on the map like any other icon in the style's
@@ -666,8 +697,9 @@ class TrackAsiaMap extends Camera {
   ///    map.addImage('kitten', image);
   ///  });
   ///
-  ///  @see [Add an icon to the map](https://track-asia.com/trackasia-gl-js/docs/examples/add-image/)
-  loadImage(String url, Function callback) => jsObject.loadImage(url, allowInterop(callback));
+  ///  @see [Add an icon to the map](https://track-asia.io.github.track-asia-js/docs/examples/add-image/)
+  loadImage(String url, Function callback) =>
+      jsObject.loadImage(url, allowInterop(callback));
 
   //////
   ///  Returns an Array of strings containing the IDs of all images currently available in the map.
@@ -694,12 +726,13 @@ class TrackAsiaMap extends Camera {
   ///
   ///  @returns {TrackAsiaMap} `this`
   ///
-  ///  @see [Create and style clusters](https://track-asia.com/trackasia-gl-js/docs/examples/cluster/)
-  ///  @see [Add a vector tile source](https://track-asia.com/trackasia-gl-js/docs/examples/vector-source/)
-  ///  @see [Add a WMS source](https://track-asia.com/trackasia-gl-js/docs/examples/wms/)
+  ///  @see [Create and style clusters](https://track-asia.io.github.track-asia-js/docs/examples/cluster/)
+  ///  @see [Add a vector tile source](https://track-asia.io.github.track-asia-js/docs/examples/vector-source/)
+  ///  @see [Add a WMS source](https://track-asia.io.github.track-asia-js/docs/examples/wms/)
   TrackAsiaMap addLayer(dynamic layer, [String? beforeId]) {
     if (layer is Layer) {
-      return TrackAsiaMap.fromJsObject(jsObject.addLayer(layer.jsObject, beforeId));
+      return TrackAsiaMap.fromJsObject(
+          jsObject.addLayer(layer.jsObject, beforeId));
     }
     return TrackAsiaMap.fromJsObject(jsObject.addLayer(jsify(layer), beforeId));
   }
@@ -716,7 +749,8 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  // Move a layer with ID 'label' before the layer with ID 'waterways'.
   ///  map.moveLayer('label', 'waterways');
-  TrackAsiaMap moveLayer(String id, String beforeId) => TrackAsiaMap.fromJsObject(jsObject.moveLayer(id, beforeId));
+  TrackAsiaMap moveLayer(String id, String beforeId) =>
+      TrackAsiaMap.fromJsObject(jsObject.moveLayer(id, beforeId));
 
   ///  Removes the layer with the given ID from the map's style.
   ///
@@ -739,8 +773,8 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  var stateDataLayer = map.getLayer('state-data');
   ///
-  ///  @see [Filter symbols by toggling a list](https://track-asia.com/trackasia-gl-js/docs/examples/filter-markers/)
-  ///  @see [Filter symbols by text input](https://track-asia.com/trackasia-gl-js/docs/examples/filter-markers-by-input/)
+  ///  @see [Filter symbols by toggling a list](https://track-asia.io.github.track-asia-js/docs/examples/filter-markers/)
+  ///  @see [Filter symbols by text input](https://track-asia.io.github.track-asia-js/docs/examples/filter-markers-by-input/)
   dynamic getLayer(String id) => jsObject.getLayer(id);
 
   ///  Sets the zoom extent for the specified style layer. The zoom extent includes the
@@ -760,7 +794,9 @@ class TrackAsiaMap extends Camera {
   ///
   ///  @example
   ///  map.setLayerZoomRange('my-layer', 2, 5);
-  TrackAsiaMap setLayerZoomRange(String layerId, num minzoom, num maxzoom) => TrackAsiaMap.fromJsObject(jsObject.setLayerZoomRange(layerId, minzoom, maxzoom));
+  TrackAsiaMap setLayerZoomRange(String layerId, num minzoom, num maxzoom) =>
+      TrackAsiaMap.fromJsObject(
+          jsObject.setLayerZoomRange(layerId, minzoom, maxzoom));
 
   ///  Sets the filter for the specified style layer.
   ///
@@ -774,10 +810,12 @@ class TrackAsiaMap extends Camera {
   ///  @example
   ///  map.setFilter('my-layer', ['==', 'name', 'USA']);
   ///
-  ///  @see [Filter features within map view](https://track-asia.com/trackasia-gl-js/docs/examples/filter-features-within-map-view/)
-  ///  @see [Highlight features containing similar data](https://track-asia.com/trackasia-gl-js/docs/examples/query-similar-features/)
-  ///  @see [Create a timeline animation](https://track-asia.com/trackasia-gl-js/docs/examples/timeline-animation/)
-  TrackAsiaMap setFilter(String layerId, dynamic filter, [StyleSetterOptions? options]) => TrackAsiaMap.fromJsObject(jsObject.setFilter(layerId, filter));
+  ///  @see [Filter features within map view](https://track-asia.io.github.track-asia-js/docs/examples/filter-features-within-map-view/)
+  ///  @see [Highlight features containing similar data](https://track-asia.io.github.track-asia-js/docs/examples/query-similar-features/)
+  ///  @see [Create a timeline animation](https://track-asia.io.github.track-asia-js/docs/examples/timeline-animation/)
+  TrackAsiaMap setFilter(String layerId, dynamic filter,
+          [StyleSetterOptions? options]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setFilter(layerId, filter));
 
   ///  Returns the filter applied to the specified style layer.
   ///
@@ -796,17 +834,20 @@ class TrackAsiaMap extends Camera {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setPaintProperty('my-layer', 'fill-color', '#faafee');
-  ///  @see [Change a layer's color with buttons](https://track-asia.com/trackasia-gl-js/docs/examples/color-switcher/)
-  ///  @see [Adjust a layer's opacity](https://track-asia.com/trackasia-gl-js/docs/examples/adjust-layer-opacity/)
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  setPaintProperty(String layerId, String name, dynamic value, [StyleSetterOptions? options]) => jsObject.setPaintProperty(layerId, name, jsify(value));
+  ///  @see [Change a layer's color with buttons](https://track-asia.io.github.track-asia-js/docs/examples/color-switcher/)
+  ///  @see [Adjust a layer's opacity](https://track-asia.io.github.track-asia-js/docs/examples/adjust-layer-opacity/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  setPaintProperty(String layerId, String name, dynamic value,
+          [StyleSetterOptions? options]) =>
+      jsObject.setPaintProperty(layerId, name, jsify(value));
 
   ///  Returns the value of a paint property in the specified style layer.
   ///
   ///  @param {string} layerId The ID of the layer to get the paint property from.
   ///  @param {string} name The name of a paint property to get.
   ///  @returns {*} The value of the specified paint property.
-  dynamic getPaintProperty(String layerId, String name) => jsObject.getPaintProperty(layerId, name);
+  dynamic getPaintProperty(String layerId, String name) =>
+      jsObject.getPaintProperty(layerId, name);
 
   ///  Sets the value of a layout property in the specified style layer.
   ///
@@ -818,14 +859,18 @@ class TrackAsiaMap extends Camera {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setLayoutProperty('my-layer', 'visibility', 'none');
-  TrackAsiaMap setLayoutProperty(String layerId, String name, dynamic value, [StyleSetterOptions? options]) => TrackAsiaMap.fromJsObject(jsObject.setLayoutProperty(layerId, name, value));
+  TrackAsiaMap setLayoutProperty(String layerId, String name, dynamic value,
+          [StyleSetterOptions? options]) =>
+      TrackAsiaMap.fromJsObject(
+          jsObject.setLayoutProperty(layerId, name, value));
 
   ///  Returns the value of a layout property in the specified style layer.
   ///
   ///  @param {string} layerId The ID of the layer to get the layout property from.
   ///  @param {string} name The name of the layout property to get.
   ///  @returns {*} The value of the specified layout property.
-  dynamic getLayoutProperty(String layerId, String name) => jsObject.getLayoutProperty(layerId, name);
+  dynamic getLayoutProperty(String layerId, String name) =>
+      jsObject.getLayoutProperty(layerId, name);
 
   ///  Sets the any combination of light values.
   ///
@@ -833,7 +878,8 @@ class TrackAsiaMap extends Camera {
   ///  @param {Object} [options]
   ///  @param {boolean} [options.validate=true] Whether to check if the filter conforms to the TrackAsia JS Style Specification. Disabling validation is a performance optimization that should only be used if you have previously validated the values you will be passing to this function.
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap setLight(dynamic light, StyleSetterOptions options) => TrackAsiaMap.fromJsObject(jsObject.setLight(light, options.jsObject));
+  TrackAsiaMap setLight(dynamic light, StyleSetterOptions options) =>
+      TrackAsiaMap.fromJsObject(jsObject.setLight(light, options.jsObject));
 
   ///  Returns the value of the light object.
   ///
@@ -856,7 +902,8 @@ class TrackAsiaMap extends Camera {
   ///  feature ids, set the `generateId` option in the `GeoJSONSourceSpecification` to auto-assign them. This
   ///  option assigns ids based on a feature's index in the source data. If you change feature data using
   ///  `map.getSource('some id').setData(..)`, you may need to re-apply state taking into account updated `id` values.
-  setFeatureState(dynamic feature, dynamic state) => jsObject.setFeatureState(feature, state);
+  setFeatureState(dynamic feature, dynamic state) =>
+      jsObject.setFeatureState(feature, state);
 
   ///  Removes feature state, setting it back to the default behavior. If only
   ///  source is specified, removes all states of that source. If
@@ -871,7 +918,8 @@ class TrackAsiaMap extends Camera {
   ///  @param {string} `target.sourceLayer` (optional) /// For vector tile sources, the sourceLayer is
   ///   required.*
   ///  @param {string} key (optional) The key in the feature state to reset.
-  removeFeatureState(dynamic target, [String? key]) => jsObject.removeFeatureState(target);
+  removeFeatureState(dynamic target, [String? key]) =>
+      jsObject.removeFeatureState(target);
 
   ///  Gets the state of a feature.
   ///  Features are identified by their `id` attribute, which must be an integer or a string that can be
@@ -901,16 +949,16 @@ class TrackAsiaMap extends Camera {
   ///  map controls.
   ///
   ///  @returns {HTMLElement} The container of the map's `<canvas>`.
-  ///  @see [Create a draggable point](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-point/)
-  ///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
+  ///  @see [Create a draggable point](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-point/)
+  ///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
   HtmlElement getCanvasContainer() => jsObject.getCanvasContainer();
 
   ///  Returns the map's `<canvas>` element.
   ///
   ///  @returns {HTMLCanvasElement} The map's `<canvas>` element.
-  ///  @see [Measure distances](https://track-asia.com/trackasia-gl-js/docs/examples/measure/)
-  ///  @see [Display a popup on hover](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-hover/)
-  ///  @see [Center the map on a clicked symbol](https://track-asia.com/trackasia-gl-js/docs/examples/center-on-symbol/)
+  ///  @see [Measure distances](https://track-asia.io.github.track-asia-js/docs/examples/measure/)
+  ///  @see [Display a popup on hover](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-hover/)
+  ///  @see [Center the map on a clicked symbol](https://track-asia.io.github.track-asia-js/docs/examples/center-on-symbol/)
   CanvasElement getCanvas() => jsObject.getCanvas();
 
   ///  Returns a Boolean indicating whether the map is fully loaded.
@@ -1045,7 +1093,8 @@ class MapOptions extends JsObjectWrapper<MapOptionsJsImpl> {
 
   /// If `true`, map creation will fail if the performance of TrackAsia
   /// GL JS would be dramatically worse than expected (i.e. a software renderer would be used).
-  bool get failIfMajorPerformanceCaveat => jsObject.failIfMajorPerformanceCaveat;
+  bool get failIfMajorPerformanceCaveat =>
+      jsObject.failIfMajorPerformanceCaveat;
 
   /// If `true`, the map's canvas can be exported to a PNG using `map.getCanvas().toDataURL()`. This is `false` by default as a performance optimization.
   bool get preserveDrawingBuffer => jsObject.preserveDrawingBuffer;
@@ -1132,12 +1181,13 @@ class MapOptions extends JsObjectWrapper<MapOptionsJsImpl> {
   /// font-family for locally overriding generation of glyphs in the 'CJK Unified Ideographs', 'Hiragana', 'Katakana' and 'Hangul Syllables' ranges.
   /// In these ranges, font settings from the map's style will be ignored, except for font-weight keywords (light/regular/medium/bold).
   /// Set to `false`, to enable font settings from the map's style for these glyph ranges.
-  /// The purpose of this option is to avoid bandwidth-intensive glyph server requests. (See [Use locally generated ideographs](https://track-asia.com/trackasia-gl-js/docs/examples/local-ideographs).)
+  /// The purpose of this option is to avoid bandwidth-intensive glyph server requests. (See [Use locally generated ideographs](https://track-asia.io.github.track-asia-js/docs/examples/local-ideographs).)
   String get localIdeographFontFamily => jsObject.localIdeographFontFamily;
 
   /// A callback run before the TrackAsiaMap makes a request for an external URL. The callback can be used to modify the url, set headers, or set the credentials property for cross-origin requests.
   /// Expected to return an object with a `url` property and optionally `headers` and `credentials` properties.
-  RequestTransformFunctionJsImpl get transformRequest => jsObject.transformRequest; //TODO: Remove JsImpl
+  RequestTransformFunctionJsImpl get transformRequest =>
+      jsObject.transformRequest; //TODO: Remove JsImpl
 
   /// If `true`, Resource Timing API information will be collected for requests made by GeoJSON and Vector Tile web workers (this information is normally inaccessible from the main Javascript thread). Information will be returned in a `resourceTiming` property of relevant `data` events.
   bool get collectResourceTiming => jsObject.collectResourceTiming;

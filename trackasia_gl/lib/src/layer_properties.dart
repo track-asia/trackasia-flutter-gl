@@ -863,7 +863,8 @@ class SymbolLayerProperties implements LayerProperties {
       iconAllowOverlap: changes.iconAllowOverlap ?? iconAllowOverlap,
       iconIgnorePlacement: changes.iconIgnorePlacement ?? iconIgnorePlacement,
       iconOptional: changes.iconOptional ?? iconOptional,
-      iconRotationAlignment: changes.iconRotationAlignment ?? iconRotationAlignment,
+      iconRotationAlignment:
+          changes.iconRotationAlignment ?? iconRotationAlignment,
       iconSize: changes.iconSize ?? iconSize,
       iconTextFit: changes.iconTextFit ?? iconTextFit,
       iconTextFitPadding: changes.iconTextFitPadding ?? iconTextFitPadding,
@@ -875,7 +876,8 @@ class SymbolLayerProperties implements LayerProperties {
       iconAnchor: changes.iconAnchor ?? iconAnchor,
       iconPitchAlignment: changes.iconPitchAlignment ?? iconPitchAlignment,
       textPitchAlignment: changes.textPitchAlignment ?? textPitchAlignment,
-      textRotationAlignment: changes.textRotationAlignment ?? textRotationAlignment,
+      textRotationAlignment:
+          changes.textRotationAlignment ?? textRotationAlignment,
       textField: changes.textField ?? textField,
       textFont: changes.textFont ?? textFont,
       textSize: changes.textSize ?? textSize,
@@ -1212,9 +1214,11 @@ class CircleLayerProperties implements LayerProperties {
       circleBlur: changes.circleBlur ?? circleBlur,
       circleOpacity: changes.circleOpacity ?? circleOpacity,
       circleTranslate: changes.circleTranslate ?? circleTranslate,
-      circleTranslateAnchor: changes.circleTranslateAnchor ?? circleTranslateAnchor,
+      circleTranslateAnchor:
+          changes.circleTranslateAnchor ?? circleTranslateAnchor,
       circlePitchScale: changes.circlePitchScale ?? circlePitchScale,
-      circlePitchAlignment: changes.circlePitchAlignment ?? circlePitchAlignment,
+      circlePitchAlignment:
+          changes.circlePitchAlignment ?? circlePitchAlignment,
       circleStrokeWidth: changes.circleStrokeWidth ?? circleStrokeWidth,
       circleStrokeColor: changes.circleStrokeColor ?? circleStrokeColor,
       circleStrokeOpacity: changes.circleStrokeOpacity ?? circleStrokeOpacity,
@@ -1878,14 +1882,19 @@ class FillExtrusionLayerProperties implements LayerProperties {
 
   FillExtrusionLayerProperties copyWith(FillExtrusionLayerProperties changes) {
     return FillExtrusionLayerProperties(
-      fillExtrusionOpacity: changes.fillExtrusionOpacity ?? fillExtrusionOpacity,
+      fillExtrusionOpacity:
+          changes.fillExtrusionOpacity ?? fillExtrusionOpacity,
       fillExtrusionColor: changes.fillExtrusionColor ?? fillExtrusionColor,
-      fillExtrusionTranslate: changes.fillExtrusionTranslate ?? fillExtrusionTranslate,
-      fillExtrusionTranslateAnchor: changes.fillExtrusionTranslateAnchor ?? fillExtrusionTranslateAnchor,
-      fillExtrusionPattern: changes.fillExtrusionPattern ?? fillExtrusionPattern,
+      fillExtrusionTranslate:
+          changes.fillExtrusionTranslate ?? fillExtrusionTranslate,
+      fillExtrusionTranslateAnchor:
+          changes.fillExtrusionTranslateAnchor ?? fillExtrusionTranslateAnchor,
+      fillExtrusionPattern:
+          changes.fillExtrusionPattern ?? fillExtrusionPattern,
       fillExtrusionHeight: changes.fillExtrusionHeight ?? fillExtrusionHeight,
       fillExtrusionBase: changes.fillExtrusionBase ?? fillExtrusionBase,
-      fillExtrusionVerticalGradient: changes.fillExtrusionVerticalGradient ?? fillExtrusionVerticalGradient,
+      fillExtrusionVerticalGradient: changes.fillExtrusionVerticalGradient ??
+          fillExtrusionVerticalGradient,
       visibility: changes.visibility ?? visibility,
     );
   }
@@ -1903,11 +1912,13 @@ class FillExtrusionLayerProperties implements LayerProperties {
     addIfPresent('fill-extrusion-opacity', fillExtrusionOpacity);
     addIfPresent('fill-extrusion-color', fillExtrusionColor);
     addIfPresent('fill-extrusion-translate', fillExtrusionTranslate);
-    addIfPresent('fill-extrusion-translate-anchor', fillExtrusionTranslateAnchor);
+    addIfPresent(
+        'fill-extrusion-translate-anchor', fillExtrusionTranslateAnchor);
     addIfPresent('fill-extrusion-pattern', fillExtrusionPattern);
     addIfPresent('fill-extrusion-height', fillExtrusionHeight);
     addIfPresent('fill-extrusion-base', fillExtrusionBase);
-    addIfPresent('fill-extrusion-vertical-gradient', fillExtrusionVerticalGradient);
+    addIfPresent(
+        'fill-extrusion-vertical-gradient', fillExtrusionVerticalGradient);
     addIfPresent('visibility', visibility);
     return json;
   }
@@ -2199,12 +2210,18 @@ class HillshadeLayerProperties implements LayerProperties {
 
   HillshadeLayerProperties copyWith(HillshadeLayerProperties changes) {
     return HillshadeLayerProperties(
-      hillshadeIlluminationDirection: changes.hillshadeIlluminationDirection ?? hillshadeIlluminationDirection,
-      hillshadeIlluminationAnchor: changes.hillshadeIlluminationAnchor ?? hillshadeIlluminationAnchor,
-      hillshadeExaggeration: changes.hillshadeExaggeration ?? hillshadeExaggeration,
-      hillshadeShadowColor: changes.hillshadeShadowColor ?? hillshadeShadowColor,
-      hillshadeHighlightColor: changes.hillshadeHighlightColor ?? hillshadeHighlightColor,
-      hillshadeAccentColor: changes.hillshadeAccentColor ?? hillshadeAccentColor,
+      hillshadeIlluminationDirection: changes.hillshadeIlluminationDirection ??
+          hillshadeIlluminationDirection,
+      hillshadeIlluminationAnchor:
+          changes.hillshadeIlluminationAnchor ?? hillshadeIlluminationAnchor,
+      hillshadeExaggeration:
+          changes.hillshadeExaggeration ?? hillshadeExaggeration,
+      hillshadeShadowColor:
+          changes.hillshadeShadowColor ?? hillshadeShadowColor,
+      hillshadeHighlightColor:
+          changes.hillshadeHighlightColor ?? hillshadeHighlightColor,
+      hillshadeAccentColor:
+          changes.hillshadeAccentColor ?? hillshadeAccentColor,
       visibility: changes.visibility ?? visibility,
     );
   }
@@ -2219,7 +2236,8 @@ class HillshadeLayerProperties implements LayerProperties {
       }
     }
 
-    addIfPresent('hillshade-illumination-direction', hillshadeIlluminationDirection);
+    addIfPresent(
+        'hillshade-illumination-direction', hillshadeIlluminationDirection);
     addIfPresent('hillshade-illumination-anchor', hillshadeIlluminationAnchor);
     addIfPresent('hillshade-exaggeration', hillshadeExaggeration);
     addIfPresent('hillshade-shadow-color', hillshadeShadowColor);

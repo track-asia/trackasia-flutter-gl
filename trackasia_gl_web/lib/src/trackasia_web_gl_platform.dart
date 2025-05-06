@@ -1,6 +1,7 @@
 part of '../trackasia_gl_web.dart';
 
-class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOptionsSink {
+class TrackAsiaMapController extends TrackAsiaPlatform
+    implements TrackAsiaMapOptionsSink {
   late html.DivElement _mapElement;
 
   late Map<String, dynamic> _creationParams;
@@ -24,10 +25,14 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   Timer? lastResizeObserverTimer;
 
   @override
-  Widget buildView(Map<String, dynamic> creationParams, OnPlatformViewCreatedCallback onPlatformViewCreated, Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers) {
+  Widget buildView(
+      Map<String, dynamic> creationParams,
+      OnPlatformViewCreatedCallback onPlatformViewCreated,
+      Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers) {
     _creationParams = creationParams;
     _registerViewFactory(onPlatformViewCreated, hashCode);
-    return HtmlElementView(viewType: 'plugins.flutter.io/trackasia_gl_$hashCode');
+    return HtmlElementView(
+        viewType: 'plugins.flutter.io/trackasia_gl_$hashCode');
   }
 
   @override
@@ -38,7 +43,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
 
   void _registerViewFactory(Function(int) callback, int identifier) {
     // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory('plugins.flutter.io/trackasia_gl_$identifier', (int viewId) {
+    ui.platformViewRegistry.registerViewFactory(
+        'plugins.flutter.io/trackasia_gl_$identifier', (int viewId) {
       _mapElement = html.DivElement()
         ..style.position = 'absolute'
         ..style.top = '0'
@@ -58,11 +64,12 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
       _map = TrackAsiaMap(
         MapOptions(
           container: _mapElement,
-          style: _creationParams["styleString"],
+          style: _creationParams['styleString'],
           center: LngLat(camera['target'][1], camera['target'][0]),
           zoom: camera['zoom'],
           bearing: camera['bearing'],
           pitch: camera['tilt'],
+          preserveDrawingBuffer: _creationParams['webPreserveDrawingBuffer'],
           attributionControl: false, //avoid duplicate control
         ),
       );
@@ -115,7 +122,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
       _dragOrigin = LatLng(coords.lat as double, coords.lng as double);
 
       if (_draggedFeatureId != null) {
-        final current = LatLng(e.lngLat.lat.toDouble(), e.lngLat.lng.toDouble());
+        final current =
+            LatLng(e.lngLat.lat.toDouble(), e.lngLat.lng.toDouble());
         final payload = {
           'id': _draggedFeatureId,
           'point': Point<double>(e.point.x.toDouble(), e.point.y.toDouble()),
@@ -165,14 +173,16 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<CameraPosition?> updateMapOptions(Map<String, dynamic> optionsUpdate) async {
+  Future<CameraPosition?> updateMapOptions(
+      Map<String, dynamic> optionsUpdate) async {
     // FIX: why is called indefinitely? (map_ui page)
     Convert.interpretTrackAsiaMapOptions(optionsUpdate, this);
     return _getCameraPosition();
   }
 
   @override
-  Future<bool?> animateCamera(CameraUpdate cameraUpdate, {Duration? duration}) async {
+  Future<bool?> animateCamera(CameraUpdate cameraUpdate,
+      {Duration? duration}) async {
     final cameraOptions = Convert.toCameraOptions(cameraUpdate, _map).jsObject;
 
     final around = getProperty(cameraOptions, 'around');
@@ -201,13 +211,14 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> updateMyLocationTrackingMode(MyLocationTrackingMode myLocationTrackingMode) async {
+  Future<void> updateMyLocationTrackingMode(
+      MyLocationTrackingMode myLocationTrackingMode) async {
     setMyLocationTrackingMode(myLocationTrackingMode.index);
   }
 
   @override
   Future<void> matchMapLanguageWithDeviceDefault() async {
-    // Fix in https://github.com/trackasia/flutter-trackasia-gl/issues/263
+    // Fix in https://github.com/track-asia/flutter-trackasia-gl/issues/263
     // ignore: deprecated_member_use
     setMapLanguage(ui.window.locale.languageCode);
   }
@@ -256,7 +267,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<List> queryRenderedFeatures(Point<double> point, List<String> layerIds, List<Object>? filter) async {
+  Future<List> queryRenderedFeatures(
+      Point<double> point, List<String> layerIds, List<Object>? filter) async {
     final options = <String, dynamic>{};
     if (layerIds.isNotEmpty) {
       options['layers'] = layerIds;
@@ -283,7 +295,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<List> queryRenderedFeaturesInRect(Rect rect, List<String> layerIds, String? filter) async {
+  Future<List> queryRenderedFeaturesInRect(
+      Rect rect, List<String> layerIds, String? filter) async {
     final options = <String, dynamic>{};
     if (layerIds.isNotEmpty) {
       options['layers'] = layerIds;
@@ -310,7 +323,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<List> querySourceFeatures(String sourceId, String? sourceLayerId, List<Object>? filter) async {
+  Future<List> querySourceFeatures(
+      String sourceId, String? sourceLayerId, List<Object>? filter) async {
     final parameters = <String, dynamic>{};
 
     if (sourceLayerId != null) {
@@ -368,7 +382,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> addImage(String name, Uint8List bytes, [bool sdf = false]) async {
+  Future<void> addImage(String name, Uint8List bytes,
+      [bool sdf = false]) async {
     final photo = decodeImage(bytes)!;
     if (!_map.hasImage(name)) {
       _map.addImage(
@@ -420,7 +435,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   void _onMapClick(Event e) {
-    final features = _map.queryRenderedFeatures([e.point.x, e.point.y], {"layers": _interactiveFeatureLayerIds.toList()});
+    final features = _map.queryRenderedFeatures([e.point.x, e.point.y],
+        {"layers": _interactiveFeatureLayerIds.toList()});
     final payload = {
       'point': Point<double>(e.point.x.toDouble(), e.point.y.toDouble()),
       'latLng': LatLng(e.lngLat.lat.toDouble(), e.lngLat.lng.toDouble()),
@@ -700,22 +716,26 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
 
   @override
   Future<LatLng> toLatLng(Point<num> screenLocation) async {
-    final lngLat = _map.unproject(geo_point.Point(screenLocation.x, screenLocation.y));
+    final lngLat =
+        _map.unproject(geo_point.Point(screenLocation.x, screenLocation.y));
     return LatLng(lngLat.lat as double, lngLat.lng as double);
   }
 
   @override
   Future<Point> toScreenLocation(LatLng latLng) async {
-    final screenPosition = _map.project(LngLat(latLng.longitude, latLng.latitude));
+    final screenPosition =
+        _map.project(LngLat(latLng.longitude, latLng.latitude));
     final point = Point(screenPosition.x.round(), screenPosition.y.round());
 
     return point;
   }
 
   @override
-  Future<List<Point<num>>> toScreenLocationBatch(Iterable<LatLng> latLngs) async {
+  Future<List<Point<num>>> toScreenLocationBatch(
+      Iterable<LatLng> latLngs) async {
     return latLngs.map((latLng) {
-      final screenPosition = _map.project(LngLat(latLng.longitude, latLng.latitude));
+      final screenPosition =
+          _map.project(LngLat(latLng.longitude, latLng.latitude));
       return Point(screenPosition.x.round(), screenPosition.y.round());
     }).toList(growable: false);
   }
@@ -740,7 +760,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> addGeoJsonSource(String sourceId, Map<String, dynamic> geojson, {String? promoteId}) async {
+  Future<void> addGeoJsonSource(String sourceId, Map<String, dynamic> geojson,
+      {String? promoteId}) async {
     final data = _makeFeatureCollection(geojson);
     _addedFeaturesByLayer[sourceId] = data;
     _map.addSource(sourceId, {
@@ -752,17 +773,21 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
 
   Feature _makeFeature(Map<String, dynamic> geojsonFeature) {
     return Feature(
-        geometry: Geometry(type: geojsonFeature["geometry"]["type"], coordinates: geojsonFeature["geometry"]["coordinates"]),
+        geometry: Geometry(
+            type: geojsonFeature["geometry"]["type"],
+            coordinates: geojsonFeature["geometry"]["coordinates"]),
         properties: geojsonFeature["properties"],
         id: geojsonFeature["properties"]?["id"] ?? geojsonFeature["id"]);
   }
 
   FeatureCollection _makeFeatureCollection(Map<String, dynamic> geojson) {
-    return FeatureCollection(features: [for (final f in geojson["features"] ?? []) _makeFeature(f)]);
+    return FeatureCollection(
+        features: [for (final f in geojson["features"] ?? []) _makeFeature(f)]);
   }
 
   @override
-  Future<void> setGeoJsonSource(String sourceId, Map<String, dynamic> geojson) async {
+  Future<void> setGeoJsonSource(
+      String sourceId, Map<String, dynamic> geojson) async {
     final source = _map.getSource(sourceId) as GeoJsonSource;
     final data = _makeFeatureCollection(geojson);
     _addedFeaturesByLayer[sourceId] = data;
@@ -777,39 +802,85 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
     required double east,
     required int padding,
   }) async {
-    _map.fitBounds(LngLatBounds(LngLat(west, south), LngLat(east, north)), {'padding': padding});
+    _map.fitBounds(LngLatBounds(LngLat(west, south), LngLat(east, north)),
+        {'padding': padding});
   }
 
   @override
-  Future<void> addFillExtrusionLayer(String sourceId, String layerId, Map<String, dynamic> properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
+  Future<void> addFillExtrusionLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
     return _addLayer(sourceId, layerId, properties, "fill-extrusion",
-        belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter, enableInteraction: enableInteraction);
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        filter: filter,
+        enableInteraction: enableInteraction);
   }
 
   @override
-  Future<void> addCircleLayer(String sourceId, String layerId, Map<String, dynamic> properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
+  Future<void> addCircleLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
     return _addLayer(sourceId, layerId, properties, "circle",
-        belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter, enableInteraction: enableInteraction);
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        filter: filter,
+        enableInteraction: enableInteraction);
   }
 
   @override
-  Future<void> addFillLayer(String sourceId, String layerId, Map<String, dynamic> properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
+  Future<void> addFillLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
     return _addLayer(sourceId, layerId, properties, "fill",
-        belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter, enableInteraction: enableInteraction);
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        filter: filter,
+        enableInteraction: enableInteraction);
   }
 
   @override
-  Future<void> addLineLayer(String sourceId, String layerId, Map<String, dynamic> properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
+  Future<void> addLineLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
     return _addLayer(sourceId, layerId, properties, "line",
-        belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter, enableInteraction: enableInteraction);
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        filter: filter,
+        enableInteraction: enableInteraction);
   }
 
   @override
-  Future<void> setLayerProperties(String layerId, Map<String, dynamic> properties) async {
+  Future<void> setLayerProperties(
+      String layerId, Map<String, dynamic> properties) async {
     for (final entry in properties.entries) {
       // Very hacky: because we don't know if the property is a layout
       // or paint property, we try to set it as both.
@@ -827,31 +898,80 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> addSymbolLayer(String sourceId, String layerId, Map<String, dynamic> properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
+  Future<void> addSymbolLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
     return _addLayer(sourceId, layerId, properties, "symbol",
-        belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter, enableInteraction: enableInteraction);
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        filter: filter,
+        enableInteraction: enableInteraction);
   }
 
   @override
-  Future<void> addHillshadeLayer(String sourceId, String layerId, Map<String, dynamic> properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
-    return _addLayer(sourceId, layerId, properties, "hillshade", belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, enableInteraction: false);
+  Future<void> addHillshadeLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
+    return _addLayer(sourceId, layerId, properties, "hillshade",
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        enableInteraction: false);
   }
 
   @override
-  Future<void> addHeatmapLayer(String sourceId, String layerId, Map<String, dynamic> properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
-    return _addLayer(sourceId, layerId, properties, "heatmap", belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, enableInteraction: false);
+  Future<void> addHeatmapLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
+    return _addLayer(sourceId, layerId, properties, "heatmap",
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        enableInteraction: false);
   }
 
   @override
-  Future<void> addRasterLayer(String sourceId, String layerId, Map<String, dynamic> properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
-    await _addLayer(sourceId, layerId, properties, "raster", belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, enableInteraction: false);
+  Future<void> addRasterLayer(
+      String sourceId, String layerId, Map<String, dynamic> properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
+    await _addLayer(sourceId, layerId, properties, "raster",
+        belowLayerId: belowLayerId,
+        sourceLayer: sourceLayer,
+        minzoom: minzoom,
+        maxzoom: maxzoom,
+        enableInteraction: false);
   }
 
-  Future<void> _addLayer(String sourceId, String layerId, Map<String, dynamic> properties, String layerType,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, required bool enableInteraction}) async {
-    final layout = Map.fromEntries(properties.entries.where((entry) => isLayoutProperty(entry.key)));
-    final paint = Map.fromEntries(properties.entries.where((entry) => !isLayoutProperty(entry.key)));
+  Future<void> _addLayer(String sourceId, String layerId,
+      Map<String, dynamic> properties, String layerType,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      required bool enableInteraction}) async {
+    final layout = Map.fromEntries(
+        properties.entries.where((entry) => isLayoutProperty(entry.key)));
+    final paint = Map.fromEntries(
+        properties.entries.where((entry) => !isLayoutProperty(entry.key)));
 
     _map.addLayer({
       'id': layerId,
@@ -889,8 +1009,15 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
 
   @override
   void setGestures(
-      {required bool rotateGesturesEnabled, required bool scrollGesturesEnabled, required bool tiltGesturesEnabled, required bool zoomGesturesEnabled, required bool doubleClickZoomEnabled}) {
-    if (rotateGesturesEnabled && scrollGesturesEnabled && tiltGesturesEnabled && zoomGesturesEnabled) {
+      {required bool rotateGesturesEnabled,
+      required bool scrollGesturesEnabled,
+      required bool tiltGesturesEnabled,
+      required bool zoomGesturesEnabled,
+      required bool doubleClickZoomEnabled}) {
+    if (rotateGesturesEnabled &&
+        scrollGesturesEnabled &&
+        tiltGesturesEnabled &&
+        zoomGesturesEnabled) {
       _map.keyboard.enable();
     } else {
       _map.keyboard.disable();
@@ -940,25 +1067,29 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> addImageSource(String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
+  Future<void> addImageSource(
+      String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
     // TODO: implement addImageSource
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateImageSource(String imageSourceId, Uint8List? bytes, LatLngQuad? coordinates) {
+  Future<void> updateImageSource(
+      String imageSourceId, Uint8List? bytes, LatLngQuad? coordinates) {
     // TODO: implement updateImageSource
     throw UnimplementedError();
   }
 
   @override
-  Future<void> addLayer(String imageLayerId, String imageSourceId, double? minzoom, double? maxzoom) {
+  Future<void> addLayer(String imageLayerId, String imageSourceId,
+      double? minzoom, double? maxzoom) {
     // TODO: implement addLayer
     throw UnimplementedError();
   }
 
   @override
-  Future<void> addLayerBelow(String imageLayerId, String imageSourceId, String belowLayerId, double? minzoom, double? maxzoom) {
+  Future<void> addLayerBelow(String imageLayerId, String imageSourceId,
+      String belowLayerId, double? minzoom, double? maxzoom) {
     // TODO: implement addLayerBelow
     throw UnimplementedError();
   }
@@ -970,7 +1101,8 @@ class TrackAsiaMapController extends TrackAsiaPlatform implements TrackAsiaMapOp
   }
 
   @override
-  Future<void> setFeatureForGeoJsonSource(String sourceId, Map<String, dynamic> geojsonFeature) async {
+  Future<void> setFeatureForGeoJsonSource(
+      String sourceId, Map<String, dynamic> geojsonFeature) async {
     final source = _map.getSource(sourceId) as GeoJsonSource?;
     final data = _addedFeaturesByLayer[sourceId];
 

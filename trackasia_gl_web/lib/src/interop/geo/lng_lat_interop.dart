@@ -16,10 +16,10 @@ import 'package:trackasia_gl_web/src/interop/geo/lng_lat_bounds_interop.dart';
 ///  @param {number} lat Latitude, measured in degrees.
 ///  @example
 ///  var ll = new trackasiagl.LngLat(-73.9749, 40.7736);
-///  @see [Get coordinates of the mouse pointer](https://track-asia.com/trackasia-gl-js/docs/examples/mouse-position/)
-///  @see [Display a popup](https://track-asia.com/trackasia-gl-js/docs/examples/popup/)
-///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
-///  @see [Create a timeline animation](https://track-asia.com/trackasia-gl-js/docs/examples/timeline-animation/)
+///  @see [Get coordinates of the mouse pointer](https://track-asia.io.github.track-asia-js/docs/examples/mouse-position/)
+///  @see [Display a popup](https://track-asia.io.github.track-asia-js/docs/examples/popup/)
+///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
+///  @see [Create a timeline animation](https://track-asia.io.github.track-asia-js/docs/examples/timeline-animation/)
 @JS('LngLat')
 class LngLatJsImpl {
   external num get lng;

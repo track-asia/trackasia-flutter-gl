@@ -66,7 +66,8 @@ abstract class StyleJsImpl extends EventedJsImpl {
   ///  Add a layer to the map style. The layer will be inserted before the layer with
   ///  ID `before`, or appended if `before` is omitted.
   ///  @param {string} [before] ID of an existing layer to insert before
-  addLayer(dynamic layerObject, [String? before, StyleSetterOptionsJsImpl? options]);
+  addLayer(dynamic layerObject,
+      [String? before, StyleSetterOptionsJsImpl? options]);
 
   ///  Moves a layer to a different z-position. The layer will be inserted before the layer with
   ///  ID `before`, or appended if `before` is omitted.
@@ -97,7 +98,8 @@ abstract class StyleJsImpl extends EventedJsImpl {
   ///  @returns {*} the layer's filter, if any
   getFilter(String layer);
 
-  setLayoutProperty(String layerId, String name, dynamic value, StyleSetterOptionsJsImpl options);
+  setLayoutProperty(String layerId, String name, dynamic value,
+      StyleSetterOptionsJsImpl options);
 
   ///  Get a layout property's value from a given layer
   ///  @param {string} layerId the layer to inspect
@@ -105,7 +107,8 @@ abstract class StyleJsImpl extends EventedJsImpl {
   ///  @returns {*} the property value
   getLayoutProperty(String layerId, String name);
 
-  setPaintProperty(String layerId, String name, dynamic value, StyleSetterOptionsJsImpl options);
+  setPaintProperty(String layerId, String name, dynamic value,
+      StyleSetterOptionsJsImpl options);
 
   getPaintProperty(String layer, String name);
 

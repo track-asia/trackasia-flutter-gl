@@ -11,7 +11,8 @@ class AttributionControlOptionsJsImpl {
 
   external List<String>? get customAttribution;
 
-  external factory AttributionControlOptionsJsImpl({bool? compact, List<String>? customAttribution});
+  external factory AttributionControlOptionsJsImpl(
+      {bool? compact, List<String>? customAttribution});
 }
 
 /// A `AttributionControl` control contains attributions.
@@ -23,12 +24,13 @@ class AttributionControlOptionsJsImpl {
 /// @example
 /// var attribution = new trackasiagl.AttributionControl();
 /// map.addControl(attribution, 'top-left');
-/// @see [Display map attribution controls](https://track-asia.com/trackasia-gl-js/docs/examples/attribution-position/)
+/// @see [Display map attribution controls](https://track-asia.io.github.track-asia-js/docs/examples/attribution-position/)
 @JS('AttributionControl')
 class AttributionControlJsImpl {
   external AttributionControlOptionsJsImpl get options;
 
-  external factory AttributionControlJsImpl(AttributionControlOptionsJsImpl options);
+  external factory AttributionControlJsImpl(
+      AttributionControlOptionsJsImpl options);
 
   external onAdd(TrackAsiaMapJsImpl map);
 

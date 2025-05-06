@@ -2,7 +2,8 @@ import 'package:trackasia_gl_web/src/interop/interop.dart';
 import 'package:trackasia_gl_web/src/interop/ui/control/attribution_control_interop.dart';
 import 'package:trackasia_gl_web/src/ui/map.dart';
 
-class AttributionControlOptions extends JsObjectWrapper<AttributionControlOptionsJsImpl> {
+class AttributionControlOptions
+    extends JsObjectWrapper<AttributionControlOptionsJsImpl> {
   factory AttributionControlOptions({
     bool? compact,
     List<String>? customAttribution,
@@ -25,11 +26,14 @@ class AttributionControlOptions extends JsObjectWrapper<AttributionControlOption
 /// @example
 /// var attribution = new trackasiagl.AttributionControl();
 /// map.addControl(attribution, 'top-left');
-/// @see [Display map attribution controls](https://track-asia.com/trackasia-gl-js/docs/examples/attribution-position/)
+/// @see [Display map attribution controls](https://track-asia.io.github.track-asia-js/docs/examples/attribution-position/)
 class AttributionControl extends JsObjectWrapper<AttributionControlJsImpl> {
-  AttributionControlOptions get options => AttributionControlOptions.fromJsObject(jsObject.options);
+  AttributionControlOptions get options =>
+      AttributionControlOptions.fromJsObject(jsObject.options);
 
-  factory AttributionControl(AttributionControlOptions options) => AttributionControl.fromJsObject(AttributionControlJsImpl(options.jsObject));
+  factory AttributionControl(AttributionControlOptions options) =>
+      AttributionControl.fromJsObject(
+          AttributionControlJsImpl(options.jsObject));
 
   onAdd(TrackAsiaMap map) => jsObject.onAdd(map.jsObject);
 

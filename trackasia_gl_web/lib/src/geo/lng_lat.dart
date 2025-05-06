@@ -13,10 +13,10 @@ import 'package:trackasia_gl_web/src/interop/interop.dart';
 ///  @param {number} lat Latitude, measured in degrees.
 ///  @example
 ///  var ll = new trackasiagl.LngLat(-73.9749, 40.7736);
-///  @see [Get coordinates of the mouse pointer](https://track-asia.com/trackasia-gl-js/docs/examples/mouse-position/)
-///  @see [Display a popup](https://track-asia.com/trackasia-gl-js/docs/examples/popup/)
-///  @see [Highlight features within a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/using-box-queryrenderedfeatures/)
-///  @see [Create a timeline animation](https://track-asia.com/trackasia-gl-js/docs/examples/timeline-animation/)
+///  @see [Get coordinates of the mouse pointer](https://track-asia.io.github.track-asia-js/docs/examples/mouse-position/)
+///  @see [Display a popup](https://track-asia.io.github.track-asia-js/docs/examples/popup/)
+///  @see [Highlight features within a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/using-box-queryrenderedfeatures/)
+///  @see [Create a timeline animation](https://track-asia.io.github.track-asia-js/docs/examples/timeline-animation/)
 class LngLat extends JsObjectWrapper<LngLatJsImpl> {
   num get lng => jsObject.lng;
 
@@ -64,7 +64,8 @@ class LngLat extends JsObjectWrapper<LngLatJsImpl> {
   ///  @example
   ///  var ll = new trackasiagl.LngLat(-73.9749, 40.7736);
   ///  ll.toBounds(100).toArray(); // = [[-73.97501862141328, 40.77351016847229], [-73.97478137858673, 40.77368983152771]]
-  LngLatBounds toBounds(num radius) => LngLatBounds.fromJsObject(jsObject.toBounds(radius));
+  LngLatBounds toBounds(num radius) =>
+      LngLatBounds.fromJsObject(jsObject.toBounds(radius));
 
   ///  Converts an array of two numbers or an object with `lng` and `lat` or `lon` and `lat` properties
   ///  to a `LngLat` object.
@@ -77,7 +78,8 @@ class LngLat extends JsObjectWrapper<LngLatJsImpl> {
   ///  var arr = [-73.9749, 40.7736];
   ///  var ll = trackasiagl.LngLat.convert(arr);
   ///  ll;   // = LngLat {lng: -73.9749, lat: 40.7736}
-  LngLat.convert(dynamic input) : this.fromJsObject(LngLatJsImpl.convert(input));
+  LngLat.convert(dynamic input)
+      : this.fromJsObject(LngLatJsImpl.convert(input));
 
   /// Creates a new LngLat from a [jsObject].
   LngLat.fromJsObject(super.jsObject) : super.fromJsObject();

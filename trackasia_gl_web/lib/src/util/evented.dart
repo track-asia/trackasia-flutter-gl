@@ -17,7 +17,8 @@ class Event extends JsObjectWrapper<EventJsImpl> {
 
   LngLat get lngLat => LngLat.fromJsObject(jsObject.lngLat);
 
-  List<Feature> get features => jsObject.features.map((dynamic f) => Feature.fromJsObject(f)).toList();
+  List<Feature> get features =>
+      jsObject.features.map((dynamic f) => Feature.fromJsObject(f)).toList();
 
   Point get point => Point.fromJsObject(jsObject.point);
 
@@ -32,7 +33,8 @@ class Event extends JsObjectWrapper<EventJsImpl> {
         id: id,
         type: type,
         lngLat: lngLat.jsObject,
-        features: features.map((dynamic f) => f.jsObject).toList() as List<FeatureJsImpl?>?,
+        features: features.map((dynamic f) => f.jsObject).toList()
+            as List<FeatureJsImpl?>?,
         point: point.jsObject,
       ));
 
@@ -69,7 +71,8 @@ class Evented extends JsObjectWrapper<EventedJsImpl> {
         )),
       );
     }
-    return TrackAsiaMap.fromJsObject(jsObject.on(type, layerIdOrListener, allowInterop(
+    return TrackAsiaMap.fromJsObject(
+        jsObject.on(type, layerIdOrListener, allowInterop(
       (EventJsImpl object) {
         listener!(Event.fromJsObject(object));
       },
@@ -81,7 +84,8 @@ class Evented extends JsObjectWrapper<EventedJsImpl> {
   ///  @param {string} type The event type to remove listeners for.
   ///  @param {Function} listener The listener function to remove.
   ///  @returns {Object} `this`
-  TrackAsiaMap off(String type, [dynamic layerIdOrListener, Listener? listener]) {
+  TrackAsiaMap off(String type,
+      [dynamic layerIdOrListener, Listener? listener]) {
     if (layerIdOrListener is Listener) {
       return TrackAsiaMap.fromJsObject(
         jsObject.off(type, allowInterop(
@@ -91,7 +95,8 @@ class Evented extends JsObjectWrapper<EventedJsImpl> {
         )),
       );
     }
-    return TrackAsiaMap.fromJsObject(jsObject.off(type, layerIdOrListener, allowInterop(
+    return TrackAsiaMap.fromJsObject(
+        jsObject.off(type, layerIdOrListener, allowInterop(
       (EventJsImpl object) {
         listener!(Event.fromJsObject(object));
       },
@@ -105,13 +110,15 @@ class Evented extends JsObjectWrapper<EventedJsImpl> {
   ///  @param {string} type The event type to listen for.
   ///  @param {Function} listener The function to be called when the event is fired the first time.
   ///  @returns {Object} `this`
-  TrackAsiaMap once(String type, Listener listener) => TrackAsiaMap.fromJsObject(jsObject.once(type, allowInterop(
+  TrackAsiaMap once(String type, Listener listener) =>
+      TrackAsiaMap.fromJsObject(jsObject.once(type, allowInterop(
         (EventJsImpl object) {
           listener(Event.fromJsObject(object));
         },
       )));
 
-  fire(Event event, [dynamic properties]) => jsObject.fire(event.jsObject, properties);
+  fire(Event event, [dynamic properties]) =>
+      jsObject.fire(event.jsObject, properties);
 
   ///  Returns a true if this instance of Evented or any forwardeed instances of Evented have a listener for the specified type.
   ///
@@ -125,7 +132,8 @@ class Evented extends JsObjectWrapper<EventedJsImpl> {
   ///  @private
   ///  @returns {Object} `this`
   ///  @private
-  setEventedParent([Evented? parent, dynamic data]) => jsObject.setEventedParent(parent?.jsObject, data);
+  setEventedParent([Evented? parent, dynamic data]) =>
+      jsObject.setEventedParent(parent?.jsObject, data);
 
   /// Creates a new Evented from a [jsObject].
   Evented.fromJsObject(super.jsObject) : super.fromJsObject();

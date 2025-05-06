@@ -16,7 +16,7 @@ A new Flutter plugin.
   s.dependency 'Flutter'
   # When updating the dependency version,
   # make sure to also update the version in Package.swift.
-  s.dependency 'TrackAsia', '2.0.0'
+  s.dependency 'Trackasia', '2.0.3'
   s.swift_version = '5.0'
   s.ios.deployment_target = '12.0'
 end

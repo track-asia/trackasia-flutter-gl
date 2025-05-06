@@ -24,8 +24,8 @@ import 'package:trackasia_gl_web/src/interop/util/evented_interop.dart';
 ///   .setLngLat([30.5, 50.5])
 ///   .addTo(map);
 /// ```
-/// @see [Add custom icons with Markers](https://track-asia.com/trackasia-gl-js/docs/examples/custom-marker-icons/)
-/// @see [Create a draggable Marker](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-marker/)
+/// @see [Add custom icons with Markers](https://track-asia.io.github.track-asia-js/docs/examples/custom-marker-icons/)
+/// @see [Create a draggable Marker](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-marker/)
 @JS('Marker')
 class MarkerJsImpl extends EventedJsImpl {
   external factory MarkerJsImpl([MarkerOptionsJsImpl? options]);

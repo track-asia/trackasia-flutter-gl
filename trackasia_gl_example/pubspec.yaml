@@ -1,0 +1,41 @@
+name: trackasia_gl_example
+description: Demonstrates how to use the trackasia_gl plugin.
+publish_to: 'none'
+version: 1.0.0+1
+repository: https://github.com/track-asia/flutter-trackasia-gl
+issue_tracker: https://github.com/track-asia/flutter-trackasia-gl/issues
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  collection: ^1.17.1
+  device_info_plus: ^11.3.0
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  location: ^5.0.3
+  # trackasia_gl: ^0.22.0
+  trackasia_gl:
+    path: ../trackasia_gl
+  path_provider: ^2.1.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fill/cat_silhouette_pattern.png
+    - assets/symbols/custom-icon.png
+    - assets/symbols/2.0x/custom-icon.png
+    - assets/symbols/3.0x/custom-icon.png
+    - assets/symbols/custom-marker.png
+    - assets/style.json
+    - assets/osm_style.json
+    - assets/pmtiles_style.json
+    - assets/sydney0.png
+    - assets/sydney1.png

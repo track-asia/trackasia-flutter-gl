@@ -10,7 +10,8 @@ class LineLayerJsImpl {
       'type': 'line',
     };
     if (lineLayer.source != null) {
-      dict['source'] = lineLayer.source is String ? lineLayer.source : lineLayer.source.dict;
+      dict['source'] =
+          lineLayer.source is String ? lineLayer.source : lineLayer.source.dict;
     }
     if (lineLayer.sourceLayer != null) {
       dict['source-layer'] = lineLayer.sourceLayer;

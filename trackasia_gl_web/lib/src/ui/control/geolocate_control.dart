@@ -2,8 +2,10 @@ import 'package:trackasia_gl_web/src/interop/interop.dart';
 import 'package:trackasia_gl_web/src/ui/map.dart';
 import 'package:trackasia_gl_web/src/util/evented.dart';
 
-class GeolocateControlOptions extends JsObjectWrapper<GeolocateControlOptionsJsImpl> {
-  PositionOptions get positionOptions => PositionOptions.fromJsObject(jsObject.positionOptions);
+class GeolocateControlOptions
+    extends JsObjectWrapper<GeolocateControlOptionsJsImpl> {
+  PositionOptions get positionOptions =>
+      PositionOptions.fromJsObject(jsObject.positionOptions);
   dynamic get fitBoundsOptions => jsObject.fitBoundsOptions;
   bool get trackUserLocation => jsObject.trackUserLocation;
   bool get showAccuracyCircle => jsObject.showAccuracyCircle;
@@ -78,13 +80,15 @@ class PositionOptions extends JsObjectWrapper<PositionOptionsJsImpl> {
 ///     },
 ///     trackUserLocation: true
 /// }));
-/// @see [Locate the user](https://track-asia.com/trackasia-gl-js/docs/examples/locate-user/)
+/// @see [Locate the user](https://track-asia.io.github.track-asia-js/docs/examples/locate-user/)
 class GeolocateControl extends Evented {
   @override
   final GeolocateControlJsImpl jsObject;
-  GeolocateControlOptions get options => GeolocateControlOptions.fromJsObject(jsObject.options);
+  GeolocateControlOptions get options =>
+      GeolocateControlOptions.fromJsObject(jsObject.options);
 
-  factory GeolocateControl(GeolocateControlOptions options) => GeolocateControl.fromJsObject(GeolocateControlJsImpl(options.jsObject));
+  factory GeolocateControl(GeolocateControlOptions options) =>
+      GeolocateControl.fromJsObject(GeolocateControlJsImpl(options.jsObject));
 
   onAdd(TrackAsiaMap map) => jsObject.onAdd(map.jsObject);
 

@@ -20,6 +20,7 @@ class TrackAsiaMap extends StatefulWidget {
     this.styleString = TrackAsiaStyles.demo,
     this.onMapCreated,
     this.onStyleLoadedCallback,
+    this.locationEnginePlatforms = LocationEnginePlatforms.defaultPlatform,
     this.gestureRecognizers,
     this.compassEnabled = true,
     this.cameraTargetBounds = CameraTargetBounds.unbounded,
@@ -40,6 +41,7 @@ class TrackAsiaMap extends StatefulWidget {
     this.attributionButtonPosition = AttributionButtonPosition.bottomRight,
     this.attributionButtonMargins,
     this.iosLongClickDuration,
+    this.webPreserveDrawingBuffer = false,
     this.onMapClick,
     this.onUserLocationUpdated,
     this.onMapLongClick,
@@ -60,11 +62,16 @@ class TrackAsiaMap extends StatefulWidget {
       AnnotationType.circle,
     ],
   })  : assert(
-          myLocationRenderMode == MyLocationRenderMode.normal || myLocationEnabled,
+          myLocationRenderMode == MyLocationRenderMode.normal ||
+              myLocationEnabled,
           "$myLocationRenderMode requires [myLocationEnabled] set to true.",
         ),
         assert(annotationOrder.length <= 4),
         assert(annotationConsumeTapEvents.length > 0);
+
+  /// The properties for the platform-specific location engine.
+  /// Only has an impact if [myLocationEnabled] is set to true.
+  final LocationEnginePlatforms locationEnginePlatforms;
 
   /// Defines the layer order of annotations displayed on map
   ///
@@ -93,6 +100,11 @@ class TrackAsiaMap extends StatefulWidget {
   /// Has no effect on web or Android. Can not be changed at runtime, only the initial value is used.
   /// If null, the default value of the native TrackAsia library / of the OS is used.
   final Duration? iosLongClickDuration;
+
+  /// If true, the map's canvas can be exported to a PNG using map.getCanvas().toDataURL().
+  /// This is false by default as a performance optimization.
+  /// **Web only** - has no effect on other platforms.
+  final bool? webPreserveDrawingBuffer;
 
   /// True if the map should show a compass when rotated.
   final bool compassEnabled;
@@ -238,31 +250,41 @@ class TrackAsiaMap extends StatefulWidget {
   /// Set `TrackAsiaMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
   /// or leave it `true` (default) to use Hybrid composition (Slower on Android 9 and below).
-  static bool get useHybridComposition => TrackAsiaMethodChannel.useHybridComposition;
+  static bool get useHybridComposition =>
+      TrackAsiaMethodChannel.useHybridComposition;
 
-  static set useHybridComposition(bool useHybridComposition) => TrackAsiaMethodChannel.useHybridComposition = useHybridComposition;
+  static set useHybridComposition(bool useHybridComposition) =>
+      TrackAsiaMethodChannel.useHybridComposition = useHybridComposition;
 
   @override
   State createState() => _TrackAsiaMapState();
 }
 
 class _TrackAsiaMapState extends State<TrackAsiaMap> {
-  final Completer<TrackAsiaMapController> _controller = Completer<TrackAsiaMapController>();
+  final Completer<TrackAsiaMapController> _controller =
+      Completer<TrackAsiaMapController>();
 
   late _TrackAsiaMapOptions _trackasiaMapOptions;
   final TrackAsiaPlatform _trackasiaPlatform = TrackAsiaPlatform.createInstance();
 
   @override
   Widget build(BuildContext context) {
-    assert(widget.annotationOrder.toSet().length == widget.annotationOrder.length, "annotationOrder must not have duplicate types");
+    assert(
+        widget.annotationOrder.toSet().length == widget.annotationOrder.length,
+        "annotationOrder must not have duplicate types");
     final creationParams = <String, dynamic>{
       'initialCameraPosition': widget.initialCameraPosition.toMap(),
       'styleString': widget.styleString,
       'options': _TrackAsiaMapOptions.fromWidget(widget).toMap(),
       'dragEnabled': widget.dragEnabled,
-      if (widget.iosLongClickDuration != null) 'iosLongClickDurationMilliseconds': widget.iosLongClickDuration!.inMilliseconds,
+      if (widget.iosLongClickDuration != null)
+        'iosLongClickDurationMilliseconds':
+            widget.iosLongClickDuration!.inMilliseconds,
+      if (widget.webPreserveDrawingBuffer != null)
+        'webPreserveDrawingBuffer': widget.webPreserveDrawingBuffer,
     };
-    return _trackasiaPlatform.buildView(creationParams, onPlatformViewCreated, widget.gestureRecognizers);
+    return _trackasiaPlatform.buildView(
+        creationParams, onPlatformViewCreated, widget.gestureRecognizers);
   }
 
   @override
@@ -329,29 +351,30 @@ class _TrackAsiaMapState extends State<TrackAsiaMap> {
 /// When used to change configuration, null values will be interpreted as
 /// "do not change this configuration option".
 class _TrackAsiaMapOptions {
-  _TrackAsiaMapOptions({
-    this.compassEnabled,
-    this.cameraTargetBounds,
-    this.styleString,
-    this.minMaxZoomPreference,
-    required this.rotateGesturesEnabled,
-    required this.scrollGesturesEnabled,
-    required this.tiltGesturesEnabled,
-    required this.zoomGesturesEnabled,
-    required this.doubleClickZoomEnabled,
-    this.trackCameraPosition,
-    this.myLocationEnabled,
-    this.myLocationTrackingMode,
-    this.myLocationRenderMode,
-    this.logoViewMargins,
-    this.compassViewPosition,
-    this.compassViewMargins,
-    this.attributionButtonPosition,
-    this.attributionButtonMargins,
-  });
+  _TrackAsiaMapOptions(
+      {this.compassEnabled,
+      this.cameraTargetBounds,
+      this.styleString,
+      this.minMaxZoomPreference,
+      required this.rotateGesturesEnabled,
+      required this.scrollGesturesEnabled,
+      required this.tiltGesturesEnabled,
+      required this.zoomGesturesEnabled,
+      required this.doubleClickZoomEnabled,
+      this.trackCameraPosition,
+      this.myLocationEnabled,
+      this.myLocationTrackingMode,
+      this.myLocationRenderMode,
+      this.logoViewMargins,
+      this.compassViewPosition,
+      this.compassViewMargins,
+      this.attributionButtonPosition,
+      this.attributionButtonMargins,
+      this.locationEnginePlatforms});
 
   _TrackAsiaMapOptions.fromWidget(TrackAsiaMap map)
       : this(
+          locationEnginePlatforms: map.locationEnginePlatforms,
           compassEnabled: map.compassEnabled,
           cameraTargetBounds: map.cameraTargetBounds,
           styleString: map.styleString,
@@ -361,7 +384,8 @@ class _TrackAsiaMapOptions {
           tiltGesturesEnabled: map.tiltGesturesEnabled,
           trackCameraPosition: map.trackCameraPosition,
           zoomGesturesEnabled: map.zoomGesturesEnabled,
-          doubleClickZoomEnabled: map.doubleClickZoomEnabled ?? map.zoomGesturesEnabled,
+          doubleClickZoomEnabled:
+              map.doubleClickZoomEnabled ?? map.zoomGesturesEnabled,
           myLocationEnabled: map.myLocationEnabled,
           myLocationTrackingMode: map.myLocationTrackingMode,
           myLocationRenderMode: map.myLocationRenderMode,
@@ -408,7 +432,15 @@ class _TrackAsiaMapOptions {
 
   final Point? attributionButtonMargins;
 
-  final _gestureGroup = {'rotateGesturesEnabled', 'scrollGesturesEnabled', 'tiltGesturesEnabled', 'zoomGesturesEnabled', 'doubleClickZoomEnabled'};
+  final LocationEnginePlatforms? locationEnginePlatforms;
+
+  final _gestureGroup = {
+    'rotateGesturesEnabled',
+    'scrollGesturesEnabled',
+    'tiltGesturesEnabled',
+    'zoomGesturesEnabled',
+    'doubleClickZoomEnabled'
+  };
 
   Map<String, dynamic> toMap() {
     final optionsMap = <String, dynamic>{};
@@ -446,7 +478,9 @@ class _TrackAsiaMapOptions {
     addIfNonNull('compassViewPosition', compassViewPosition?.index);
     addIfNonNull('compassViewMargins', pointToArray(compassViewMargins));
     addIfNonNull('attributionButtonPosition', attributionButtonPosition?.index);
-    addIfNonNull('attributionButtonMargins', pointToArray(attributionButtonMargins));
+    addIfNonNull(
+        'attributionButtonMargins', pointToArray(attributionButtonMargins));
+    addIfNonNull('locationEngineProperties', locationEnginePlatforms?.toList());
     return optionsMap;
   }
 
@@ -457,7 +491,8 @@ class _TrackAsiaMapOptions {
     // if any gesture is updated also all other gestures have to the saved to
     // the update
 
-    final gesturesRequireUpdate = _gestureGroup.any((key) => newOptionsMap[key] != prevOptionsMap[key]);
+    final gesturesRequireUpdate =
+        _gestureGroup.any((key) => newOptionsMap[key] != prevOptionsMap[key]);
 
     return newOptionsMap
       ..removeWhere((String key, dynamic value) {

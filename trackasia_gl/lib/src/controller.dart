@@ -4,20 +4,29 @@
 
 part of '../trackasia_gl.dart';
 
-typedef OnMapClickCallback = void Function(Point<double> point, LatLng coordinates);
+typedef OnMapClickCallback = void Function(
+    Point<double> point, LatLng coordinates);
 
-typedef OnFeatureInteractionCallback = void Function(dynamic id, Point<double> point, LatLng coordinates, String layerId);
+typedef OnFeatureInteractionCallback = void Function(
+    dynamic id, Point<double> point, LatLng coordinates, String layerId);
 
-typedef OnFeatureDragnCallback = void Function(dynamic id, {required Point<double> point, required LatLng origin, required LatLng current, required LatLng delta, required DragEventType eventType});
+typedef OnFeatureDragnCallback = void Function(dynamic id,
+    {required Point<double> point,
+    required LatLng origin,
+    required LatLng current,
+    required LatLng delta,
+    required DragEventType eventType});
 
-typedef OnMapLongClickCallback = void Function(Point<double> point, LatLng coordinates);
+typedef OnMapLongClickCallback = void Function(
+    Point<double> point, LatLng coordinates);
 
 typedef OnStyleLoadedCallback = void Function();
 
 typedef OnUserLocationUpdated = void Function(UserLocation location);
 
 typedef OnCameraTrackingDismissedCallback = void Function();
-typedef OnCameraTrackingChangedCallback = void Function(MyLocationTrackingMode mode);
+typedef OnCameraTrackingChangedCallback = void Function(
+    MyLocationTrackingMode mode);
 
 typedef OnCameraIdleCallback = void Function();
 
@@ -82,15 +91,23 @@ class TrackAsiaMapController extends ChangeNotifier {
     _cameraPosition = initialCameraPosition;
 
     _trackasiaPlatform.onFeatureTappedPlatform.add((payload) {
-      for (final fun in List<OnFeatureInteractionCallback>.from(onFeatureTapped)) {
-        fun(payload["id"], payload["point"], payload["latLng"], payload["layerId"]);
+      for (final fun
+          in List<OnFeatureInteractionCallback>.from(onFeatureTapped)) {
+        fun(payload["id"], payload["point"], payload["latLng"],
+            payload["layerId"]);
       }
     });
 
     _trackasiaPlatform.onFeatureDraggedPlatform.add((payload) {
       for (final fun in List<OnFeatureDragnCallback>.from(onFeatureDrag)) {
-        final enmDragEventType = DragEventType.values.firstWhere((element) => element.name == payload["eventType"]);
-        fun(payload["id"], point: payload["point"], origin: payload["origin"], current: payload["current"], delta: payload["delta"], eventType: enmDragEventType);
+        final enmDragEventType = DragEventType.values
+            .firstWhere((element) => element.name == payload["eventType"]);
+        fun(payload["id"],
+            point: payload["point"],
+            origin: payload["origin"],
+            current: payload["current"],
+            delta: payload["delta"],
+            eventType: enmDragEventType);
       }
     });
 
@@ -119,13 +136,19 @@ class TrackAsiaMapController extends ChangeNotifier {
         final enableInteraction = interactionEnabled.contains(type);
         switch (type) {
           case AnnotationType.fill:
-            fillManager = FillManager(this, onTap: onFillTapped.call, enableInteraction: enableInteraction);
+            fillManager = FillManager(this,
+                onTap: onFillTapped.call, enableInteraction: enableInteraction);
           case AnnotationType.line:
-            lineManager = LineManager(this, onTap: onLineTapped.call, enableInteraction: enableInteraction);
+            lineManager = LineManager(this,
+                onTap: onLineTapped.call, enableInteraction: enableInteraction);
           case AnnotationType.circle:
-            circleManager = CircleManager(this, onTap: onCircleTapped.call, enableInteraction: enableInteraction);
+            circleManager = CircleManager(this,
+                onTap: onCircleTapped.call,
+                enableInteraction: enableInteraction);
           case AnnotationType.symbol:
-            symbolManager = SymbolManager(this, onTap: onSymbolTapped.call, enableInteraction: enableInteraction);
+            symbolManager = SymbolManager(this,
+                onTap: onSymbolTapped.call,
+                enableInteraction: enableInteraction);
         }
       }
       onStyleLoadedCallback?.call();
@@ -189,7 +212,8 @@ class TrackAsiaMapController extends ChangeNotifier {
 
   /// Callbacks to receive tap events for info windows on symbols
   @Deprecated("InfoWindow tapped is no longer supported")
-  final ArgumentCallbacks<Symbol> onInfoWindowTapped = ArgumentCallbacks<Symbol>();
+  final ArgumentCallbacks<Symbol> onInfoWindowTapped =
+      ArgumentCallbacks<Symbol>();
 
   /// The current set of symbols on this map added with the [addSymbol] or [addSymbols] methods.
   ///
@@ -259,7 +283,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// platform side.
   /// It returns true if the camera was successfully moved and false if the movement was canceled.
   /// Note: this currently always returns immediately with a value of null on iOS
-  Future<bool?> animateCamera(CameraUpdate cameraUpdate, {Duration? duration}) async {
+  Future<bool?> animateCamera(CameraUpdate cameraUpdate,
+      {Duration? duration}) async {
     return _trackasiaPlatform.animateCamera(cameraUpdate, duration: duration);
   }
 
@@ -285,8 +310,10 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> addGeoJsonSource(String sourceId, Map<String, dynamic> geojson, {String? promoteId}) async {
-    await _trackasiaPlatform.addGeoJsonSource(sourceId, geojson, promoteId: promoteId);
+  Future<void> addGeoJsonSource(String sourceId, Map<String, dynamic> geojson,
+      {String? promoteId}) async {
+    await _trackasiaPlatform.addGeoJsonSource(sourceId, geojson,
+        promoteId: promoteId);
   }
 
   /// Sets new geojson data to and existing source
@@ -300,7 +327,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> setGeoJsonSource(String sourceId, Map<String, dynamic> geojson) async {
+  Future<void> setGeoJsonSource(
+      String sourceId, Map<String, dynamic> geojson) async {
     await _trackasiaPlatform.setGeoJsonSource(sourceId, geojson);
   }
 
@@ -315,8 +343,10 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> setGeoJsonFeature(String sourceId, Map<String, dynamic> geojsonFeature) async {
-    await _trackasiaPlatform.setFeatureForGeoJsonSource(sourceId, geojsonFeature);
+  Future<void> setGeoJsonFeature(
+      String sourceId, Map<String, dynamic> geojsonFeature) async {
+    await _trackasiaPlatform.setFeatureForGeoJsonSource(
+        sourceId, geojsonFeature);
   }
 
   /// Add a symbol layer to the map with the given properties
@@ -338,8 +368,14 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Filters are written as [expressions].
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addSymbolLayer(String sourceId, String layerId, SymbolLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+  Future<void> addSymbolLayer(
+      String sourceId, String layerId, SymbolLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _trackasiaPlatform.addSymbolLayer(
       sourceId,
       layerId,
@@ -372,8 +408,14 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Filters are written as [expressions].
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addLineLayer(String sourceId, String layerId, LineLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+  Future<void> addLineLayer(
+      String sourceId, String layerId, LineLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _trackasiaPlatform.addLineLayer(
       sourceId,
       layerId,
@@ -393,7 +435,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> setLayerProperties(String layerId, LayerProperties properties) async {
+  Future<void> setLayerProperties(
+      String layerId, LayerProperties properties) async {
     await _trackasiaPlatform.setLayerProperties(layerId, properties.toJson());
   }
 
@@ -416,8 +459,14 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Filters are written as [expressions].
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addFillLayer(String sourceId, String layerId, FillLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+  Future<void> addFillLayer(
+      String sourceId, String layerId, FillLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _trackasiaPlatform.addFillLayer(
       sourceId,
       layerId,
@@ -450,8 +499,14 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Filters are written as [expressions].
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addFillExtrusionLayer(String sourceId, String layerId, FillExtrusionLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+  Future<void> addFillExtrusionLayer(
+      String sourceId, String layerId, FillExtrusionLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _trackasiaPlatform.addFillExtrusionLayer(
       sourceId,
       layerId,
@@ -484,8 +539,14 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Filters are written as [expressions].
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addCircleLayer(String sourceId, String layerId, CircleLayerProperties properties,
-      {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter, bool enableInteraction = true}) async {
+  Future<void> addCircleLayer(
+      String sourceId, String layerId, CircleLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter,
+      bool enableInteraction = true}) async {
     await _trackasiaPlatform.addCircleLayer(
       sourceId,
       layerId,
@@ -513,7 +574,12 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// visible.
   /// [maxzoom] is the maximum (exclusive) zoom level at which the layer is
   /// visible.
-  Future<void> addRasterLayer(String sourceId, String layerId, RasterLayerProperties properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
+  Future<void> addRasterLayer(
+      String sourceId, String layerId, RasterLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
     await _trackasiaPlatform.addRasterLayer(
       sourceId,
       layerId,
@@ -539,7 +605,12 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// visible.
   /// [maxzoom] is the maximum (exclusive) zoom level at which the layer is
   /// visible.
-  Future<void> addHillshadeLayer(String sourceId, String layerId, HillshadeLayerProperties properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
+  Future<void> addHillshadeLayer(
+      String sourceId, String layerId, HillshadeLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
     await _trackasiaPlatform.addHillshadeLayer(
       sourceId,
       layerId,
@@ -565,7 +636,12 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// visible.
   /// [maxzoom] is the maximum (exclusive) zoom level at which the layer is
   /// visible.
-  Future<void> addHeatmapLayer(String sourceId, String layerId, HeatmapLayerProperties properties, {String? belowLayerId, String? sourceLayer, double? minzoom, double? maxzoom}) async {
+  Future<void> addHeatmapLayer(
+      String sourceId, String layerId, HeatmapLayerProperties properties,
+      {String? belowLayerId,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom}) async {
     await _trackasiaPlatform.addHeatmapLayer(
       sourceId,
       layerId,
@@ -581,8 +657,10 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> updateMyLocationTrackingMode(MyLocationTrackingMode myLocationTrackingMode) async {
-    return _trackasiaPlatform.updateMyLocationTrackingMode(myLocationTrackingMode);
+  Future<void> updateMyLocationTrackingMode(
+      MyLocationTrackingMode myLocationTrackingMode) async {
+    return _trackasiaPlatform
+        .updateMyLocationTrackingMode(myLocationTrackingMode);
   }
 
   /// Updates the language of the map labels to match the device's language.
@@ -604,7 +682,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
-  Future<void> updateContentInsets(EdgeInsets insets, [bool animated = false]) async {
+  Future<void> updateContentInsets(EdgeInsets insets,
+      [bool animated = false]) async {
     return _trackasiaPlatform.updateContentInsets(insets, animated);
   }
 
@@ -665,8 +744,13 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes with the added symbol once listeners have
   /// been notified.
-  Future<List<Symbol>> addSymbols(List<SymbolOptions> options, [List<Map>? data]) async {
-    final symbols = [for (var i = 0; i < options.length; i++) Symbol(getRandomString(), SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])];
+  Future<List<Symbol>> addSymbols(List<SymbolOptions> options,
+      [List<Map>? data]) async {
+    final symbols = [
+      for (var i = 0; i < options.length; i++)
+        Symbol(getRandomString(),
+            SymbolOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await symbolManager!.addAll(symbols);
 
     notifyListeners();
@@ -681,7 +765,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes once listeners have been notified.
   Future<void> updateSymbol(Symbol symbol, SymbolOptions changes) async {
-    await symbolManager!.set(symbol..options = symbol.options.copyWith(changes));
+    await symbolManager!
+        .set(symbol..options = symbol.options.copyWith(changes));
 
     notifyListeners();
   }
@@ -750,8 +835,13 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes with the added line once listeners have
   /// been notified.
-  Future<List<Line>> addLines(List<LineOptions> options, [List<Map>? data]) async {
-    final lines = [for (var i = 0; i < options.length; i++) Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]), data?[i])];
+  Future<List<Line>> addLines(List<LineOptions> options,
+      [List<Map>? data]) async {
+    final lines = [
+      for (var i = 0; i < options.length; i++)
+        Line(getRandomString(), LineOptions.defaultOptions.copyWith(options[i]),
+            data?[i])
+    ];
     await lineManager!.addAll(lines);
 
     notifyListeners();
@@ -836,8 +926,13 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes with the added circle once listeners have
   /// been notified.
-  Future<List<Circle>> addCircles(List<CircleOptions> options, [List<Map>? data]) async {
-    final cricles = [for (var i = 0; i < options.length; i++) Circle(getRandomString(), CircleOptions.defaultOptions.copyWith(options[i]), data?[i])];
+  Future<List<Circle>> addCircles(List<CircleOptions> options,
+      [List<Map>? data]) async {
+    final cricles = [
+      for (var i = 0; i < options.length; i++)
+        Circle(getRandomString(),
+            CircleOptions.defaultOptions.copyWith(options[i]), data?[i])
+    ];
     await circleManager!.addAll(cricles);
 
     notifyListeners();
@@ -925,8 +1020,13 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// The returned [Future] completes with the added fills once listeners have
   /// been notified.
-  Future<List<Fill>> addFills(List<FillOptions> options, [List<Map>? data]) async {
-    final fills = [for (var i = 0; i < options.length; i++) Fill(getRandomString(), FillOptions.defaultOptions.copyWith(options[i]), data?[i])];
+  Future<List<Fill>> addFills(List<FillOptions> options,
+      [List<Map>? data]) async {
+    final fills = [
+      for (var i = 0; i < options.length; i++)
+        Fill(getRandomString(), FillOptions.defaultOptions.copyWith(options[i]),
+            data?[i])
+    ];
     await fillManager!.addAll(fills);
 
     notifyListeners();
@@ -984,13 +1084,16 @@ class TrackAsiaMapController extends ChangeNotifier {
   }
 
   /// Query rendered (i.e. visible) features at a point in screen coordinates
-  Future<List> queryRenderedFeatures(Point<double> point, List<String> layerIds, List<Object>? filter) async {
+  Future<List> queryRenderedFeatures(
+      Point<double> point, List<String> layerIds, List<Object>? filter) async {
     return _trackasiaPlatform.queryRenderedFeatures(point, layerIds, filter);
   }
 
   /// Query rendered (i.e. visible) features in a Rect in screen coordinates
-  Future<List> queryRenderedFeaturesInRect(Rect rect, List<String> layerIds, String? filter) async {
-    return _trackasiaPlatform.queryRenderedFeaturesInRect(rect, layerIds, filter);
+  Future<List> queryRenderedFeaturesInRect(
+      Rect rect, List<String> layerIds, String? filter) async {
+    return _trackasiaPlatform.queryRenderedFeaturesInRect(
+        rect, layerIds, filter);
   }
 
   /// Query features contained in the source with the specified [sourceId].
@@ -999,8 +1102,10 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// regardless of whether they are currently rendered by the current style.
   ///
   /// Note: On web, this will probably only work for GeoJson source, not for vector tiles
-  Future<List> querySourceFeatures(String sourceId, String? sourceLayerId, List<Object>? filter) async {
-    return _trackasiaPlatform.querySourceFeatures(sourceId, sourceLayerId, filter);
+  Future<List> querySourceFeatures(
+      String sourceId, String? sourceLayerId, List<Object>? filter) async {
+    return _trackasiaPlatform.querySourceFeatures(
+        sourceId, sourceLayerId, filter);
   }
 
   Future invalidateAmbientCache() async {
@@ -1084,14 +1189,17 @@ class TrackAsiaMapController extends ChangeNotifier {
 
   /// Adds an image source to the style currently displayed in the map, so that it can later be referred to by the provided id.
   /// Not implemented on web.
-  Future<void> addImageSource(String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
+  Future<void> addImageSource(
+      String imageSourceId, Uint8List bytes, LatLngQuad coordinates) {
     return _trackasiaPlatform.addImageSource(imageSourceId, bytes, coordinates);
   }
 
   /// Update the image and/or coordinates of an image source.
   /// Not implemented on web.
-  Future<void> updateImageSource(String imageSourceId, Uint8List? bytes, LatLngQuad? coordinates) {
-    return _trackasiaPlatform.updateImageSource(imageSourceId, bytes, coordinates);
+  Future<void> updateImageSource(
+      String imageSourceId, Uint8List? bytes, LatLngQuad? coordinates) {
+    return _trackasiaPlatform.updateImageSource(
+        imageSourceId, bytes, coordinates);
   }
 
   /// Removes previously added image source by id
@@ -1106,19 +1214,26 @@ class TrackAsiaMapController extends ChangeNotifier {
   }
 
   /// Adds an image layer to the map's style at render time.
-  Future<void> addImageLayer(String layerId, String imageSourceId, {double? minzoom, double? maxzoom}) {
+  Future<void> addImageLayer(String layerId, String imageSourceId,
+      {double? minzoom, double? maxzoom}) {
     return _trackasiaPlatform.addLayer(layerId, imageSourceId, minzoom, maxzoom);
   }
 
   /// Adds an image layer below the layer provided with belowLayerId to the map's style at render time.
-  Future<void> addImageLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
-    return _trackasiaPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
+  Future<void> addImageLayerBelow(
+      String layerId, String sourceId, String imageSourceId,
+      {double? minzoom, double? maxzoom}) {
+    return _trackasiaPlatform.addLayerBelow(
+        layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
   /// Adds an image layer below the layer provided with belowLayerId to the map's style at render time. Only works for image sources!
   @Deprecated("This method was renamed to addImageLayerBelow for clarity.")
-  Future<void> addLayerBelow(String layerId, String sourceId, String imageSourceId, {double? minzoom, double? maxzoom}) {
-    return _trackasiaPlatform.addLayerBelow(layerId, sourceId, imageSourceId, minzoom, maxzoom);
+  Future<void> addLayerBelow(
+      String layerId, String sourceId, String imageSourceId,
+      {double? minzoom, double? maxzoom}) {
+    return _trackasiaPlatform.addLayerBelow(
+        layerId, sourceId, imageSourceId, minzoom, maxzoom);
   }
 
   /// Removes a TrackAsia style layer
@@ -1204,30 +1319,76 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// [filter] is not supported by RasterLayer and HillshadeLayer.
   ///
   /// [expressions]: https://track-asia.com/trackasia-style-spec/expressions/
-  Future<void> addLayer(String sourceId, String layerId, LayerProperties properties,
-      {String? belowLayerId, bool enableInteraction = true, String? sourceLayer, double? minzoom, double? maxzoom, dynamic filter}) async {
+  Future<void> addLayer(
+      String sourceId, String layerId, LayerProperties properties,
+      {String? belowLayerId,
+      bool enableInteraction = true,
+      String? sourceLayer,
+      double? minzoom,
+      double? maxzoom,
+      dynamic filter}) async {
     if (properties is FillLayerProperties) {
-      addFillLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+      await addFillLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is FillExtrusionLayerProperties) {
-      addFillExtrusionLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      await addFillExtrusionLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom);
     } else if (properties is LineLayerProperties) {
-      addLineLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+      await addLineLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is SymbolLayerProperties) {
-      addSymbolLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+      await addSymbolLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is CircleLayerProperties) {
-      addCircleLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, enableInteraction: enableInteraction, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom, filter: filter);
+      await addCircleLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          enableInteraction: enableInteraction,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom,
+          filter: filter);
     } else if (properties is RasterLayerProperties) {
       if (filter != null) {
         throw UnimplementedError("RasterLayer does not support filter");
       }
-      addRasterLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      await addRasterLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom);
     } else if (properties is HillshadeLayerProperties) {
       if (filter != null) {
         throw UnimplementedError("HillShadeLayer does not support filter");
       }
-      addHillshadeLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      await addHillshadeLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom);
     } else if (properties is HeatmapLayerProperties) {
-      addHeatmapLayer(sourceId, layerId, properties, belowLayerId: belowLayerId, sourceLayer: sourceLayer, minzoom: minzoom, maxzoom: maxzoom);
+      await addHeatmapLayer(sourceId, layerId, properties,
+          belowLayerId: belowLayerId,
+          sourceLayer: sourceLayer,
+          minzoom: minzoom,
+          maxzoom: maxzoom);
     } else {
       throw UnimplementedError("Unknown layer type $properties");
     }
@@ -1245,7 +1406,9 @@ class TrackAsiaMapController extends ChangeNotifier {
   ///
   /// This method is not currently implemented on the web
   Future<List<String>> getSourceIds() async {
-    return (await _trackasiaPlatform.getSourceIds()).whereType<String>().toList();
+    return (await _trackasiaPlatform.getSourceIds())
+        .whereType<String>()
+        .toList();
   }
 
   @override

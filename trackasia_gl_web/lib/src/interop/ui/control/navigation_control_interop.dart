@@ -30,13 +30,14 @@ class NavigationControlOptionsJsImpl {
 /// @example
 /// var nav = new trackasiagl.NavigationControl();
 /// map.addControl(nav, 'top-left');
-/// @see [Display map navigation controls](https://track-asia.com/trackasia-gl-js/docs/examples/navigation/)
-/// @see [Add a third party vector tile source](https://track-asia.com/trackasia-gl-js/docs/examples/third-party/)
+/// @see [Display map navigation controls](https://track-asia.io.github.track-asia-js/docs/examples/navigation/)
+/// @see [Add a third party vector tile source](https://track-asia.io.github.track-asia-js/docs/examples/third-party/)
 @JS('NavigationControl')
 class NavigationControlJsImpl {
   external NavigationControlOptionsJsImpl get options;
 
-  external factory NavigationControlJsImpl(NavigationControlOptionsJsImpl options);
+  external factory NavigationControlJsImpl(
+      NavigationControlOptionsJsImpl options);
 
   external onAdd(TrackAsiaMapJsImpl map);
 

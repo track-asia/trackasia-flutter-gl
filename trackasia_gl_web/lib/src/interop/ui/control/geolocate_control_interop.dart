@@ -47,7 +47,8 @@ class PositionOptionsJsImpl {
 abstract class GeolocateControlJsImpl extends EventedJsImpl {
   external GeolocateControlOptionsJsImpl get options;
 
-  external factory GeolocateControlJsImpl(GeolocateControlOptionsJsImpl options);
+  external factory GeolocateControlJsImpl(
+      GeolocateControlOptionsJsImpl options);
 
   external onAdd(TrackAsiaMapJsImpl map);
 

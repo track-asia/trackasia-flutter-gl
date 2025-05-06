@@ -5,7 +5,8 @@ import 'package:trackasia_gl_web/src/utils.dart';
 class FeatureCollection extends JsObjectWrapper<FeatureCollectionJsImpl> {
   String get type => jsObject.type;
 
-  List<Feature> get features => jsObject.features.map((f) => Feature.fromJsObject(f)).toList();
+  List<Feature> get features =>
+      jsObject.features.map((f) => Feature.fromJsObject(f)).toList();
 
   factory FeatureCollection({
     required List<Feature> features,
@@ -59,7 +60,8 @@ class Feature extends JsObjectWrapper<FeatureJsImpl> {
         type: 'Feature',
         id: id ?? this.id,
         geometry: geometry != null ? geometry.jsObject : this.geometry.jsObject,
-        properties: properties != null ? jsify(properties) : jsify(this.properties),
+        properties:
+            properties != null ? jsify(properties) : jsify(this.properties),
         source: source ?? this.source,
       ));
 

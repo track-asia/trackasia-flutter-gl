@@ -1,7 +1,8 @@
 import 'dart:html';
 import 'package:trackasia_gl_web/src/interop/interop.dart';
 
-class TouchZoomRotateHandler extends JsObjectWrapper<TouchZoomRotateHandlerJsImpl> {
+class TouchZoomRotateHandler
+    extends JsObjectWrapper<TouchZoomRotateHandlerJsImpl> {
   ///  Returns a Boolean indicating whether the "pinch to rotate and zoom" interaction is enabled.
   ///
   ///  @returns {boolean} `true` if the "pinch to rotate and zoom" interaction is enabled.

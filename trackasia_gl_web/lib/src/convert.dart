@@ -1,7 +1,8 @@
 part of '../trackasia_gl_web.dart';
 
 class Convert {
-  static void interpretTrackAsiaMapOptions(Map<String, dynamic> options, TrackAsiaMapOptionsSink sink) {
+  static void interpretTrackAsiaMapOptions(
+      Map<String, dynamic> options, TrackAsiaMapOptionsSink sink) {
     if (options.containsKey('cameraTargetBounds')) {
       final bounds = options['cameraTargetBounds'][0];
       if (bounds == null) {
@@ -22,7 +23,8 @@ class Convert {
       sink.setStyleString(options['styleString']);
     }
     if (options.containsKey('minMaxZoomPreference')) {
-      sink.setMinMaxZoomPreference(options['minMaxZoomPreference'][0], options['minMaxZoomPreference'][1]);
+      sink.setMinMaxZoomPreference(options['minMaxZoomPreference'][0],
+          options['minMaxZoomPreference'][1]);
     }
     if (options['rotateGesturesEnabled'] != null &&
         options['scrollGesturesEnabled'] != null &&
@@ -52,27 +54,33 @@ class Convert {
       sink.setMyLocationRenderMode(options['myLocationRenderMode']);
     }
     if (options.containsKey('logoViewMargins')) {
-      sink.setLogoViewMargins(options['logoViewMargins'][0], options['logoViewMargins'][1]);
+      sink.setLogoViewMargins(
+          options['logoViewMargins'][0], options['logoViewMargins'][1]);
     }
     if (options.containsKey('compassViewPosition')) {
-      final position = CompassViewPosition.values[options['compassViewPosition']];
+      final position =
+          CompassViewPosition.values[options['compassViewPosition']];
       sink.setCompassAlignment(position);
     }
     if (options.containsKey('compassViewMargins')) {
-      sink.setCompassViewMargins(options['compassViewMargins'][0], options['compassViewMargins'][1]);
+      sink.setCompassViewMargins(
+          options['compassViewMargins'][0], options['compassViewMargins'][1]);
     }
     if (options.containsKey('attributionButtonPosition')) {
-      final position = AttributionButtonPosition.values[options['attributionButtonPosition']];
+      final position = AttributionButtonPosition
+          .values[options['attributionButtonPosition']];
       sink.setAttributionButtonAlignment(position);
     } else {
       sink.setAttributionButtonAlignment(AttributionButtonPosition.bottomRight);
     }
     if (options.containsKey('attributionButtonMargins')) {
-      sink.setAttributionButtonMargins(options['attributionButtonMargins'][0], options['attributionButtonMargins'][1]);
+      sink.setAttributionButtonMargins(options['attributionButtonMargins'][0],
+          options['attributionButtonMargins'][1]);
     }
   }
 
-  static CameraOptions toCameraOptions(CameraUpdate cameraUpdate, TrackAsiaMap trackAsiaMap) {
+  static CameraOptions toCameraOptions(
+      CameraUpdate cameraUpdate, TrackAsiaMap trackAsiaMap) {
     final List<dynamic> json = cameraUpdate.toJson();
     final type = json[0];
     switch (type) {
@@ -126,7 +134,8 @@ class Convert {
         final y = json[2];
         final point = trackAsiaMap.project(trackAsiaMap.getCenter());
         return CameraOptions(
-          center: trackAsiaMap.unproject(geo_point.Point(point.x + x, point.y + y)),
+          center:
+              trackAsiaMap.unproject(geo_point.Point(point.x + x, point.y + y)),
           zoom: trackAsiaMap.getZoom(),
           pitch: trackAsiaMap.getPitch(),
           bearing: trackAsiaMap.getBearing(),
@@ -192,7 +201,8 @@ class Convert {
     }
   }
 
-  static Feature interpretSymbolOptions(SymbolOptions options, Feature feature) {
+  static Feature interpretSymbolOptions(
+      SymbolOptions options, Feature feature) {
     final properties = feature.properties;
     var geometry = feature.geometry;
     if (options.iconSize != null) {
@@ -205,7 +215,10 @@ class Convert {
       properties['iconRotate'] = options.iconRotate;
     }
     if (options.iconOffset != null) {
-      properties['iconOffset'] = [options.iconOffset!.dx, options.iconOffset!.dy];
+      properties['iconOffset'] = [
+        options.iconOffset!.dx,
+        options.iconOffset!.dy
+      ];
     }
     if (options.iconAnchor != null) {
       properties['iconAnchor'] = options.iconAnchor;
@@ -235,7 +248,10 @@ class Convert {
       properties['textTransform'] = options.textTransform;
     }
     if (options.textOffset != null) {
-      properties['textOffset'] = [options.textOffset!.dx, options.textOffset!.dy];
+      properties['textOffset'] = [
+        options.textOffset!.dx,
+        options.textOffset!.dy
+      ];
     }
     if (options.iconOpacity != null) {
       properties['iconOpacity'] = options.iconOpacity;
@@ -312,7 +328,9 @@ class Convert {
     if (options.geometry != null) {
       geometry = Geometry(
         type: geometry.type,
-        coordinates: options.geometry!.map((latLng) => [latLng.longitude, latLng.latitude]).toList(),
+        coordinates: options.geometry!
+            .map((latLng) => [latLng.longitude, latLng.latitude])
+            .toList(),
       );
     }
     if (options.draggable != null) {
@@ -321,7 +339,8 @@ class Convert {
     return feature.copyWith(properties: properties, geometry: geometry);
   }
 
-  static Feature interpretCircleOptions(CircleOptions options, Feature feature) {
+  static Feature interpretCircleOptions(
+      CircleOptions options, Feature feature) {
     final properties = feature.properties;
     var geometry = feature.geometry;
     if (options.circleRadius != null) {
@@ -357,7 +376,8 @@ class Convert {
     return feature.copyWith(properties: properties, geometry: geometry);
   }
 
-  static List<List<List<double>>> fillGeometryToFeatureGeometry(List<List<LatLng>> geom) {
+  static List<List<List<double>>> fillGeometryToFeatureGeometry(
+      List<List<LatLng>> geom) {
     final convertedFill = <List<List<double>>>[];
     for (final ring in geom) {
       final convertedRing = <List<double>>[];
@@ -369,7 +389,8 @@ class Convert {
     return convertedFill;
   }
 
-  static List<List<LatLng>> featureGeometryToFillGeometry(List<List<List<double>>> geom) {
+  static List<List<LatLng>> featureGeometryToFillGeometry(
+      List<List<List<double>>> geom) {
     final convertedFill = <List<LatLng>>[];
     for (final ring in geom) {
       final convertedRing = <LatLng>[];

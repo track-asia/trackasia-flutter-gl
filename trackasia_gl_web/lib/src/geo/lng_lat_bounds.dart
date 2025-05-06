@@ -30,19 +30,22 @@ class LngLatBounds extends JsObjectWrapper<LngLatBoundsJsImpl> {
   ///
   ///  @param {LngLatLike} ne
   ///  @returns {LngLatBounds} `this`
-  LngLatBounds setNorthEast(LngLat ne) => LngLatBounds.fromJsObject(jsObject.setNorthEast(ne.jsObject));
+  LngLatBounds setNorthEast(LngLat ne) =>
+      LngLatBounds.fromJsObject(jsObject.setNorthEast(ne.jsObject));
 
   ///  Set the southwest corner of the bounding box
   ///
   ///  @param {LngLatLike} sw
   ///  @returns {LngLatBounds} `this`
-  LngLatBounds setSouthWest(LngLat sw) => LngLatBounds.fromJsObject(jsObject.setSouthWest(sw.jsObject));
+  LngLatBounds setSouthWest(LngLat sw) =>
+      LngLatBounds.fromJsObject(jsObject.setSouthWest(sw.jsObject));
 
   ///  Extend the bounds to include a given LngLat or LngLatBounds.
   ///
   ///  @param {LngLat|LngLatBounds} obj object to extend to
   ///  @returns {LngLatBounds} `this`
-  LngLatBounds extend(dynamic obj) => LngLatBounds.fromJsObject(jsObject.extend(obj.jsObject));
+  LngLatBounds extend(dynamic obj) =>
+      LngLatBounds.fromJsObject(jsObject.extend(obj.jsObject));
 
   ///  Returns the geographical coordinate equidistant from the bounding box's corners.
   ///
@@ -134,7 +137,8 @@ class LngLatBounds extends JsObjectWrapper<LngLatBoundsJsImpl> {
   ///  var arr = [[-73.9876, 40.7661], [-73.9397, 40.8002]];
   ///  var llb = trackasiagl.LngLatBounds.convert(arr);
   ///  llb;   // = LngLatBounds {_sw: LngLat {lng: -73.9876, lat: 40.7661}, _ne: LngLat {lng: -73.9397, lat: 40.8002}}
-  LngLatBounds.convert(dynamic input) : this.fromJsObject(LngLatBoundsJsImpl.convert(input));
+  LngLatBounds.convert(dynamic input)
+      : this.fromJsObject(LngLatBoundsJsImpl.convert(input));
 
   /// Creates a new LngLatBounds from a [jsObject].
   LngLatBounds.fromJsObject(super.jsObject) : super.fromJsObject();

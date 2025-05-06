@@ -144,7 +144,8 @@ class Camera extends Evented {
   ///  @returns {TrackAsiaMap} `this`
   ///  @example
   ///  map.setCenter([-74, 38]);
-  TrackAsiaMap setCenter(LngLat center, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.setCenter(center.jsObject));
+  TrackAsiaMap setCenter(LngLat center, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setCenter(center.jsObject));
 
   ///  Pans the map by the specified offset.
   ///
@@ -155,8 +156,10 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  ///  @see [Navigate the map with game-like controls](https://track-asia.com/trackasia-gl-js/docs/examples/game-controls/)
-  TrackAsiaMap panBy(Point offset, [AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.panBy(offset.jsObject));
+  ///  @see [Navigate the map with game-like controls](https://track-asia.io.github.track-asia-js/docs/examples/game-controls/)
+  TrackAsiaMap panBy(Point offset,
+          [AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.panBy(offset.jsObject));
 
   ///  Pans the map to the specified location, with an animated transition.
   ///
@@ -167,7 +170,9 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap panTo(LngLat lnglat, [AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.panTo(lnglat.jsObject));
+  TrackAsiaMap panTo(LngLat lnglat,
+          [AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.panTo(lnglat.jsObject));
 
   ///  Returns the map's current zoom level.
   ///
@@ -190,7 +195,8 @@ class Camera extends Evented {
   ///  @example
   ///  // zoom the map to 5
   ///  map.setZoom(5);
-  TrackAsiaMap setZoom(num zoom, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.setZoom(zoom));
+  TrackAsiaMap setZoom(num zoom, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setZoom(zoom));
 
   ///  Zooms the map to the specified zoom level, with an animated transition.
   ///
@@ -205,7 +211,9 @@ class Camera extends Evented {
   ///  @fires moveend
   ///  @fires zoomend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap zoomTo(num zoom, [AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.zoomTo(zoom));
+  TrackAsiaMap zoomTo(num zoom,
+          [AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.zoomTo(zoom));
 
   ///  Increases the map's zoom level by 1.
   ///
@@ -219,7 +227,8 @@ class Camera extends Evented {
   ///  @fires moveend
   ///  @fires zoomend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap zoomIn([AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.zoomIn());
+  TrackAsiaMap zoomIn([AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.zoomIn());
 
   ///  Decreases the map's zoom level by 1.
   ///
@@ -233,14 +242,15 @@ class Camera extends Evented {
   ///  @fires moveend
   ///  @fires zoomend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap zoomOut([AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.zoomOut());
+  TrackAsiaMap zoomOut([AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.zoomOut());
 
   ///  Returns the map's current bearing. The bearing is the compass direction that is \"up\"; for example, a bearing
   ///  of 90° orients the map so that east is up.
   ///
   ///  @memberof TrackAsiaMap#
   ///  @returns The map's current bearing.
-  ///  @see [Navigate the map with game-like controls](https://track-asia.com/trackasia-gl-js/docs/examples/game-controls/)
+  ///  @see [Navigate the map with game-like controls](https://track-asia.io.github.track-asia-js/docs/examples/game-controls/)
   num getBearing() => jsObject.getBearing();
 
   ///  Sets the map's bearing (rotation). The bearing is the compass direction that is \"up\"; for example, a bearing
@@ -257,7 +267,8 @@ class Camera extends Evented {
   ///  @example
   ///  // rotate the map to 90 degrees
   ///  map.setBearing(90);
-  TrackAsiaMap setBearing(num bearing, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.setBearing(bearing));
+  TrackAsiaMap setBearing(num bearing, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setBearing(bearing));
 
   ///  Rotates the map to the specified bearing, with an animated transition. The bearing is the compass direction
   ///  that is \"up\"; for example, a bearing of 90° orients the map so that east is up.
@@ -269,7 +280,9 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap rotateTo(num bearing, [AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.rotateTo(bearing));
+  TrackAsiaMap rotateTo(num bearing,
+          [AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.rotateTo(bearing));
 
   ///  Rotates the map so that north is up (0° bearing), with an animated transition.
   ///
@@ -279,7 +292,8 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap resetNorth([AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.resetNorth());
+  TrackAsiaMap resetNorth([AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.resetNorth());
 
   ///  Rotates and pitches the map so that north is up (0° bearing) and pitch is 0°, with an animated transition.
   ///
@@ -289,7 +303,8 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap resetNorthPitch([AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.resetNorthPitch());
+  TrackAsiaMap resetNorthPitch([AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.resetNorthPitch());
 
   ///  Snaps the map so that north is up (0° bearing), if the current bearing is close enough to it (i.e. within the
   ///  `bearingSnap` threshold).
@@ -300,7 +315,8 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap snapToNorth([AnimationOptions? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.snapToNorth());
+  TrackAsiaMap snapToNorth([AnimationOptions? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.snapToNorth());
 
   ///  Returns the map's current pitch (tilt).
   ///
@@ -317,7 +333,8 @@ class Camera extends Evented {
   ///  @fires movestart
   ///  @fires moveend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap setPitch(num pitch, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.setPitch(pitch));
+  TrackAsiaMap setPitch(num pitch, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.setPitch(pitch));
 
   ///  @memberof TrackAsiaMap#
   ///  @param {LatLngBoundsLike} bounds Calculate the center for these bounds in the viewport and use
@@ -336,9 +353,11 @@ class Camera extends Evented {
   ///  });
   CameraOptions cameraForBounds(LngLatBounds bounds, [dynamic options]) {
     if (options == null) {
-      return CameraOptions.fromJsObject(jsObject.cameraForBounds(bounds.jsObject));
+      return CameraOptions.fromJsObject(
+          jsObject.cameraForBounds(bounds.jsObject));
     }
-    return CameraOptions.fromJsObject(jsObject.cameraForBounds(bounds.jsObject, options is CameraOptions ? options.jsObject : jsify(options)));
+    return CameraOptions.fromJsObject(jsObject.cameraForBounds(bounds.jsObject,
+        options is CameraOptions ? options.jsObject : jsify(options)));
   }
 
   ///  Pans and zooms the map to contain its visible area within the specified geographical bounds.
@@ -364,8 +383,11 @@ class Camera extends Evented {
   ///  map.fitBounds(bbox, {
   ///    padding: {top: 10, bottom:25, left: 15, right: 5}
   ///  });
-  ///  @see [Fit a map to a bounding box](https://track-asia.com/trackasia-gl-js/docs/examples/fitbounds/)
-  TrackAsiaMap fitBounds(LngLatBounds bounds, [Map<String, dynamic>? options, dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.fitBounds(bounds.jsObject, jsify(options ?? {}), eventData));
+  ///  @see [Fit a map to a bounding box](https://track-asia.io.github.track-asia-js/docs/examples/fitbounds/)
+  TrackAsiaMap fitBounds(LngLatBounds bounds,
+          [Map<String, dynamic>? options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(
+          jsObject.fitBounds(bounds.jsObject, jsify(options ?? {}), eventData));
 
   ///  Pans, rotates and zooms the map to to fit the box made by points p0 and p1
   ///  once the map is rotated to the specified bearing. To zoom without rotating,
@@ -393,9 +415,11 @@ class Camera extends Evented {
   ///  map.fitScreenCoordinates(p0, p1, map.getBearing(), {
   ///    padding: {top: 10, bottom:25, left: 15, right: 5}
   ///  });
-  ///  @see [Used by BoxZoomHandler](https://track-asia.com/trackasia-gl-js/docs/API/classes/trackasiagl.BoxZoomHandler/)
-  TrackAsiaMap fitScreenCoordinates(Point p0, Point p1, num bearing, [dynamic options, dynamic eventData]) =>
-      TrackAsiaMap.fromJsObject(jsObject.fitScreenCoordinates(p0.jsObject, p1.jsObject, bearing));
+  ///  @see [Used by BoxZoomHandler](https://track-asia.io.github.track-asia-js/docs/API/classes/trackasiagl.BoxZoomHandler/)
+  TrackAsiaMap fitScreenCoordinates(Point p0, Point p1, num bearing,
+          [dynamic options, dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(
+          jsObject.fitScreenCoordinates(p0.jsObject, p1.jsObject, bearing));
 
   ///  Changes any combination of center, zoom, bearing, and pitch, without
   ///  an animated transition. The map will retain its current values for any
@@ -415,7 +439,8 @@ class Camera extends Evented {
   ///  @fires zoomend
   ///  @fires pitchend
   ///  @returns {TrackAsiaMap} `this`
-  TrackAsiaMap jumpTo(CameraOptions options, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.jumpTo(options.jsObject));
+  TrackAsiaMap jumpTo(CameraOptions options, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.jumpTo(options.jsObject));
 
   ///  Changes any combination of center, zoom, bearing, and pitch, with an animated transition
   ///  between old and new values. The map will retain its current values for any
@@ -439,8 +464,9 @@ class Camera extends Evented {
   ///  @fires zoomend
   ///  @fires pitchend
   ///  @returns {TrackAsiaMap} `this`
-  ///  @see [Navigate the map with game-like controls](https://track-asia.com/trackasia-gl-js/docs/examples/game-controls/)
-  TrackAsiaMap easeTo(dynamic options, [dynamic eventData]) => TrackAsiaMap.fromJsObject(jsObject.easeTo(options));
+  ///  @see [Navigate the map with game-like controls](https://track-asia.io.github.track-asia-js/docs/examples/game-controls/)
+  TrackAsiaMap easeTo(dynamic options, [dynamic eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject.easeTo(options));
 
   ///  Changes any combination of center, zoom, bearing, and pitch, animating the transition along a curve that
   ///  evokes flight. The animation seamlessly incorporates zooming and panning to help
@@ -495,10 +521,12 @@ class Camera extends Evented {
   ///      return t;
   ///    }
   ///  });
-  ///  @see [Fly to a location](https://track-asia.com/trackasia-gl-js/docs/examples/flyto/)
-  ///  @see [Slowly fly to a location](https://track-asia.com/trackasia-gl-js/docs/examples/flyto-options/)
-  ///  @see [Fly to a location based on scroll position](https://track-asia.com/trackasia-gl-js/docs/examples/scroll-fly-to/)
-  TrackAsiaMap flyTo(dynamic options, [String? eventData]) => TrackAsiaMap.fromJsObject(jsObject.flyTo(options is CameraOptions ? options.jsObject : jsify(options)));
+  ///  @see [Fly to a location](https://track-asia.io.github.track-asia-js/docs/examples/flyto/)
+  ///  @see [Slowly fly to a location](https://track-asia.io.github.track-asia-js/docs/examples/flyto-options/)
+  ///  @see [Fly to a location based on scroll position](https://track-asia.io.github.track-asia-js/docs/examples/scroll-fly-to/)
+  TrackAsiaMap flyTo(dynamic options, [String? eventData]) =>
+      TrackAsiaMap.fromJsObject(jsObject
+          .flyTo(options is CameraOptions ? options.jsObject : jsify(options)));
 
   bool isEasing() => jsObject.isEasing();
 

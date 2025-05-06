@@ -1,7 +1,8 @@
 import 'package:trackasia_gl_web/src/interop/interop.dart';
 import 'package:trackasia_gl_web/src/ui/map.dart';
 
-class NavigationControlOptions extends JsObjectWrapper<NavigationControlOptionsJsImpl> {
+class NavigationControlOptions
+    extends JsObjectWrapper<NavigationControlOptionsJsImpl> {
   bool get showCompass => jsObject.showCompass;
 
   bool get showZoom => jsObject.showZoom;
@@ -33,12 +34,14 @@ class NavigationControlOptions extends JsObjectWrapper<NavigationControlOptionsJ
 /// @example
 /// var nav = new trackasiagl.NavigationControl();
 /// map.addControl(nav, 'top-left');
-/// @see [Display map navigation controls](https://track-asia.com/trackasia-gl-js/docs/examples/navigation/)
-/// @see [Add a third party vector tile source](https://track-asia.com/trackasia-gl-js/docs/examples/third-party/)
+/// @see [Display map navigation controls](https://track-asia.io.github.track-asia-js/docs/examples/navigation/)
+/// @see [Add a third party vector tile source](https://track-asia.io.github.track-asia-js/docs/examples/third-party/)
 class NavigationControl extends JsObjectWrapper<NavigationControlJsImpl> {
-  NavigationControlOptions get options => NavigationControlOptions.fromJsObject(jsObject.options);
+  NavigationControlOptions get options =>
+      NavigationControlOptions.fromJsObject(jsObject.options);
 
-  factory NavigationControl(NavigationControlOptions options) => NavigationControl.fromJsObject(NavigationControlJsImpl(options.jsObject));
+  factory NavigationControl(NavigationControlOptions options) =>
+      NavigationControl.fromJsObject(NavigationControlJsImpl(options.jsObject));
 
   onAdd(TrackAsiaMap map) => jsObject.onAdd(map.jsObject);
 

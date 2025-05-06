@@ -45,10 +45,10 @@ import 'package:trackasia_gl_web/src/util/evented.dart';
 ///   .setHTML("<h1>Hello World!</h1>")
 ///   .setMaxWidth("300px")
 ///   .addTo(map);
-/// @see [Display a popup](https://track-asia.com/trackasia-gl-js/docs/examples/popup/)
-/// @see [Display a popup on hover](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-hover/)
-/// @see [Display a popup on click](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-click/)
-/// @see [Attach a popup to a marker instance](https://track-asia.com/trackasia-gl-js/docs/examples/set-popup/)
+/// @see [Display a popup](https://track-asia.io.github.track-asia-js/docs/examples/popup/)
+/// @see [Display a popup on hover](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-hover/)
+/// @see [Display a popup on click](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-click/)
+/// @see [Attach a popup to a marker instance](https://track-asia.io.github.track-asia-js/docs/examples/set-popup/)
 class Popup extends Evented {
   dynamic get options => jsObject.options;
 
@@ -67,7 +67,8 @@ class Popup extends Evented {
   /// @param {TrackAsiaMap} map The TrackAsia JS JS map to add the popup to.
   /// @returns {Popup} `this`
 ////
-  Popup addTo(TrackAsiaMap map) => Popup.fromJsObject(jsObject.addTo(map.jsObject));
+  Popup addTo(TrackAsiaMap map) =>
+      Popup.fromJsObject(jsObject.addTo(map.jsObject));
 
   /// @returns {boolean} `true` if the popup is open, `false` if it is closed.
   bool isOpen() => jsObject.isOpen();
@@ -93,7 +94,8 @@ class Popup extends Evented {
   ///
   /// @param lnglat The geographical location to set as the popup's anchor.
   /// @returns {Popup} `this`
-  Popup setLngLat(LngLat lnglat) => Popup.fromJsObject(jsObject.setLngLat(lnglat.jsObject));
+  Popup setLngLat(LngLat lnglat) =>
+      Popup.fromJsObject(jsObject.setLngLat(lnglat.jsObject));
 
   /// Tracks the popup anchor to the cursor position, on screens with a pointer device (will be hidden on touchscreens). Replaces the setLngLat behavior.
   /// For most use cases, `closeOnClick` and `closeButton` should also be set to `false` here.
@@ -139,7 +141,8 @@ class Popup extends Evented {
   ///
   /// @param maxWidth A string representing the value for the maximum width.
   /// @returns {Popup} `this`
-  Popup setMaxWidth(String maxWidth) => Popup.fromJsObject(jsObject.setMaxWidth(maxWidth));
+  Popup setMaxWidth(String maxWidth) =>
+      Popup.fromJsObject(jsObject.setMaxWidth(maxWidth));
 
   /// Sets the popup's content to the element provided as a DOM node.
   ///
@@ -153,7 +156,8 @@ class Popup extends Evented {
   ///   .setLngLat(e.lngLat)
   ///   .setDOMContent(div)
   ///   .addTo(map);
-  Popup setDOMContent(Node htmlNode) => Popup.fromJsObject(jsObject.setDOMContent(htmlNode));
+  Popup setDOMContent(Node htmlNode) =>
+      Popup.fromJsObject(jsObject.setDOMContent(htmlNode));
 
   /// Adds a CSS class to the popup container element.
   ///

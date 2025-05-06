@@ -1,0 +1,48 @@
+PODS:
+  - device_info_plus (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - location (0.0.1):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - Trackasia (2.0.3)
+  - trackasia_gl (2.0.3):
+    - Flutter
+    - Trackasia (= 2.0.3)
+
+DEPENDENCIES:
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - Flutter (from `Flutter`)
+  - location (from `.symlinks/plugins/location/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - trackasia_gl (from `.symlinks/plugins/trackasia_gl/ios`)
+
+SPEC REPOS:
+  https://github.com/track-asia/trackasia-flutter-podspecs.git:
+    - Trackasia
+
+EXTERNAL SOURCES:
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
+  Flutter:
+    :path: Flutter
+  location:
+    :path: ".symlinks/plugins/location/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  trackasia_gl:
+    :path: ".symlinks/plugins/trackasia_gl/ios"
+
+SPEC CHECKSUMS:
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  location: 155caecf9da4f280ab5fe4a55f94ceccfab838f8
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  Trackasia: 8e0e885ade38efd0193dbabb9c2a942918951d3a
+  trackasia_gl: f3a519396cdb45afbf0e6ebe943f8ea5aea918fa
+
+PODFILE CHECKSUM: dc5ae3034eed68d8da708789fe7037b3859c7135
+
+COCOAPODS: 1.16.2

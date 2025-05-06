@@ -17,5 +17,6 @@ class GeoJsonSourceJsImpl {
     FeatureCollectionJsImpl data,
   });
 
-  external GeoJsonSourceJsImpl setData(FeatureCollectionJsImpl featureCollection);
+  external GeoJsonSourceJsImpl setData(
+      FeatureCollectionJsImpl featureCollection);
 }

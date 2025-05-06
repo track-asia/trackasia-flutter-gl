@@ -1,7 +1,7 @@
 name: trackasia_gl_workspace
 publish_to: 'none'
-repository: https://github.com/trackasia/flutter-trackasia-gl
-issue_tracker: https://github.com/trackasia/flutter-trackasia-gl/issues
+repository: https://github.com/track-asia/flutter-trackasia-gl
+issue_tracker: https://github.com/track-asia/flutter-trackasia-gl/issues
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

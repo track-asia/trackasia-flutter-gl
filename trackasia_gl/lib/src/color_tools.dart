@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 part of '../trackasia_gl.dart';
 
 extension TrackAsiaColorConversion on Color {

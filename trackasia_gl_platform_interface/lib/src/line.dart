@@ -39,7 +39,8 @@ class Line implements Annotation {
 
   @override
   void translate(LatLng delta) {
-    options = options.copyWith(LineOptions(geometry: options.geometry?.map((e) => e + delta).toList()));
+    options = options.copyWith(LineOptions(
+        geometry: options.geometry?.map((e) => e + delta).toList()));
   }
 }
 
@@ -111,7 +112,8 @@ class LineOptions {
     addIfPresent('lineBlur', lineBlur);
     addIfPresent('linePattern', linePattern);
     if (addGeometry) {
-      addIfPresent('geometry', geometry?.map((LatLng latLng) => latLng.toJson()).toList());
+      addIfPresent('geometry',
+          geometry?.map((LatLng latLng) => latLng.toJson()).toList());
     }
     addIfPresent('draggable', draggable);
     return json;
@@ -121,7 +123,10 @@ class LineOptions {
     return {
       "type": "Feature",
       "properties": toJson(false),
-      "geometry": {"type": "LineString", "coordinates": geometry!.map((c) => c.toGeoJsonCoordinates()).toList()}
+      "geometry": {
+        "type": "LineString",
+        "coordinates": geometry!.map((c) => c.toGeoJsonCoordinates()).toList()
+      }
     };
   }
 }

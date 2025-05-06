@@ -21,18 +21,20 @@ import 'package:trackasia_gl_web/src/util/evented.dart';
 ///   .setLngLat([30.5, 50.5])
 ///   .addTo(map);
 /// ```
-/// @see [Add custom icons with Markers](https://track-asia.com/trackasia-gl-js/docs/examples/custom-marker-icons/)
-/// @see [Create a draggable Marker](https://track-asia.com/trackasia-gl-js/docs/examples/drag-a-marker/)
+/// @see [Add custom icons with Markers](https://track-asia.io.github.track-asia-js/docs/examples/custom-marker-icons/)
+/// @see [Create a draggable Marker](https://track-asia.io.github.track-asia-js/docs/examples/drag-a-marker/)
 class Marker extends Evented {
   @override
   final MarkerJsImpl jsObject;
 
-  factory Marker([MarkerOptions? options]) => Marker.fromJsObject(MarkerJsImpl(options?.jsObject));
+  factory Marker([MarkerOptions? options]) =>
+      Marker.fromJsObject(MarkerJsImpl(options?.jsObject));
 
   ///  Attaches the marker to a map
   ///  @param {TrackAsiaMap} map
   ///  @returns {Marker} `this`
-  Marker addTo(TrackAsiaMap map) => Marker.fromJsObject(jsObject.addTo(map.jsObject));
+  Marker addTo(TrackAsiaMap map) =>
+      Marker.fromJsObject(jsObject.addTo(map.jsObject));
 
   ///  Removes the marker from a map
   ///  @example
@@ -52,7 +54,8 @@ class Marker extends Evented {
 
   ///  Set the marker's geographical position and move it.
   ///  @returns {Marker} `this`
-  Marker setLngLat(LngLat lnglat) => Marker.fromJsObject(jsObject.setLngLat(lnglat.jsObject));
+  Marker setLngLat(LngLat lnglat) =>
+      Marker.fromJsObject(jsObject.setLngLat(lnglat.jsObject));
 
   ///  Returns the `Marker`'s HTML element.
   ///  @returns {HtmlElement} element
@@ -62,7 +65,8 @@ class Marker extends Evented {
   ///  @param popup an instance of the `Popup` class. If undefined or null, any popup
   ///  set on this `Marker` instance is unset
   ///  @returns {Marker} `this`
-  Marker setPopup(Popup popup) => Marker.fromJsObject(jsObject.setPopup(popup.jsObject));
+  Marker setPopup(Popup popup) =>
+      Marker.fromJsObject(jsObject.setPopup(popup.jsObject));
 
   ///  Returns the Popup instance that is bound to the Marker
   ///  @returns {Popup} popup
@@ -79,12 +83,14 @@ class Marker extends Evented {
   ///  Sets the offset of the marker
   ///  @param {PointLike} offset The offset in pixels as a {@link PointLike} object to apply relative to the element's center. Negatives indicate left and up.
   ///  @returns {Marker} `this`
-  Marker setOffset(Point offset) => Marker.fromJsObject(jsObject.setOffset(offset.jsObject));
+  Marker setOffset(Point offset) =>
+      Marker.fromJsObject(jsObject.setOffset(offset.jsObject));
 
   ///  Sets the `draggable` property and functionality of the marker
   ///  @param {boolean} [shouldBeDraggable=false] Turns drag functionality on/off
   ///  @returns {Marker} `this`
-  Marker setDraggable(bool shouldBeDraggable) => Marker.fromJsObject(jsObject.setDraggable(shouldBeDraggable));
+  Marker setDraggable(bool shouldBeDraggable) =>
+      Marker.fromJsObject(jsObject.setDraggable(shouldBeDraggable));
 
   ///  Returns true if the marker can be dragged
   ///  @returns {boolean}
@@ -93,7 +99,8 @@ class Marker extends Evented {
   ///  Sets the `rotation` property of the marker.
   ///  @param {number} [rotation=0] The rotation angle of the marker (clockwise, in degrees), relative to its respective {@link Marker#rotationAlignment} setting.
   ///  @returns {Marker} `this`
-  Marker setRotation(num rotation) => Marker.fromJsObject(jsObject.setRotation(rotation));
+  Marker setRotation(num rotation) =>
+      Marker.fromJsObject(jsObject.setRotation(rotation));
 
   ///  Returns the current rotation angle of the marker (in degrees).
   ///  @returns {number}
@@ -102,7 +109,8 @@ class Marker extends Evented {
   ///  Sets the `rotationAlignment` property of the marker.
   ///  @param {string} [alignment='auto'] Sets the `rotationAlignment` property of the marker.
   ///  @returns {Marker} `this`
-  Marker setRotationAlignment(String alignment) => Marker.fromJsObject(jsObject.setRotationAlignment(alignment));
+  Marker setRotationAlignment(String alignment) =>
+      Marker.fromJsObject(jsObject.setRotationAlignment(alignment));
 
   ///  Returns the current `rotationAlignment` property of the marker.
   ///  @returns {string}
@@ -111,7 +119,8 @@ class Marker extends Evented {
   ///  Sets the `pitchAlignment` property of the marker.
   ///  @param {string} [alignment] Sets the `pitchAlignment` property of the marker. If alignment is 'auto', it will automatically match `rotationAlignment`.
   ///  @returns {Marker} `this`
-  Marker setPitchAlignment(String alignment) => Marker.fromJsObject(jsObject.setPitchAlignment(alignment));
+  Marker setPitchAlignment(String alignment) =>
+      Marker.fromJsObject(jsObject.setPitchAlignment(alignment));
 
   ///  Returns the current `pitchAlignment` property of the marker.
   ///  @returns {string}

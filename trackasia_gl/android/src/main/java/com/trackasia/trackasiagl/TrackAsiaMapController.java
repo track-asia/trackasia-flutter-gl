@@ -32,8 +32,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+
 import com.trackasia.android.gestures.AndroidGesturesManager;
 import com.trackasia.android.gestures.MoveGestureDetector;
+import com.trackasia.android.location.engine.LocationEngine;
+import com.trackasia.android.location.engine.LocationEngineDefault;
+import com.trackasia.android.location.engine.LocationEngineProxy;
+import com.trackasia.android.location.engine.LocationEngineRequest;
 import com.trackasia.geojson.Feature;
 import com.trackasia.geojson.FeatureCollection;
 import com.trackasia.android.camera.CameraPosition;
@@ -1242,7 +1247,10 @@ final class TrackAsiaMapController
       case "locationComponent#getLastLocation":
         {
           Log.e(TAG, "location component: getLastLocation");
-          if (this.myLocationEnabled && locationComponent != null) {
+          if (this.myLocationEnabled
+              && locationComponent != null
+              && locationComponent.isLocationComponentActivated()
+              && locationComponent.getLocationEngine() != null) {
             Map<String, Object> reply = new HashMap<>();
 
             trackAsiaMap.getLocationComponent().getLocationEngine().getLastLocation(
@@ -1265,6 +1273,11 @@ final class TrackAsiaMapController
                     result.error("", "", null); // ???
                   }
                 });
+          } else {
+            result.error(
+                "LOCATION DISABLED",
+                "Location is disabled or location component is unavailable",
+                null);
           }
           break;
         }
@@ -1784,7 +1797,7 @@ final class TrackAsiaMapController
    * For more information check out:
    * <a href="https://github.com/flutter/flutter/issues/107297">Flutter issue</a>
    * <a href="https://github.com/flutter/engine/commit/8dc7cd1b1a33b5da561ac859cdcc49705ad1e598">Flutter Engine commit that introduced the issue</a>
-   * <a href="https://github.com/trackasia/flutter-trackasia-gl/issues/182">The reported issue in the TrackAsia repo</a>
+   * <a href="https://github.com/track-asia/flutter-trackasia-gl/issues/182">The reported issue in the TrackAsia repo</a>
    */
   private void destroyMapViewIfNecessary() {
     if (mapView == null) {
@@ -1861,6 +1874,20 @@ final class TrackAsiaMapController
   @Override
   public void setCameraTargetBounds(LatLngBounds bounds) {
     this.bounds = bounds;
+  }
+
+  @Override
+  public void setLocationEngineProperties(LocationEngineRequest locationEngineRequest){
+    if(locationComponent != null){
+        if(locationEngineRequest.getPriority() == LocationEngineRequest.PRIORITY_HIGH_ACCURACY){
+            locationComponent.setLocationEngine(new LocationEngineProxy(
+                new TrackAsiaGPSLocationEngine(context)));
+     } else {
+       locationComponent.setLocationEngine(
+               LocationEngineDefault.INSTANCE.getDefaultLocationEngine(context));
+            }
+      locationComponent.setLocationEngineRequest(locationEngineRequest);
+    }
   }
 
   @Override
@@ -2017,7 +2044,7 @@ final class TrackAsiaMapController
   }
 
   private void updateMyLocationEnabled() {
-    if (this.locationComponent == null && myLocationEnabled) {
+    if (this.locationComponent == null && trackAsiaMap.getStyle() != null && myLocationEnabled) {
       enableLocationComponent(trackAsiaMap.getStyle());
     }
 
@@ -2035,6 +2062,7 @@ final class TrackAsiaMapController
   private void startListeningForLocationUpdates() {
     if (locationEngineCallback == null
         && locationComponent != null
+        && locationComponent.isLocationComponentActivated()
         && locationComponent.getLocationEngine() != null) {
       locationEngineCallback =
           new LocationEngineCallback<LocationEngineResult>() {
@@ -2056,6 +2084,7 @@ final class TrackAsiaMapController
   private void stopListeningForLocationUpdates() {
     if (locationEngineCallback != null
         && locationComponent != null
+        && locationComponent.isLocationComponentActivated()
         && locationComponent.getLocationEngine() != null) {
       locationComponent.getLocationEngine().removeLocationUpdates(locationEngineCallback);
       locationEngineCallback = null;

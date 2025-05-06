@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Q&A - GitHub Discussions"
+    url: https://github.com/track-asia/flutter-trackasia-gl/discussions/categories/q-a
+    about: "If you have a question about using TrackAsia on Flutter"
+  - name: "Join on Slack"
+    url: https://slack.openstreetmap.us/
+    about: "Join #trackasia-flutter on the OpenStreetMap Slack"

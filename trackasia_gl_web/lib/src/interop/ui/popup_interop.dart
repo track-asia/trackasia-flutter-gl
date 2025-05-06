@@ -48,10 +48,10 @@ import 'package:trackasia_gl_web/src/interop/util/evented_interop.dart';
 ///   .setHTML("<h1>Hello World!</h1>")
 ///   .setMaxWidth("300px")
 ///   .addTo(map);
-/// @see [Display a popup](https://track-asia.com/trackasia-gl-js/docs/examples/popup/)
-/// @see [Display a popup on hover](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-hover/)
-/// @see [Display a popup on click](https://track-asia.com/trackasia-gl-js/docs/examples/popup-on-click/)
-/// @see [Attach a popup to a marker instance](https://track-asia.com/trackasia-gl-js/docs/examples/set-popup/)
+/// @see [Display a popup](https://track-asia.io.github.track-asia-js/docs/examples/popup/)
+/// @see [Display a popup on hover](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-hover/)
+/// @see [Display a popup on click](https://track-asia.io.github.track-asia-js/docs/examples/popup-on-click/)
+/// @see [Attach a popup to a marker instance](https://track-asia.io.github.track-asia-js/docs/examples/set-popup/)
 @JS('Popup')
 class PopupJsImpl extends EventedJsImpl {
   external dynamic get options;

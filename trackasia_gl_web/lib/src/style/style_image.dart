@@ -6,7 +6,8 @@ class StyleImage extends JsObjectWrapper<StyleImageJsImpl> {
   bool get sdf => jsObject.sdf;
   num get version => jsObject.version;
   bool get hasRenderCallback => jsObject.hasRenderCallback;
-  StyleImageInterface get userImage => StyleImageInterface.fromJsObject(jsObject.userImage);
+  StyleImageInterface get userImage =>
+      StyleImageInterface.fromJsObject(jsObject.userImage);
 
   /// Creates a new EvaluationParameters from a [jsObject].
   StyleImage.fromJsObject(super.jsObject) : super.fromJsObject();
@@ -17,7 +18,8 @@ class StyleImageInterface extends JsObjectWrapper<StyleImageInterfaceJsImpl> {
   num get height => jsObject.height;
   dynamic get data => jsObject.data;
   Function get render => jsObject.render;
-  Function(TrackAsiaMapJsImpl map, String id) get onAdd => jsObject.onAdd; //TODO: Remove JsImpl
+  Function(TrackAsiaMapJsImpl map, String id) get onAdd =>
+      jsObject.onAdd; //TODO: Remove JsImpl
   Function get onRemove => jsObject.onRemove;
 
   /// Creates a new EvaluationParameters from a [jsObject].

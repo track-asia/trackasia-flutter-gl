@@ -9,7 +9,8 @@ class ScrollZoomHandler extends JsObjectWrapper<ScrollZoomHandlerJsImpl> {
 
   ///  Set the zoom rate of a mouse wheel
   ///  @param {number} [wheelZoomRate = 1/450]
-  setWheelZoomRate(num wheelZoomRate) => jsObject.setWheelZoomRate(wheelZoomRate);
+  setWheelZoomRate(num wheelZoomRate) =>
+      jsObject.setWheelZoomRate(wheelZoomRate);
 
   ///  Returns a Boolean indicating whether the "scroll to zoom" interaction is enabled.
   ///

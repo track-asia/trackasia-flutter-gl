@@ -1,7 +1,8 @@
 import 'package:trackasia_gl_web/src/interop/interop.dart';
 import 'package:trackasia_gl_web/src/ui/events.dart';
 
-class DoubleClickZoomHandler extends JsObjectWrapper<DoubleClickZoomHandlerJsImpl> {
+class DoubleClickZoomHandler
+    extends JsObjectWrapper<DoubleClickZoomHandlerJsImpl> {
   ///  Returns a Boolean indicating whether the "double click to zoom" interaction is enabled.
   ///
   ///  @returns {boolean} `true` if the "double click to zoom" interaction is enabled.

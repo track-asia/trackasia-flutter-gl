@@ -7,7 +7,9 @@ import 'package:recase/recase.dart';
 import 'conversions.dart';
 
 main() async {
-  final styleJson = jsonDecode(await File('scripts/input/style.json').readAsString());
+  final currentPath = Directory.current.path;
+  final styleFilePath = '$currentPath/input/style.json';
+  final styleJson = jsonDecode(await File(styleFilePath).readAsString());
 
   final layerTypes = [
     "symbol",
@@ -19,7 +21,15 @@ main() async {
     "hillshade",
     "heatmap",
   ];
-  final sourceTypes = ["vector", "raster", "raster_dem", "geojson", "video", "image"];
+
+  final sourceTypes = [
+    "vector",
+    "raster",
+    "raster_dem",
+    "geojson",
+    "video",
+    "image"
+  ];
 
   final renderContext = {
     "layerTypes": [
@@ -44,11 +54,14 @@ main() async {
   };
 
   // required for deduplication
-  renderContext["all_layout_properties"] = <dynamic>{for (final type in renderContext["layerTypes"]!) ...type["layout_properties"].map((p) => p["value"])}.map((p) => {"property": p}).toList();
+  renderContext["all_layout_properties"] = <dynamic>{
+    for (final type in renderContext["layerTypes"]!)
+      ...type["layout_properties"].map((p) => p["value"])
+  }.map((p) => {"property": p}).toList();
 
   const templates = [
-    "trackasia_gl/android/src/main/java/com/mapbox/mapboxgl/LayerPropertyConverter.java",
-    "trackasia_gl/ios/Classes/LayerPropertyConverter.swift",
+    "trackasia_gl/android/src/main/java/org/track-asia/trackasiagl/LayerPropertyConverter.java",
+    "trackasia_gl/ios/trackasia_gl/Sources/trackasia_gl/LayerPropertyConverter.swift",
     "trackasia_gl/lib/src/layer_expressions.dart",
     "trackasia_gl/lib/src/layer_properties.dart",
     "trackasia_gl_web/lib/src/layer_tools.dart",
@@ -64,12 +77,16 @@ Future<void> render(
   Map<String, List> renderContext,
   String path,
 ) async {
+  final currentParentPath = Directory.current.parent.path;
+
   final pathItems = path.split("/");
   final filename = pathItems.removeLast();
-  final outputPath = pathItems.join("/");
+  final outputPath = '$currentParentPath/${pathItems.join("/")}';
 
   print("Rendering $filename");
-  final templateFile = await File('./scripts/templates/$filename.template').readAsString();
+  final templateFile =
+      await File('$currentParentPath/scripts/templates/$filename.template')
+          .readAsString();
 
   final template = Template(templateFile);
   final outputFile = File('$outputPath/$filename');
@@ -77,16 +94,23 @@ Future<void> render(
   outputFile.writeAsString(template.renderString(renderContext));
 }
 
-List<Map<String, dynamic>> buildStyleProperties(Map<String, dynamic> styleJson, String key) {
+List<Map<String, dynamic>> buildStyleProperties(
+    Map<String, dynamic> styleJson, String key) {
   final Map<String, dynamic> items = styleJson[key];
 
   return items.entries.map((e) => buildStyleProperty(e.key, e.value)).toList();
 }
 
-Map<String, dynamic> buildStyleProperty(String key, Map<String, dynamic> value) {
+Map<String, dynamic> buildStyleProperty(
+    String key, Map<String, dynamic> value) {
+  final typeDart = dartTypeMappingTable[value["type"]];
+  final nestedTypeDart = dartTypeMappingTable[value["value"]] ??
+      dartTypeMappingTable[value["value"]?["type"]];
   final camelCase = ReCase(key).camelCase;
+
   return <String, dynamic>{
     'value': key,
+    'isFloatArrayProperty': typeDart == "List" && nestedTypeDart == "double",
     'isVisibilityProperty': key == "visibility",
     'requiresLiteral': key == "icon-image",
     'isIosAsCamelCase': renamedIosProperties.containsKey(camelCase),
@@ -97,18 +121,25 @@ Map<String, dynamic> buildStyleProperty(String key, Map<String, dynamic> value) 
   };
 }
 
-List<Map<String, dynamic>> buildSourceProperties(Map<String, dynamic> styleJson, String key) {
+List<Map<String, dynamic>> buildSourceProperties(
+    Map<String, dynamic> styleJson, String key) {
   final Map<String, dynamic> items = styleJson[key];
 
-  return items.entries.where((e) => e.key != "*" && e.key != "type").map((e) => buildSourceProperty(e.key, e.value)).toList();
+  return items.entries
+      .where((e) => e.key != "*" && e.key != "type")
+      .map((e) => buildSourceProperty(e.key, e.value))
+      .toList();
 }
 
-Map<String, dynamic> buildSourceProperty(String key, Map<String, dynamic> value) {
+Map<String, dynamic> buildSourceProperty(
+    String key, Map<String, dynamic> value) {
   final camelCase = ReCase(key).camelCase;
   final typeDart = dartTypeMappingTable[value["type"]];
   final typeSwift = swiftTypeMappingTable[value["type"]];
-  final nestedTypeDart = dartTypeMappingTable[value["value"]] ?? dartTypeMappingTable[value["value"]?["type"]];
-  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ?? swiftTypeMappingTable[value["value"]?["type"]];
+  final nestedTypeDart = dartTypeMappingTable[value["value"]] ??
+      dartTypeMappingTable[value["value"]?["type"]];
+  final nestedTypeSwift = swiftTypeMappingTable[value["value"]] ??
+      swiftTypeMappingTable[value["value"]?["type"]];
 
   var defaultValue = value["default"];
   if (defaultValue is List) {
@@ -123,7 +154,8 @@ Map<String, dynamic> buildSourceProperty(String key, Map<String, dynamic> value)
     'default': defaultValue,
     'hasDefault': value["default"] != null,
     'type': nestedTypeDart == null ? typeDart : "$typeDart<$nestedTypeDart>",
-    'typeSwift': nestedTypeSwift == null ? typeSwift : "$typeSwift<$nestedTypeSwift>",
+    'typeSwift':
+        nestedTypeSwift == null ? typeSwift : "$typeSwift<$nestedTypeSwift>",
     'docSplit': buildDocSplit(value).map((s) => {"part": s}).toList(),
     'valueAsCamelCase': camelCase
   };
@@ -148,7 +180,8 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
       result.add("Options:");
       for (final value in values.entries) {
         result.add('  "${value.key}"');
-        result.addAll(splitIntoChunks("${value.value["doc"]}", 70, prefix: "     "));
+        result.addAll(
+            splitIntoChunks("${value.value["doc"]}", 70, prefix: "     "));
       }
     }
   }
@@ -169,7 +202,8 @@ List<String> buildDocSplit(Map<String, dynamic> item) {
   return result;
 }
 
-List<String> splitIntoChunks(String input, int lineLength, {String prefix = ""}) {
+List<String> splitIntoChunks(String input, int lineLength,
+    {String prefix = ""}) {
   final words = input.split(" ");
   final chunks = <String>[];
 
@@ -188,7 +222,8 @@ List<String> splitIntoChunks(String input, int lineLength, {String prefix = ""})
   return chunks;
 }
 
-List<Map<String, dynamic>> buildExpressionProperties(Map<String, dynamic> styleJson) {
+List<Map<String, dynamic>> buildExpressionProperties(
+    Map<String, dynamic> styleJson) {
   final Map<String, dynamic> items = styleJson["expression_name"]["values"];
 
   final renamed = {

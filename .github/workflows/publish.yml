@@ -1,0 +1,25 @@
+name: Publish packages to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+permissions:
+  id-token: write
+
+jobs:
+  publish_trackasia_gl_platform_interface:
+    uses: ./.github/workflows/publish-single.yml
+    with:
+      working-directory: trackasia_gl_platform_interface
+  publish_trackasia_gl_web:
+    needs: [publish_trackasia_gl_platform_interface]
+    uses: ./.github/workflows/publish-single.yml
+    with:
+      working-directory: trackasia_gl_web
+  publish_trackasia_gl:
+    needs: [publish_trackasia_gl_platform_interface, publish_trackasia_gl_web]
+    uses: ./.github/workflows/publish-single.yml
+    with:
+      working-directory: trackasia_gl

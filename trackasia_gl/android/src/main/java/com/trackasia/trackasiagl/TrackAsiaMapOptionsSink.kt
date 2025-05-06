@@ -4,6 +4,7 @@
 package com.trackasia.trackasiagl
 
 import com.trackasia.android.geometry.LatLngBounds
+import com.trackasia.android.location.engine.LocationEngineRequest
 
 /** Receiver of TrackAsiaMap configuration options.  */
 internal interface TrackAsiaMapOptionsSink {
@@ -42,4 +43,6 @@ internal interface TrackAsiaMapOptionsSink {
     fun setAttributionButtonGravity(gravity: Int)
 
     fun setAttributionButtonMargins(x: Int, y: Int)
+
+    fun setLocationEngineProperties(locationEngineRequest: LocationEngineRequest)
 }

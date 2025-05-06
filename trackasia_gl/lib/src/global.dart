@@ -55,7 +55,8 @@ Future<List<OfflineRegion>> getListOfRegions() async {
   return regions.map((region) => OfflineRegion.fromMap(region)).toList();
 }
 
-Future<OfflineRegion> updateOfflineRegionMetadata(int id, Map<String, dynamic> metadata) async {
+Future<OfflineRegion> updateOfflineRegionMetadata(
+    int id, Map<String, dynamic> metadata) async {
   final regionJson = await _globalChannel.invokeMethod(
     'updateOfflineRegionMetadata',
     <String, dynamic>{
@@ -67,7 +68,8 @@ Future<OfflineRegion> updateOfflineRegionMetadata(int id, Map<String, dynamic> m
   return OfflineRegion.fromMap(json.decode(regionJson));
 }
 
-Future<dynamic> setOfflineTileCountLimit(int limit) => _globalChannel.invokeMethod(
+Future<dynamic> setOfflineTileCountLimit(int limit) =>
+    _globalChannel.invokeMethod(
       'setOfflineTileCountLimit',
       <String, dynamic>{
         'limit': limit,
@@ -86,9 +88,11 @@ Future<OfflineRegion> downloadOfflineRegion(
   Map<String, dynamic> metadata = const {},
   Function(DownloadRegionStatus event)? onEvent,
 }) async {
-  final channelName = 'downloadOfflineRegion_${DateTime.now().microsecondsSinceEpoch}';
+  final channelName =
+      'downloadOfflineRegion_${DateTime.now().microsecondsSinceEpoch}';
 
-  await _globalChannel.invokeMethod('downloadOfflineRegion#setup', <String, dynamic>{
+  await _globalChannel
+      .invokeMethod('downloadOfflineRegion#setup', <String, dynamic>{
     'channelName': channelName,
   });
 
@@ -101,7 +105,8 @@ Future<OfflineRegion> downloadOfflineRegion(
       final unknownError = Error(
         PlatformException(
           code: 'UnknowException',
-          message: 'This error is unhandled by plugin. Please contact us if needed.',
+          message:
+              'This error is unhandled by plugin. Please contact us if needed.',
           details: error,
         ),
       );
@@ -119,7 +124,8 @@ Future<OfflineRegion> downloadOfflineRegion(
     });
   }
 
-  final result = await _globalChannel.invokeMethod('downloadOfflineRegion', <String, dynamic>{
+  final result = await _globalChannel
+      .invokeMethod('downloadOfflineRegion', <String, dynamic>{
     'definition': definition.toMap(),
     'metadata': metadata,
   });
