@@ -107,6 +107,18 @@ class TrackAsiaMethodChannel extends TrackAsiaPlatform {
                   ),
             timestamp: DateTime.fromMillisecondsSinceEpoch(
                 userLocation['timestamp'])));
+      case 'navigation#onEvent':
+        final Map<String, dynamic> eventData = call.arguments;
+        onNavigationEventPlatform(NavigationEvent.fromMap(eventData));
+      case 'navigation#onRouteProgress':
+        final Map<String, dynamic> progressData = call.arguments;
+        onRouteProgressPlatform(RouteProgress.fromMap(progressData));
+      case 'navigation#onVoiceInstruction':
+        final Map<String, dynamic> instructionData = call.arguments;
+        onVoiceInstructionPlatform(VoiceInstruction.fromMap(instructionData));
+      case 'navigation#onBannerInstruction':
+        final Map<String, dynamic> instructionData = call.arguments;
+        onBannerInstructionPlatform(BannerInstruction.fromMap(instructionData));
       default:
         throw MissingPluginException();
     }
@@ -334,10 +346,15 @@ class TrackAsiaMethodChannel extends TrackAsiaPlatform {
   }
 
   @override
-  Future<LatLng> requestMyLocationLatLng() async {
+  Future<LatLng?> requestMyLocationLatLng() async {
     try {
-      final Map<dynamic, dynamic> reply =
+      final Map<dynamic, dynamic>? reply =
           await _channel.invokeMethod('locationComponent#getLastLocation');
+      
+      if (reply == null) {
+        return null;
+      }
+      
       var latitude = 0.0;
       var longitude = 0.0;
       if (reply.containsKey('latitude') && reply['latitude'] != null) {
@@ -348,7 +365,8 @@ class TrackAsiaMethodChannel extends TrackAsiaPlatform {
       }
       return LatLng(latitude, longitude);
     } on PlatformException catch (e) {
-      return Future.error(e);
+      // Return null instead of throwing error for location unavailable
+      return null;
     }
   }
 
@@ -816,6 +834,96 @@ class TrackAsiaMethodChannel extends TrackAsiaPlatform {
       final Map<dynamic, dynamic> reply =
           await _channel.invokeMethod('style#getLayerIds');
       return reply['layers'].map((it) => it.toString()).toList();
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  // Navigation method implementations
+  @override
+  Future<NavigationRoute?> calculateRoute({
+    required List<LatLng> waypoints,
+    NavigationOptions? options,
+  }) async {
+    try {
+      final Map<dynamic, dynamic>? reply = await _channel.invokeMethod(
+        'navigation#calculateRoute',
+        <String, dynamic>{
+          'waypoints': waypoints.map((w) => [w.latitude, w.longitude]).toList(),
+          'options': options?.toMap(),
+        },
+      );
+      return reply != null ? NavigationRoute.fromMap(Map<String, dynamic>.from(reply)) : null;
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> startNavigation({
+    required NavigationRoute route,
+    NavigationOptions? options,
+  }) async {
+    try {
+      await _channel.invokeMethod(
+        'navigation#start',
+        <String, dynamic>{
+          'route': {
+            'geometry': route.geometry,
+            'distance': route.distance,
+            'duration': route.duration,
+            'waypoints': route.waypoints,
+          },
+          'options': options?.toMap(),
+        },
+      );
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> stopNavigation() async {
+    try {
+      await _channel.invokeMethod('navigation#stop');
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> pauseNavigation() async {
+    try {
+      await _channel.invokeMethod('navigation#pause');
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> resumeNavigation() async {
+    try {
+      await _channel.invokeMethod('navigation#resume');
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<bool> isNavigationActive() async {
+    try {
+      final bool? result = await _channel.invokeMethod('navigation#isActive');
+      return result ?? false;
+    } on PlatformException catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  @override
+  Future<RouteProgress?> getCurrentRouteProgress() async {
+    try {
+      final Map<dynamic, dynamic>? reply = await _channel.invokeMethod('navigation#getProgress');
+      return reply != null ? RouteProgress.fromMap(Map<String, dynamic>.from(reply)) : null;
     } on PlatformException catch (e) {
       return Future.error(e);
     }

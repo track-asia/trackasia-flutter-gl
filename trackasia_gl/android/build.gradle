@@ -52,6 +52,22 @@ android {
         implementation 'io.github.track-asia:android-plugin-annotation-v9:2.0.1'
         implementation 'io.github.track-asia:android-plugin-offline-v9:2.0.1'
         implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+        
+        // TrackAsia Navigation dependencies
+        implementation 'io.github.track-asia:navigation-core:2.0.2'
+        implementation 'io.github.track-asia:navigation-ui-android:2.0.2'
+        implementation 'io.github.track-asia:geojson:2.0.2'
+        implementation 'io.github.track-asia:turf:2.0.2'
+        
+        // Additional navigation dependencies
+        implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+        implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+        implementation 'com.google.android.material:material:1.11.0'
+    }
+    
+    configurations {
+        implementation.exclude group: 'io.github.track-asia', module: 'android-sdk-geojson'
+        implementation.exclude group: 'io.github.track-asia', module: 'android-sdk-turf'
     }
 }
 

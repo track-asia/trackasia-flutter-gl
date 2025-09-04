@@ -17,6 +17,10 @@ A new Flutter plugin.
   # When updating the dependency version,
   # make sure to also update the version in Package.swift.
   s.dependency 'Trackasia', '2.0.3'
+  
+  # TrackAsia Navigation dependencies
+  s.dependency 'TrackAsiaNavigation', '~> 1.0.0'
+  s.dependency 'TrackAsiaDirections', '~> 1.0.0'
   s.swift_version = '5.0'
   s.ios.deployment_target = '12.0'
 end

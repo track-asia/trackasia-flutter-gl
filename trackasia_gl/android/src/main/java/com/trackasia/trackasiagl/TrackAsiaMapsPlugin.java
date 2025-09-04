@@ -22,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel;
 public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
 
   static FlutterAssets flutterAssets;
+  private static GlobalMethodHandler globalMethodHandler;
   private Lifecycle lifecycle;
 
   public TrackAsiaMapsPlugin() {
@@ -36,7 +37,8 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
 
     MethodChannel methodChannel =
         new MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/trackasia_gl");
-    methodChannel.setMethodCallHandler(new GlobalMethodHandler(binding));
+    globalMethodHandler = new GlobalMethodHandler(binding);
+    methodChannel.setMethodCallHandler(globalMethodHandler);
 
     binding
         .getPlatformViewRegistry()
@@ -55,7 +57,11 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    // no-op
+    globalMethodHandler = null;
+  }
+
+  public static GlobalMethodHandler getGlobalMethodHandler() {
+    return globalMethodHandler;
   }
 
   @Override

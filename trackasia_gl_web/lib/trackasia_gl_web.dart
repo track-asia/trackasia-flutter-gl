@@ -11,6 +11,8 @@ import 'dart:js';
 import 'dart:js_util';
 import 'dart:math';
 import 'dart:ui' as ui;
+// Import platformViewRegistry from dart:ui for Flutter 3.22+
+import 'dart:ui_web' as ui_web;
 import 'package:flutter/services.dart';
 
 import 'package:flutter/foundation.dart';

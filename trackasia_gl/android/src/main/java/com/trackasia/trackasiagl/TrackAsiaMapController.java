@@ -1247,6 +1247,13 @@ final class TrackAsiaMapController
       case "locationComponent#getLastLocation":
         {
           Log.e(TAG, "location component: getLastLocation");
+          Log.e(TAG, "myLocationEnabled: " + this.myLocationEnabled);
+          Log.e(TAG, "locationComponent != null: " + (locationComponent != null));
+          if (locationComponent != null) {
+            Log.e(TAG, "locationComponent.isLocationComponentActivated(): " + locationComponent.isLocationComponentActivated());
+            Log.e(TAG, "locationComponent.getLocationEngine() != null: " + (locationComponent.getLocationEngine() != null));
+          }
+          
           if (this.myLocationEnabled
               && locationComponent != null
               && locationComponent.isLocationComponentActivated()
@@ -1257,27 +1264,29 @@ final class TrackAsiaMapController
                 new LocationEngineCallback<LocationEngineResult>() {
                   @Override
                   public void onSuccess(LocationEngineResult locationEngineResult) {
+                    Log.e(TAG, "getLastLocation onSuccess called");
                     Location lastLocation = locationEngineResult.getLastLocation();
                     if (lastLocation != null) {
+                      Log.e(TAG, "lastLocation found: " + lastLocation.getLatitude() + ", " + lastLocation.getLongitude());
                       reply.put("latitude", lastLocation.getLatitude());
                       reply.put("longitude", lastLocation.getLongitude());
                       reply.put("altitude", lastLocation.getAltitude());
                       result.success(reply);
                     } else {
-                      result.error("", "", null); // ???
+                      Log.e(TAG, "lastLocation is null");
+                      result.success(null); // Return null when location is not available
                     }
                   }
 
                   @Override
                   public void onFailure(@NonNull Exception exception) {
-                    result.error("", "", null); // ???
+                    Log.e(TAG, "getLastLocation onFailure: " + exception.getMessage());
+                    result.success(null); // Return null when location request fails
                   }
                 });
           } else {
-            result.error(
-                "LOCATION DISABLED",
-                "Location is disabled or location component is unavailable",
-                null);
+            Log.e(TAG, "Location component conditions not met, returning null");
+            result.success(null); // Return null when location is disabled
           }
           break;
         }
@@ -1620,6 +1629,21 @@ final class TrackAsiaMapController
         result.success(reply);
         break;
       }
+      // Navigation methods - delegate to GlobalMethodHandler
+      case "navigation#calculateRoute":
+      case "navigation#start":
+      case "navigation#stop":
+      case "navigation#pause":
+      case "navigation#resume":
+      case "navigation#isActive":
+      case "navigation#getProgress":
+        // Get the global method handler from the plugin
+        if (TrackAsiaMapsPlugin.getGlobalMethodHandler() != null) {
+          TrackAsiaMapsPlugin.getGlobalMethodHandler().onMethodCall(call, result);
+        } else {
+          result.error("NAVIGATION_NOT_INITIALIZED", "Navigation handler not initialized", null);
+        }
+        break;
       default:
         result.notImplemented();
     }

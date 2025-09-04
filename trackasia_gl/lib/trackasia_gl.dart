@@ -51,12 +51,14 @@ export 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.
         Annotation,
         ArgumentCallbacks,
         AttributionButtonPosition,
+        BannerInstruction,
         CameraPosition,
         CameraTargetBounds,
         CameraUpdate,
         Circle,
         CircleOptions,
         CompassViewPosition,
+        DistanceUnits,
         Fill,
         FillOptions,
         GeojsonSourceProperties,
@@ -74,16 +76,24 @@ export 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.
         MinMaxZoomPreference,
         MyLocationRenderMode,
         MyLocationTrackingMode,
+        NavigationEvent,
+        NavigationEventType,
+        NavigationOptions,
+        NavigationProfile,
+        NavigationRoute,
         OnPlatformViewCreatedCallback,
         RasterDemSourceProperties,
         RasterSourceProperties,
+        RouteProgress,
         SourceProperties,
         Symbol,
         SymbolOptions,
+        TrackAsiaGlPlatform,
         UserHeading,
         UserLocation,
         VectorSourceProperties,
-        VideoSourceProperties;
+        VideoSourceProperties,
+        VoiceInstruction;
 
 part 'src/controller.dart';
 
@@ -106,3 +116,7 @@ part 'src/annotation_manager.dart';
 part 'src/util.dart';
 
 part 'src/trackasia_styles.dart';
+
+part 'src/trackasia_navigation.dart';
+
+part 'src/navigation_widget.dart';

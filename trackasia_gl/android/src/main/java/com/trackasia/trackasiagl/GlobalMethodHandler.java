@@ -28,12 +28,14 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
   @NonNull private final BinaryMessenger messenger;
   @Nullable private FlutterPlugin.FlutterAssets flutterAssets;
   @Nullable private OfflineChannelHandlerImpl downloadOfflineRegionChannelHandler;
+  @Nullable private NavigationMethodHandler navigationMethodHandler;
 
 
   GlobalMethodHandler(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
     this.context = binding.getApplicationContext();
     this.flutterAssets = binding.getFlutterAssets();
     this.messenger = binding.getBinaryMessenger();
+    this.navigationMethodHandler = new NavigationMethodHandler(context);
   }
 
   private static void copy(InputStream input, OutputStream output) throws IOException {
@@ -124,6 +126,19 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
       case "deleteOfflineRegion":
         OfflineManagerUtils.deleteRegion(
             result, context, methodCall.<Number>argument("id").longValue());
+        break;
+      case "navigation#calculateRoute":
+      case "navigation#start":
+      case "navigation#stop":
+      case "navigation#pause":
+      case "navigation#resume":
+      case "navigation#isActive":
+      case "navigation#getProgress":
+        if (navigationMethodHandler != null) {
+          navigationMethodHandler.onMethodCall(methodCall, result);
+        } else {
+          result.error("NAVIGATION_NOT_INITIALIZED", "Navigation handler not initialized", null);
+        }
         break;
       default:
         result.notImplemented();

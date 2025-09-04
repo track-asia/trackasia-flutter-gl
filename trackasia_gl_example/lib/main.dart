@@ -35,12 +35,16 @@ import 'place_source.dart';
 import 'place_symbol.dart';
 import 'scrolling_map.dart';
 import 'sources.dart';
+import 'navigation_example.dart';
+import 'navigation_test_page.dart';
 
 final List<ExamplePage> _allPages = <ExamplePage>[
   const MapUiPage(),
   const FullMapPage(),
   const PMTilesPage(),
   const LocalizedMapPage(),
+  const NavigationExamplePage(),
+  const NavigationTestPage(),
   const AnimateCameraPage(),
   const MoveCameraPage(),
   const PlaceSymbolPage(),

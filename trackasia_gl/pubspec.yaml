@@ -11,12 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  trackasia_gl_platform_interface: ^2.0.1
-  # trackasia_gl_platform_interface:
-  #   path: ../trackasia_gl_platform_interface
-  trackasia_gl_web: ^2.0.1
-  # trackasia_gl_web:
-  #   path: ../trackasia_gl_web
+  # trackasia_gl_platform_interface: ^2.0.1
+  trackasia_gl_platform_interface:
+    path: ../trackasia_gl_platform_interface
+  # trackasia_gl_web: ^2.0.1
+  trackasia_gl_web:
+    path: ../trackasia_gl_web
 
 dev_dependencies:
   very_good_analysis: ^5.0.0

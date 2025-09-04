@@ -44,6 +44,12 @@ abstract class TrackAsiaPlatform {
 
   final onUserLocationUpdatedPlatform = ArgumentCallbacks<UserLocation>();
 
+  // Navigation callbacks
+  final onNavigationEventPlatform = ArgumentCallbacks<NavigationEvent>();
+  final onRouteProgressPlatform = ArgumentCallbacks<RouteProgress>();
+  final onVoiceInstructionPlatform = ArgumentCallbacks<VoiceInstruction>();
+  final onBannerInstructionPlatform = ArgumentCallbacks<BannerInstruction>();
+
   Future<void> initPlatform(int id);
   Widget buildView(
       Map<String, dynamic> creationParams,
@@ -202,6 +208,27 @@ abstract class TrackAsiaPlatform {
 
   Future<void> setLayerVisibility(String layerId, bool visible);
 
+  // Navigation methods
+  Future<NavigationRoute?> calculateRoute({
+    required List<LatLng> waypoints,
+    NavigationOptions? options,
+  });
+  
+  Future<void> startNavigation({
+    required NavigationRoute route,
+    NavigationOptions? options,
+  });
+  
+  Future<void> stopNavigation();
+  
+  Future<void> pauseNavigation();
+  
+  Future<void> resumeNavigation();
+  
+  Future<bool> isNavigationActive();
+  
+  Future<RouteProgress?> getCurrentRouteProgress();
+
   @mustCallSuper
   void dispose() {
     // clear all callbacks to avoid cyclic refs
@@ -219,5 +246,11 @@ abstract class TrackAsiaPlatform {
     onCameraTrackingDismissedPlatform.clear();
     onMapIdlePlatform.clear();
     onUserLocationUpdatedPlatform.clear();
+    
+    // Clear navigation callbacks
+    onNavigationEventPlatform.clear();
+    onRouteProgressPlatform.clear();
+    onVoiceInstructionPlatform.clear();
+    onBannerInstructionPlatform.clear();
   }
 }

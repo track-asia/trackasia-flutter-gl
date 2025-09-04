@@ -5,10 +5,14 @@ import UIKit
 
 public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
     static var downloadOfflineRegionChannelHandler: OfflineChannelHandler? = nil
+    static var navigationMethodHandler: NavigationMethodHandler? = nil
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let instance = TrackAsiaMapFactory(withRegistrar: registrar)
         registrar.register(instance, withId: "plugins.flutter.io/trackasia_gl")
+        
+        // Initialize navigation handler
+        navigationMethodHandler = NavigationMethodHandler(registrar: registrar)
 
         let channel = FlutterMethodChannel(
             name: "plugins.flutter.io/trackasia_gl",
@@ -109,6 +113,22 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
                     return
                 }
                 OfflineManagerUtils.deleteRegion(result: result, id: id)
+            case "navigation#calculateRoute",
+                 "navigation#start",
+                 "navigation#stop",
+                 "navigation#pause",
+                 "navigation#resume",
+                 "navigation#isActive",
+                 "navigation#getProgress":
+                if let navigationHandler = navigationMethodHandler {
+                    navigationHandler.handleMethodCall(methodCall, result: result)
+                } else {
+                    result(FlutterError(
+                        code: "NAVIGATION_NOT_INITIALIZED",
+                        message: "Navigation handler not initialized",
+                        details: nil
+                    ))
+                }
             default:
                 result(FlutterMethodNotImplemented)
             }
