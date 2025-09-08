@@ -1,6 +1,6 @@
 part of '../trackasia_gl_platform_interface.dart';
 
-/// Navigation options for route calculation
+/// Navigation options for route calculation and navigation UI
 class NavigationOptions {
   /// Whether to enable voice guidance
   final bool enableVoiceGuidance;
@@ -20,13 +20,37 @@ class NavigationOptions {
   /// Units for distance (metric, imperial)
   final DistanceUnits units;
   
+  /// Theme configuration for navigation UI
+  final NavigationTheme? theme;
+  
+  /// Whether to show alternative routes
+  final bool showAlternativeRoutes;
+  
+  /// Whether to enable turn-by-turn navigation UI
+  final bool enableNavigationUI;
+  
+  /// Custom navigation UI configuration
+  final NavigationUIConfig? uiConfig;
+  
+  /// Route refresh interval in seconds
+  final int? routeRefreshInterval;
+  
+  /// Whether to enable offline navigation
+  final bool enableOfflineNavigation;
+  
   const NavigationOptions({
     this.enableVoiceGuidance = true,
     this.enableRerouting = true,
     this.simulateRoute = false,
-    this.profile = NavigationProfile.driving,
+    this.profile = NavigationProfile.car,
     this.language,
     this.units = DistanceUnits.metric,
+    this.theme,
+    this.showAlternativeRoutes = true,
+    this.enableNavigationUI = true,
+    this.uiConfig,
+    this.routeRefreshInterval,
+    this.enableOfflineNavigation = false,
   });
   
   Map<String, dynamic> toMap() {
@@ -37,15 +61,22 @@ class NavigationOptions {
       'profile': profile.name,
       'language': language,
       'units': units.name,
+      'theme': theme?.toMap(),
+      'showAlternativeRoutes': showAlternativeRoutes,
+      'enableNavigationUI': enableNavigationUI,
+      'uiConfig': uiConfig?.toMap(),
+      'routeRefreshInterval': routeRefreshInterval,
+      'enableOfflineNavigation': enableOfflineNavigation,
     };
   }
 }
 
 /// Navigation profile types
 enum NavigationProfile {
-  driving,
-  walking,
-  cycling,
+  car,
+  walk,
+  moto,
+  truck,
 }
 
 /// Distance units
@@ -229,6 +260,93 @@ class NavigationRoute {
       duration: (map['duration'] ?? 0.0).toDouble(),
       waypoints: waypoints,
     );
+  }
+}
+
+/// Navigation theme configuration
+class NavigationTheme {
+  /// Light theme resource ID (Android)
+  final int? lightThemeResId;
+  
+  /// Dark theme resource ID (Android)
+  final int? darkThemeResId;
+  
+  /// Whether to use system theme
+  final bool useSystemTheme;
+  
+  /// Primary color for navigation UI
+  final String? primaryColor;
+  
+  /// Secondary color for navigation UI
+  final String? secondaryColor;
+  
+  const NavigationTheme({
+    this.lightThemeResId,
+    this.darkThemeResId,
+    this.useSystemTheme = true,
+    this.primaryColor,
+    this.secondaryColor,
+  });
+  
+  Map<String, dynamic> toMap() {
+    return {
+      'lightThemeResId': lightThemeResId,
+      'darkThemeResId': darkThemeResId,
+      'useSystemTheme': useSystemTheme,
+      'primaryColor': primaryColor,
+      'secondaryColor': secondaryColor,
+    };
+  }
+}
+
+/// Navigation UI configuration
+class NavigationUIConfig {
+  /// Whether to show speed limit
+  final bool showSpeedLimit;
+  
+  /// Whether to show current speed
+  final bool showCurrentSpeed;
+  
+  /// Whether to show arrival time
+  final bool showArrivalTime;
+  
+  /// Whether to show distance remaining
+  final bool showDistanceRemaining;
+  
+  /// Whether to show turn instructions
+  final bool showTurnInstructions;
+  
+  /// Whether to show route overview button
+  final bool showRouteOverview;
+  
+  /// Whether to show end navigation button
+  final bool showEndNavigation;
+  
+  /// Whether to show recenter button
+  final bool showRecenterButton;
+  
+  const NavigationUIConfig({
+    this.showSpeedLimit = true,
+    this.showCurrentSpeed = true,
+    this.showArrivalTime = true,
+    this.showDistanceRemaining = true,
+    this.showTurnInstructions = true,
+    this.showRouteOverview = true,
+    this.showEndNavigation = true,
+    this.showRecenterButton = true,
+  });
+  
+  Map<String, dynamic> toMap() {
+    return {
+      'showSpeedLimit': showSpeedLimit,
+      'showCurrentSpeed': showCurrentSpeed,
+      'showArrivalTime': showArrivalTime,
+      'showDistanceRemaining': showDistanceRemaining,
+      'showTurnInstructions': showTurnInstructions,
+      'showRouteOverview': showRouteOverview,
+      'showEndNavigation': showEndNavigation,
+      'showRecenterButton': showRecenterButton,
+    };
   }
 }
 

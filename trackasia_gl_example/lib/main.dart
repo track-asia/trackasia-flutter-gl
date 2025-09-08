@@ -37,6 +37,7 @@ import 'scrolling_map.dart';
 import 'sources.dart';
 import 'navigation_example.dart';
 import 'navigation_test_page.dart';
+import 'navigation_map_route_example.dart';
 
 final List<ExamplePage> _allPages = <ExamplePage>[
   const MapUiPage(),
@@ -45,6 +46,7 @@ final List<ExamplePage> _allPages = <ExamplePage>[
   const LocalizedMapPage(),
   const NavigationExamplePage(),
   const NavigationTestPage(),
+  const NavigationMapRouteExamplePage(),
   const AnimateCameraPage(),
   const MoveCameraPage(),
   const PlaceSymbolPage(),

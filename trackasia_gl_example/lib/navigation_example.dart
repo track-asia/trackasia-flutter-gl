@@ -204,8 +204,9 @@ class _NavigationExampleState extends State<NavigationExample> {
       }
       
       // Enhanced route options similar to native RouteOptions
-      final baseUrl = 'https://maps.track-asia.com/route/v1/car';
-      final url = '$baseUrl/${coordinatesBuilder.toString()}.json?geometries=polyline6&steps=true&overview=full&key=public_key';
+      final profile = 'car'; // Can be: car, moto, walk, truck
+      final baseUrl = 'https://maps.track-asia.com/route/v1/$profile';
+      final url = '$baseUrl/${coordinatesBuilder.toString()}?geometries=polyline6&steps=true&overview=full&key=public_key';
       
       print('NAVIGATION: Requesting route with ${_waypoints.length} points: $url');
       

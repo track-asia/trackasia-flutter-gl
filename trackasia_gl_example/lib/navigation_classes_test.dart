@@ -46,7 +46,7 @@ class NavigationClassesTest extends StatelessWidget {
         enableVoiceGuidance: true,
         enableRerouting: false,
         simulateRoute: true,
-        profile: NavigationProfile.driving,
+        profile: NavigationProfile.car,
         language: 'en',
         units: DistanceUnits.metric,
       );

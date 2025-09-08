@@ -40,6 +40,11 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
     globalMethodHandler = new GlobalMethodHandler(binding);
     methodChannel.setMethodCallHandler(globalMethodHandler);
 
+    // Register NavigationMapRoute method channel
+    MethodChannel navigationChannel =
+        new MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/trackasia_gl_navigation");
+    navigationChannel.setMethodCallHandler(globalMethodHandler.getNavigationMethodHandler());
+
     binding
         .getPlatformViewRegistry()
         .registerViewFactory(

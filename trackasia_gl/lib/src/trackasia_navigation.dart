@@ -14,8 +14,7 @@ class TrackAsiaNavigation {
 
   /// Get the singleton instance
   static TrackAsiaNavigation get instance {
-    _instance ??= TrackAsiaNavigation._();
-    return _instance!;
+    return _instance ??= TrackAsiaNavigation._();
   }
 
   /// Create a new TrackAsiaNavigation instance
@@ -55,7 +54,7 @@ class TrackAsiaNavigation {
     required List<LatLng> waypoints,
     NavigationOptions? options,
   }) async {
-    return await _platform.calculateRoute(
+    return _platform.calculateRoute(
       waypoints: waypoints,
       options: options,
     );
@@ -94,14 +93,14 @@ class TrackAsiaNavigation {
   ///
   /// Returns true if navigation is active, false otherwise
   Future<bool> isNavigationActive() async {
-    return await _platform.isNavigationActive();
+    return _platform.isNavigationActive();
   }
 
   /// Get the current route progress
   ///
   /// Returns [RouteProgress] if navigation is active, null otherwise
   Future<RouteProgress?> getCurrentRouteProgress() async {
-    return await _platform.getCurrentRouteProgress();
+    return _platform.getCurrentRouteProgress();
   }
 }
 

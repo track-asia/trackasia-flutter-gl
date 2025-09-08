@@ -15,12 +15,17 @@ let package = Package(
         // When updating the dependency version,
         // make sure to also update the version in trackasia_gl.podspec.
         .package(url: "https://github.com/track-asia/trackasia-native.git", tag: "ios-v2.0.3"),
+        // TrackAsia Navigation dependencies
+        .package(url: "https://github.com/flitsmeister/mapbox-directions-swift", exact: "0.23.3"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.8.0"),
     ],
     targets: [
         .target(
             name: "trackasia_gl",
             dependencies: [
-                .product(name: "Trackasia", package: "trackasia-native")
+                .product(name: "Trackasia", package: "trackasia-native"),
+                .product(name: "MapboxDirections", package: "mapbox-directions-swift"),
+                .product(name: "Turf", package: "turf-swift")
             ],
             cSettings: [
                 .headerSearchPath("include/trackasia_gl")

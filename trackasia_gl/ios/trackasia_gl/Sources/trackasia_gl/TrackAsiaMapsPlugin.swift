@@ -12,7 +12,9 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
         registrar.register(instance, withId: "plugins.flutter.io/trackasia_gl")
         
         // Initialize navigation handler
+        NSLog("TrackAsiaMapsPlugin: Initializing NavigationMethodHandler...")
         navigationMethodHandler = NavigationMethodHandler(registrar: registrar)
+        NSLog("TrackAsiaMapsPlugin: NavigationMethodHandler initialized successfully")
 
         let channel = FlutterMethodChannel(
             name: "plugins.flutter.io/trackasia_gl",
@@ -119,10 +121,19 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
                  "navigation#pause",
                  "navigation#resume",
                  "navigation#isActive",
-                 "navigation#getProgress":
+                 "navigation#getProgress",
+                 "navigationMapRoute#addRoute",
+                 "navigationMapRoute#addRoutes",
+                 "navigationMapRoute#removeRoute",
+                 "navigationMapRoute#clearRoutes",
+                 "navigationMapRoute#setVisibility",
+                 "navigationMapRoute#fitCameraToRoutes":
+                NSLog("TrackAsiaMapsPlugin: Received navigation method: %@", methodCall.method)
                 if let navigationHandler = navigationMethodHandler {
+                    NSLog("TrackAsiaMapsPlugin: Forwarding to NavigationMethodHandler")
                     navigationHandler.handleMethodCall(methodCall, result: result)
                 } else {
+                    NSLog("TrackAsiaMapsPlugin: NavigationMethodHandler is nil!")
                     result(FlutterError(
                         code: "NAVIGATION_NOT_INITIALIZED",
                         message: "Navigation handler not initialized",

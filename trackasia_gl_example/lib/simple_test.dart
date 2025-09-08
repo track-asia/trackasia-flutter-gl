@@ -10,7 +10,7 @@ void main() {
     print('NavigationOptions created: ${options.runtimeType}');
     
     // Test NavigationProfile enum
-    final profile = NavigationProfile.driving;
+    final profile = NavigationProfile.car;
     print('NavigationProfile: $profile');
     
     // Test DistanceUnits enum

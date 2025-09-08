@@ -37,7 +37,8 @@ library trackasia_gl;
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:math' as math;
+import 'dart:math' show Point, Random;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -71,8 +72,6 @@ export 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.
         LocationEngineAndroidProperties,
         LocationEnginePlatforms,
         LocationPriority,
-        TrackAsiaMethodChannel,
-        TrackAsiaPlatform,
         MinMaxZoomPreference,
         MyLocationRenderMode,
         MyLocationTrackingMode,
@@ -88,12 +87,15 @@ export 'package:trackasia_gl_platform_interface/trackasia_gl_platform_interface.
         SourceProperties,
         Symbol,
         SymbolOptions,
-        TrackAsiaGlPlatform,
+        TrackAsiaMethodChannel,
+        TrackAsiaPlatform,
         UserHeading,
         UserLocation,
         VectorSourceProperties,
         VideoSourceProperties,
         VoiceInstruction;
+
+export 'dart:math' show Point;
 
 part 'src/controller.dart';
 
@@ -120,3 +122,5 @@ part 'src/trackasia_styles.dart';
 part 'src/trackasia_navigation.dart';
 
 part 'src/navigation_widget.dart';
+
+part 'src/navigation_map_route.dart';

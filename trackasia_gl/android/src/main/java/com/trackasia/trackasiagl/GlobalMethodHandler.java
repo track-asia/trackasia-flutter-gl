@@ -38,6 +38,10 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
     this.navigationMethodHandler = new NavigationMethodHandler(context);
   }
 
+  public NavigationMethodHandler getNavigationMethodHandler() {
+    return navigationMethodHandler;
+  }
+
   private static void copy(InputStream input, OutputStream output) throws IOException {
     final byte[] buffer = new byte[BUFFER_SIZE];
     final BufferedInputStream in = new BufferedInputStream(input, BUFFER_SIZE);
@@ -134,6 +138,13 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
       case "navigation#resume":
       case "navigation#isActive":
       case "navigation#getProgress":
+      // NavigationMapRoute methods
+      case "navigationMapRoute#addRoute":
+      case "navigationMapRoute#addRoutes":
+      case "navigationMapRoute#removeRoute":
+      case "navigationMapRoute#clearRoutes":
+      case "navigationMapRoute#setVisibility":
+      case "navigationMapRoute#fitCameraToRoutes":
         if (navigationMethodHandler != null) {
           navigationMethodHandler.onMethodCall(methodCall, result);
         } else {

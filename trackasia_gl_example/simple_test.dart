@@ -63,7 +63,7 @@ class _NavigationTestPageState extends State<NavigationTestPage> {
         enableVoiceGuidance: true,
         enableRerouting: true,
         simulateRoute: false,
-        profile: NavigationProfile.driving,
+        profile: NavigationProfile.car,
         language: 'vi',
         units: DistanceUnits.metric,
       );

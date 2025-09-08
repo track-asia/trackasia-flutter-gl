@@ -86,6 +86,8 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
+import com.trackasia.trackasiagl.GlobalMethodHandler;
+import com.trackasia.trackasiagl.TrackAsiaMapsPlugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -233,6 +235,12 @@ final class TrackAsiaMapController
     trackAsiaMap.addOnCameraMoveStartedListener(this);
     trackAsiaMap.addOnCameraMoveListener(this);
     trackAsiaMap.addOnCameraIdleListener(this);
+    
+    // Initialize NavigationMethodHandler with map instances
+    if (TrackAsiaMapsPlugin.getGlobalMethodHandler() != null) {
+      TrackAsiaMapsPlugin.getGlobalMethodHandler().getNavigationMethodHandler().setMapView(mapView);
+      TrackAsiaMapsPlugin.getGlobalMethodHandler().getNavigationMethodHandler().setTrackAsiaMap(trackAsiaMap);
+    }
 
     if (androidGesturesManager != null) {
       androidGesturesManager.setMoveGestureListener(new MoveGestureListener());
@@ -1637,6 +1645,13 @@ final class TrackAsiaMapController
       case "navigation#resume":
       case "navigation#isActive":
       case "navigation#getProgress":
+      // NavigationMapRoute methods - delegate to GlobalMethodHandler
+      case "navigationMapRoute#addRoute":
+      case "navigationMapRoute#addRoutes":
+      case "navigationMapRoute#removeRoute":
+      case "navigationMapRoute#clearRoutes":
+      case "navigationMapRoute#setVisibility":
+      case "navigationMapRoute#fitCameraToRoutes":
         // Get the global method handler from the plugin
         if (TrackAsiaMapsPlugin.getGlobalMethodHandler() != null) {
           TrackAsiaMapsPlugin.getGlobalMethodHandler().onMethodCall(call, result);
