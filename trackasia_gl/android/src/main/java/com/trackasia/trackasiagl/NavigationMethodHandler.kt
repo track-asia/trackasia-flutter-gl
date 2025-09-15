@@ -1,6 +1,7 @@
 package com.trackasia.trackasiagl
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -154,6 +155,28 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                                 
                                 Log.d(TAG, "Route found: Distance=${firstRoute.distance}m, Duration=${firstRoute.duration}s")
                                 
+                                // Create a copy of the route with proper RouteOptions - match MapWayPointFragment.kt line 589-604
+                                val routeWithOptions = firstRoute.copy(
+                                    routeOptions = RouteOptions(
+                                        baseUrl = "https://maps.track-asia.com/route/v1",
+                                        profile = "car",
+                                        user = "trackasia",
+                                        accessToken = "public_key",
+                                        voiceInstructions = true,
+                                        bannerInstructions = true,
+                                        language = "vi",
+                                        coordinates = listOf(origin, destination),
+                                        geometries = "polyline6",
+                                        steps = true,
+                                        overview = "full",
+                                        requestUuid = "trackasia-nav-${System.currentTimeMillis()}"
+                                    )
+                                )
+                                
+                                // Store current route for navigation - match MapWayPointFragment.kt line 642
+                                currentRoute = routeWithOptions
+                                Log.d(TAG, "Current route stored for navigation: ${currentRoute?.distance}m")
+                                
                                 // Display route on map using NavigationMapRoute like MapMultiPointFragment
                                 // Must run on UI thread to avoid CalledFromWorkerThreadException
                                 Handler(Looper.getMainLooper()).post {
@@ -165,7 +188,7 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                                     
                                     navigationMapRoute?.let { navMapRoute ->
                                         navMapRoute.removeRoute()
-                                        navMapRoute.addRoutes(trackasiaResponse.routes)
+                                        navMapRoute.addRoutes(listOf(routeWithOptions))
                                         Log.d(TAG, "Route displayed on map successfully")
                                     } ?: run {
                                         Log.w(TAG, "NavigationMapRoute not available, map may not be ready")
@@ -174,10 +197,10 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                                 
                                 // Return route data for Flutter
                                 val routeMap = hashMapOf<String, Any?>(
-                                    "geometry" to firstRoute.geometry,
-                                    "distance" to firstRoute.distance,
-                                    "duration" to firstRoute.duration,
-                                    "weight" to (firstRoute.weight ?: firstRoute.duration),
+                                    "geometry" to routeWithOptions.geometry,
+                                    "distance" to routeWithOptions.distance,
+                                    "duration" to routeWithOptions.duration,
+                                    "weight" to (routeWithOptions.weight ?: routeWithOptions.duration),
                                     "waypoints" to listOf(
                                         mapOf(
                                             "latitude" to origin.latitude(),
@@ -220,18 +243,52 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                 return
             }
 
-            // Build navigation launch options
-            val options = NavigationLauncherOptions.builder()
+            // Extract navigation options from call
+            val routeData = call.argument<Map<String, Any>>("route")
+            val options = call.argument<Map<String, Any>>("options") ?: emptyMap()
+            val simulateRoute = options["simulateRoute"] as? Boolean ?: false // Default to false for real navigation
+
+            // Get Activity context - this is REQUIRED for NavigationLauncher
+            val activityContext = TrackAsiaMapsPlugin.getCurrentActivity()
+            if (activityContext == null) {
+                Log.e(TAG, "No Activity context available for NavigationLauncher")
+                result.error("NAVIGATION_CONTEXT_ERROR", 
+                    "Navigation requires Activity context. Please ensure the app is in the foreground and try again.", 
+                    mapOf("error_type" to "no_activity_context", "suggestion" to "retry_when_app_active"))
+                return
+            }
+
+            // Build navigation launch options with custom themes - match MapWayPointFragment.kt line 881-891  
+            val launcherOptions = NavigationLauncherOptions.builder()
                 .directionsRoute(currentRoute!!)
-                .shouldSimulateRoute(true) // Default to simulation for testing
+                .shouldSimulateRoute(simulateRoute)
+                .lightThemeResId(R.style.NavigationViewLight)
+                .darkThemeResId(R.style.NavigationViewDark)
                 .build()
 
-            // Start navigation using NavigationLauncher
-            NavigationLauncher.startNavigation(context, options)
-            isNavigationActive = true
+            Log.d(TAG, "Starting navigation with Activity context, simulate: $simulateRoute")
             
-            Log.d(TAG, "Navigation started successfully with route: ${currentRoute?.distance}m")
-            result.success(true)
+            // Note: NavigationActivity may show warning about "Unable to parse resourceUrl mapbox://styles/mapbox/navigation-guidance-day-v4"
+            // This is expected as TrackAsia was forked from Mapbox and some default style URLs remain from the original codebase.
+            // The warning doesn't affect navigation functionality and can be safely ignored.
+            try {
+                NavigationLauncher.startNavigation(activityContext, launcherOptions)
+                isNavigationActive = true
+                Log.d(TAG, "Navigation started successfully using NavigationLauncher")
+                
+                result.success(mapOf(
+                    "success" to true,
+                    "simulateRoute" to simulateRoute,
+                    "routeDistance" to currentRoute?.distance,
+                    "routeDuration" to currentRoute?.duration
+                ))
+            } catch (e: android.util.AndroidRuntimeException) {
+                Log.e(TAG, "NavigationLauncher failed with AndroidRuntimeException", e)
+                result.error("NAVIGATION_START_ERROR", "Failed to start navigation: ${e.message}", null)
+            } catch (e: Exception) {
+                Log.e(TAG, "NavigationLauncher failed with unexpected exception", e)
+                result.error("NAVIGATION_START_ERROR", "Failed to start navigation: ${e.message}", null)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error starting navigation", e)
             result.error("START_ERROR", "Error starting navigation: ${e.message}", null)
@@ -295,63 +352,92 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
             val duration = (routeData["duration"] as? Number)?.toDouble() ?: 0.0
             val waypoints = routeData["waypoints"] as? List<Map<String, Any>> ?: emptyList()
             
-            // Create DirectionsRoute from the data
-            val directionsRoute = createDirectionsRouteFromData(geometry, distance, duration, waypoints)
-            
-            if (directionsRoute == null) {
-                Log.e(TAG, "Failed to create DirectionsRoute from provided data")
-                result.error("ROUTE_CREATION_FAILED", "Failed to create DirectionsRoute from provided data", null)
-                return
-            }
-            
-            // DirectionsRoute is guaranteed to be non-null here
-            // Use NavigationMapRoute to draw the route
-            // Must run on UI thread to avoid CalledFromWorkerThreadException
-            Handler(Looper.getMainLooper()).post {
-                val currentMapView = mapView
-                val currentTrackasiaMap = trackasiaMap
-                if (navigationMapRoute == null && currentMapView != null && currentTrackasiaMap != null) {
-                    navigationMapRoute = com.trackasia.navigation.android.navigation.ui.v5.route.NavigationMapRoute(
-                        null, currentMapView, currentTrackasiaMap
+                // Convert Flutter route data to proper DirectionsRoute format
+                // This matches the exact process from MapWayPointFragment.kt processRouteResponse
+                val directionsRoute = try {
+                    // Create RouteOptions exactly like MapWayPointFragment.kt line 589-603
+                    val routeOptions = RouteOptions(
+                        baseUrl = "https://maps.track-asia.com/route/v1",
+                        profile = "car",
+                        user = "trackasia", 
+                        accessToken = "public_key",
+                        voiceInstructions = true,
+                        bannerInstructions = true,
+                        language = "vi",
+                        coordinates = waypoints.mapNotNull { waypoint ->
+                            val lat = waypoint["latitude"] as? Double
+                            val lng = waypoint["longitude"] as? Double
+                            if (lat != null && lng != null) {
+                                Point.fromLngLat(lng, lat)
+                            } else null
+                        },
+                        geometries = "polyline6",
+                        steps = true,
+                        overview = "full",
+                        requestUuid = "trackasia-nav-${System.currentTimeMillis()}"
                     )
+                    
+                    // Create DirectionsRoute with proper structure - match MapWayPointFragment.kt format
+                    createDirectionsRouteFromNativeData(geometry, distance, duration, waypoints, routeOptions)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error creating DirectionsRoute with RouteOptions", e)
+                    null
                 }
                 
-                navigationMapRoute?.let { navMapRoute ->
-                try {
-                    Log.d(TAG, "About to add route to NavigationMapRoute. DirectionsRoute: $directionsRoute")
-                    Log.d(TAG, "DirectionsRoute object created successfully")
-                    
-                    // Additional safety checks before calling native methods
-                    if (directionsRoute.geometry.isNullOrEmpty()) {
-                        Log.e(TAG, "DirectionsRoute geometry is null or empty, cannot add route")
-                        result.error("INVALID_ROUTE_GEOMETRY", "Route geometry is null or empty", null)
-                        return@post
-                    }
-                    
-                    if (isPrimary) {
-                        // Clear existing routes and add new one
-                        navMapRoute.removeRoute()
-                        Log.d(TAG, "Cleared existing routes, now adding primary route")
-                        navMapRoute.addRoute(directionsRoute)
-                    } else {
-                        // Add as alternative route
-                        Log.d(TAG, "Adding alternative route")
-                        navMapRoute.addRoute(directionsRoute)
-                    }
-                    
-                    Log.d(TAG, "Navigation route drawn successfully: $routeId")
-                    result.success(mapOf("routeId" to routeId, "success" to true))
-                } catch (e: IndexOutOfBoundsException) {
-                    Log.e(TAG, "IndexOutOfBoundsException in NavigationMapRoute.addRoute(): ${e.message}", e)
-                    result.error("INDEX_OUT_OF_BOUNDS_ERROR", "Index out of bounds error in native NavigationMapRoute.addRoute(): ${e.message}. This may be caused by empty route data or invalid geometry.", e.stackTrace.joinToString("\n"))
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in NavigationMapRoute.addRoute(): ${e.message}", e)
-                    result.error("NATIVE_ADD_ROUTE_ERROR", "Error in native NavigationMapRoute.addRoute(): ${e.message}", e.stackTrace.joinToString("\n"))
+                if (directionsRoute == null) {
+                    Log.e(TAG, "Failed to create DirectionsRoute from provided data")
+                    result.error("ROUTE_CREATION_FAILED", "Failed to create DirectionsRoute from provided data", null)
+                    return
                 }
-             } ?: run {
-                 result.error("MAP_NOT_READY", "Map or NavigationMapRoute not initialized", null)
-             }
-            }
+                
+                // Store current route for navigation like MapWayPointFragment.kt line 642
+                currentRoute = directionsRoute
+                
+                // Use NavigationMapRoute exactly like MapWayPointFragment.kt line 179-184
+                // Must run on UI thread to avoid CalledFromWorkerThreadException
+                Handler(Looper.getMainLooper()).post {
+                    val currentMapView = mapView
+                    val currentTrackasiaMap = trackasiaMap
+                    if (navigationMapRoute == null && currentMapView != null && currentTrackasiaMap != null) {
+                        navigationMapRoute = NavigationMapRoute(null, currentMapView, currentTrackasiaMap)
+                        Log.d(TAG, "NavigationMapRoute initialized successfully")
+                    }
+                    
+                    navigationMapRoute?.let { navMapRoute ->
+                    try {
+                        Log.d(TAG, "About to add route to NavigationMapRoute. Route distance: ${directionsRoute.distance}m")
+                        
+                        // Additional safety checks before calling native methods
+                        if (directionsRoute.geometry.isNullOrEmpty()) {
+                            Log.e(TAG, "DirectionsRoute geometry is null or empty, cannot add route")
+                            result.error("INVALID_ROUTE_GEOMETRY", "Route geometry is null or empty", null)
+                            return@post
+                        }
+                        
+                        if (isPrimary) {
+                            // Clear existing routes and add new one - match MapWayPointFragment.kt line 618-620
+                            navMapRoute.removeRoute()
+                            Log.d(TAG, "Cleared existing routes, now adding primary route")
+                            navMapRoute.addRoute(directionsRoute)
+                        } else {
+                            // Add as alternative route
+                            Log.d(TAG, "Adding alternative route")
+                            navMapRoute.addRoute(directionsRoute)
+                        }
+                        
+                        Log.d(TAG, "Navigation route drawn successfully: $routeId")
+                        result.success(mapOf("routeId" to routeId, "success" to true))
+                    } catch (e: IndexOutOfBoundsException) {
+                        Log.e(TAG, "IndexOutOfBoundsException in NavigationMapRoute.addRoute(): ${e.message}", e)
+                        result.error("INDEX_OUT_OF_BOUNDS_ERROR", "Index out of bounds error in native NavigationMapRoute.addRoute(): ${e.message}. This may be caused by empty route data or invalid geometry.", e.stackTrace.joinToString("\n"))
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error in NavigationMapRoute.addRoute(): ${e.message}", e)
+                        result.error("NATIVE_ADD_ROUTE_ERROR", "Error in native NavigationMapRoute.addRoute(): ${e.message}", e.stackTrace.joinToString("\n"))
+                    }
+                 } ?: run {
+                     result.error("MAP_NOT_READY", "Map or NavigationMapRoute not initialized", null)
+                 }
+                }
         } catch (e: Exception) {
             Log.e(TAG, "Error adding navigation route", e)
             result.error("ADD_ROUTE_ERROR", "Error adding navigation route: ${e.message}", null)
@@ -381,7 +467,29 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                 val waypoints = routeData["waypoints"] as? List<Map<String, Any>> ?: emptyList()
                 
                 if (geometry != null) {
-                    val directionsRoute = createDirectionsRouteFromData(geometry, distance, duration, waypoints)
+                    // Create RouteOptions for each route
+                    val routeOptions = RouteOptions(
+                        baseUrl = "https://maps.track-asia.com/route/v1",
+                        profile = "car",
+                        user = "trackasia",
+                        accessToken = "public_key",
+                        voiceInstructions = true,
+                        bannerInstructions = true,
+                        language = "vi",
+                        coordinates = waypoints.mapNotNull { waypoint ->
+                            val lat = waypoint["latitude"] as? Double
+                            val lng = waypoint["longitude"] as? Double
+                            if (lat != null && lng != null) {
+                                Point.fromLngLat(lng, lat)
+                            } else null
+                        },
+                        geometries = "polyline6",
+                        steps = true,
+                        overview = "full",
+                        requestUuid = "trackasia-nav-${System.currentTimeMillis()}_$index"
+                    )
+                    
+                    val directionsRoute = createDirectionsRouteFromNativeData(geometry, distance, duration, waypoints, routeOptions)
                     if (directionsRoute != null) {
                         directionsRoutes.add(directionsRoute)
                         val routeId = "route_${System.currentTimeMillis()}_$index"
@@ -406,7 +514,7 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                         try {
                             Log.d(TAG, "About to add ${directionsRoutes.size} routes to NavigationMapRoute")
                             directionsRoutes.forEachIndexed { index, route ->
-                                Log.d(TAG, "Route ${index + 1}: $route")
+                                Log.d(TAG, "Route ${index + 1}: Distance=${route.distance}m, Duration=${route.duration}s")
                             }
                             
                             // Additional safety checks before calling native methods
@@ -425,11 +533,13 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                                 }
                             }
                             
-                            // Clear existing routes
+                            // Clear existing routes - match MapWayPointFragment.kt
                             navMapRoute.removeRoute()
                             Log.d(TAG, "Cleared existing routes")
                             
-                            // Add all routes (first one as primary, others as alternatives)
+                            // Add all routes using addRoutes method - match MapWayPointFragment.kt line 619
+                            // Store first route as currentRoute for navigation
+                            currentRoute = directionsRoutes.first()
                             navMapRoute.addRoutes(directionsRoutes)
                             
                             Log.d(TAG, "Navigation routes drawn successfully: ${routeIds.size} routes")
@@ -524,11 +634,12 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
         }
     }
     
-    private fun createDirectionsRouteFromData(
+    private fun createDirectionsRouteFromNativeData(
         geometry: String,
         distance: Double,
         duration: Double,
-        waypoints: List<Map<String, Any>>
+        waypoints: List<Map<String, Any>>,
+        routeOptions: RouteOptions
     ): DirectionsRoute? {
         return try {
             // Additional safety checks
@@ -600,7 +711,7 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
                 )
             }
             
-            // Create a basic DirectionsRoute JSON structure
+            // Create DirectionsRoute with RouteOptions - match MapWayPointFragment.kt processRouteResponse
             val routeJson = mapOf(
                 "geometry" to geometry,
                 "distance" to distance,
@@ -612,16 +723,18 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
             )
             
             Log.d(TAG, "Creating DirectionsRoute with ${waypointsList.size} waypoints and ${legs.size} legs")
-            
-            Log.d(TAG, "Creating DirectionsRoute with JSON: ${gson.toJson(routeJson)}")
+            Log.d(TAG, "Using RouteOptions: ${routeOptions}")
             
             // Convert to JSON string and back to DirectionsRoute
             val jsonString = gson.toJson(routeJson)
             val directionsRoute = gson.fromJson(jsonString, DirectionsRoute::class.java)
             
-            Log.d(TAG, "DirectionsRoute created successfully. Object: $directionsRoute")
+            // Set RouteOptions using copy method like MapWayPointFragment.kt line 589-604
+            val finalRoute = directionsRoute.copy(routeOptions = routeOptions)
             
-            directionsRoute
+            Log.d(TAG, "DirectionsRoute created successfully with RouteOptions. Distance: ${finalRoute.distance}m")
+            
+            finalRoute
         } catch (e: Exception) {
             Log.e(TAG, "Error creating DirectionsRoute from data", e)
             null
@@ -650,4 +763,5 @@ class NavigationMethodHandler(private val context: Context) : MethodChannel.Meth
             Log.e(TAG, "Error cleaning up navigation resources", e)
         }
     }
+    
 }

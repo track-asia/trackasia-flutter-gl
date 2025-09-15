@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navigation Colors -->
+    <color name="colorBlue">#3D6EBE</color>
+    <color name="colorGreen">#25C6BA</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#BDBDBD</color>
+    <color name="colorBlack70">#707070</color>
+    
+    <!-- Additional Material Colors -->
+    <color name="primary_text_default_material_light">#de000000</color>
+    <color name="secondary_text_default_material_light">#8a000000</color>
+    <color name="primary_text_default_material_dark">#ffffffff</color>
+    <color name="secondary_text_default_material_dark">#b3ffffff</color>
+    <color name="background_material_light">#fafafa</color>
+    <color name="background_material_dark">#303030</color>
+    <color name="mapbox_blue">#4264fb</color>
+</resources>

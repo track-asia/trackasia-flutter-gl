@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:trackasia_gl/trackasia_gl.dart';
+
 import 'page.dart';
 
 class NavigationMapRouteExamplePage extends ExamplePage {
-  const NavigationMapRouteExamplePage({super.key}) 
-      : super(const Icon(Icons.route), 'NavigationMapRoute Example');
+  const NavigationMapRouteExamplePage({super.key}) : super(const Icon(Icons.route), 'NavigationMapRoute Example');
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +31,18 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
   NavigationMapRoute? _navigationMapRoute;
   List<NavigationRoute> _routes = [];
   bool _isCalculatingRoute = false;
+  bool _isNavigating = false;
   String _routeInfo = 'Chưa có tuyến đường';
-  
-  // Sample waypoints in Ho Chi Minh City
+
+  // Sample waypoints in Ho Chi Minh City (matching MapWayPointFragment.kt)
   final List<LatLng> _sampleWaypoints = [
-    const LatLng(10.7720, 106.6980), // Bến Thành Market
-    const LatLng(10.8231, 106.6297), // Tân Sơn Nhất Airport
-    const LatLng(10.7629, 106.6820), // Bitexco Financial Tower
+    const LatLng(10.728073, 106.624054), // Default location from MapWayPointFragment
+    const LatLng(10.8231, 106.6297), // Airport from MapWayPointFragment
   ];
 
   void _onMapCreated(TrackAsiaMapController controller) {
     _mapController = controller;
-    _navigationMapRoute = NavigationMapRoute(mapController: controller);
+    _navigationMapRoute = controller.createNavigationMapRoute();
   }
 
   // Calculate and display route
@@ -81,7 +82,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
         setState(() {
           _routes = [route];
           _routeInfo = 'Khoảng cách: ${(route.distance / 1000).toStringAsFixed(1)} km\n'
-                     'Thời gian: ${(route.duration / 60).toStringAsFixed(0)} phút';
+              'Thời gian: ${(route.duration / 60).toStringAsFixed(0)} phút';
         });
 
         // Fit camera to route
@@ -118,7 +119,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
     try {
       // Calculate multiple routes with different profiles
       final routes = <NavigationRoute>[];
-      
+
       // Car route
       final carRoute = await _mapController!.navigation.calculateRoute(
         waypoints: _sampleWaypoints,
@@ -131,7 +132,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
 
       // Walking route
       final walkingRoute = await _mapController!.navigation.calculateRoute(
-        waypoints: [_sampleWaypoints.first, _sampleWaypoints.last],
+        waypoints: _sampleWaypoints,
         options: NavigationOptions(
           profile: NavigationProfile.walk,
           language: 'vi',
@@ -207,6 +208,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
       setState(() {
         _routes.clear();
         _routeInfo = 'Chưa có tuyến đường';
+        _isNavigating = false;
       });
       _showSnackBar('Đã xóa tất cả tuyến đường');
     } catch (e) {
@@ -224,6 +226,53 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
       _showSnackBar(isVisible ? 'Đã ẩn tuyến đường' : 'Đã hiện tuyến đường');
     } catch (e) {
       _showSnackBar('Lỗi khi thay đổi hiển thị: $e', isError: true);
+    }
+  }
+
+  // Start navigation with current route
+  Future<void> _startNavigation() async {
+    if (_routes.isEmpty) {
+      _showSnackBar('Chưa có tuyến đường để điều hướng', isError: true);
+      return;
+    }
+
+    try {
+      setState(() {
+        _isNavigating = true;
+      });
+
+      // Use the first route for navigation
+      await _mapController!.navigation.startNavigation(
+        route: _routes.first,
+        options: NavigationOptions(
+          simulateRoute: true, // Enable simulation for testing
+          enableVoiceGuidance: true,
+          enableRerouting: true,
+        ),
+      );
+
+      _showSnackBar('Điều hướng đã bắt đầu (chế độ mô phỏng)');
+    } catch (e) {
+      setState(() {
+        _isNavigating = false;
+      });
+      _showSnackBar('Lỗi khởi động điều hướng: $e', isError: true);
+      debugPrint('Lỗi khởi động điều hướng: ${e.toString()}');
+    }
+  }
+
+  // Stop navigation
+  Future<void> _stopNavigation() async {
+    if (_mapController == null) return;
+
+    try {
+      await _mapController!.navigation.stopNavigation();
+      setState(() {
+        _isNavigating = false;
+      });
+      _showSnackBar('Đã dừng điều hướng');
+    } catch (e) {
+      _showSnackBar('Lỗi dừng điều hướng: $e', isError: true);
     }
   }
 
@@ -247,10 +296,10 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
           child: TrackAsiaMap(
             onMapCreated: _onMapCreated,
             initialCameraPosition: const CameraPosition(
-              target: LatLng(10.7720, 106.6980), // Ho Chi Minh City
+              target: LatLng(10.728073, 106.624054), // Match MapWayPointFragment default
               zoom: 12.0,
             ),
-            styleString: 'https://maps.track-asia.com/styles/v2/streets.json?key=public_key',
+            styleString: 'https://maps.track-asia.com/styles/v1/streets.json?key=public_key',
             myLocationEnabled: true,
             rotateGesturesEnabled: true,
             scrollGesturesEnabled: true,
@@ -259,7 +308,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
             trackCameraPosition: true,
           ),
         ),
-        
+
         // Route info
         Container(
           padding: const EdgeInsets.all(16),
@@ -273,7 +322,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
               const SizedBox(height: 8),
               Text(_routeInfo),
               const SizedBox(height: 16),
-              
+
               // Control buttons
               Wrap(
                 spacing: 8,
@@ -281,7 +330,7 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
                 children: [
                   ElevatedButton(
                     onPressed: _isCalculatingRoute ? null : _calculateAndDisplayRoute,
-                    child: _isCalculatingRoute 
+                    child: _isCalculatingRoute
                         ? const SizedBox(
                             width: 16,
                             height: 16,
@@ -293,6 +342,23 @@ class _NavigationMapRouteExampleState extends State<NavigationMapRouteExample> {
                     onPressed: _isCalculatingRoute ? null : _addMultipleRoutes,
                     child: const Text('Nhiều tuyến đường'),
                   ),
+                  ElevatedButton(
+                    onPressed: (_routes.isEmpty || _isNavigating) ? null : _startNavigation,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Bắt đầu điều hướng'),
+                  ),
+                  if (_isNavigating)
+                    ElevatedButton(
+                      onPressed: _stopNavigation,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Dừng điều hướng'),
+                    ),
                   ElevatedButton(
                     onPressed: _routes.isEmpty ? null : _toggleRouteVisibility,
                     child: const Text('Ẩn/Hiện'),

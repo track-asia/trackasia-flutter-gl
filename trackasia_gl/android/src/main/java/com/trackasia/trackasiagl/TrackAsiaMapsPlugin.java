@@ -4,6 +4,7 @@
 
 package com.trackasia.trackasiagl;
 
+import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
@@ -23,6 +24,7 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
 
   static FlutterAssets flutterAssets;
   private static GlobalMethodHandler globalMethodHandler;
+  private static Activity currentActivity;
   private Lifecycle lifecycle;
 
   public TrackAsiaMapsPlugin() {
@@ -72,6 +74,7 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
   @Override
   public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
     lifecycle = FlutterLifecycleAdapter.getActivityLifecycle(binding);
+    currentActivity = binding.getActivity();
   }
 
   @Override
@@ -87,6 +90,11 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
   @Override
   public void onDetachedFromActivity() {
     lifecycle = null;
+    currentActivity = null;
+  }
+  
+  public static Activity getCurrentActivity() {
+    return currentActivity;
   }
 
 

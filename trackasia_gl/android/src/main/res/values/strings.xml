@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_style_dark" translatable="false">https://maps.track-asia.com/styles/v1/streets.json?key=public</string>
+    <string name="map_style_light" translatable="false">https://maps.track-asia.com/styles/v1/streets.json?key=public</string>
+</resources>

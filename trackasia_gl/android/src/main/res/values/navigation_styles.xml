@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navigation component styles -->
+    <style name="NavigationViewPrimary">
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorBlue</item>
+        <item name="colorAccent">@color/colorBlue</item>
+    </style>
+
+    <!-- Dark theme for navigation view -->
+    <style name="NavigationViewDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorBlue</item>
+        <item name="colorAccent">@color/colorBlue</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        
+        <!-- NavigationView attributes -->
+        <item name="navigationViewPrimary">@color/colorBlue</item>
+        <item name="navigationViewSecondary">@color/colorWhite</item>
+        <item name="navigationViewAccent">@color/colorGreen</item>
+        <item name="navigationViewPrimaryText">@color/colorWhite</item>
+        <item name="navigationViewSecondaryText">@color/colorGray</item>
+        <item name="navigationViewDivider">@color/colorGray</item>
+        <item name="navigationViewListBackground">@color/colorBlack</item>
+        <item name="navigationViewBannerBackground">@color/colorBlack</item>
+        <item name="navigationViewBannerPrimaryText">@color/colorWhite</item>
+        <item name="navigationViewBannerSecondaryText">@color/colorGray</item>
+        <item name="navigationViewBannerManeuverPrimary">@color/colorWhite</item>
+        <item name="navigationViewBannerManeuverSecondary">@color/colorGray</item>
+        <item name="navigationViewProgress">@color/colorGreen</item>
+        <item name="navigationViewProgressBackground">@color/colorGray</item>
+        <item name="navigationViewMapStyle">@string/map_style_dark</item>
+        <item name="navigationViewDestinationMarker">@drawable/ic_marker</item>
+        <item name="navigationViewRouteOverviewDrawable">@drawable/ic_map_animation</item>
+    </style>
+
+    <!-- Light theme for navigation view -->
+    <style name="NavigationViewLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorBlue</item>
+        <item name="colorAccent">@color/colorBlue</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        
+        <!-- NavigationView attributes -->
+        <item name="navigationViewPrimary">@color/colorBlue</item>
+        <item name="navigationViewSecondary">@color/colorBlack</item>
+        <item name="navigationViewAccent">@color/colorGreen</item>
+        <item name="navigationViewPrimaryText">@color/colorBlack</item>
+        <item name="navigationViewSecondaryText">@color/colorBlack70</item>
+        <item name="navigationViewDivider">@color/colorGray</item>
+        <item name="navigationViewListBackground">@color/colorWhite</item>
+        <item name="navigationViewBannerBackground">@color/colorWhite</item>
+        <item name="navigationViewBannerPrimaryText">@color/colorBlack</item>
+        <item name="navigationViewBannerSecondaryText">@color/colorBlack70</item>
+        <item name="navigationViewBannerManeuverPrimary">@color/colorBlack</item>
+        <item name="navigationViewBannerManeuverSecondary">@color/colorBlack70</item>
+        <item name="navigationViewProgress">@color/colorGreen</item>
+        <item name="navigationViewProgressBackground">@color/colorGray</item>
+        <item name="navigationViewMapStyle">@string/map_style_light</item>
+        <item name="navigationViewDestinationMarker">@drawable/ic_marker</item>
+        <item name="navigationViewRouteOverviewDrawable">@drawable/ic_map_animation</item>
+    </style>
+</resources>
