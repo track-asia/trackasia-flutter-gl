@@ -261,6 +261,15 @@ class NavigationRoute {
       waypoints: waypoints,
     );
   }
+  
+  Map<String, dynamic> toMap() {
+    return {
+      'geometry': geometry,
+      'distance': distance,
+      'duration': duration,
+      'waypoints': waypoints,
+    };
+  }
 }
 
 /// Navigation theme configuration
