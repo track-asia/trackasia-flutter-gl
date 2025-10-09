@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../trackasia-demo-android-version-2/demo"
+		},
+		{
+			"path": "../../../trackasia-demo-ios-version-2/demo"
+		}
+	],
+	"settings": {}
+}

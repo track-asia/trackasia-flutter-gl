@@ -6,8 +6,9 @@ class TrackAsiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate,
 {
     private var registrar: FlutterPluginRegistrar
     private var channel: FlutterMethodChannel?
+    private var viewId: Int64
 
-    private var mapView: MLNMapView
+    var mapView: MLNMapView
     private var isMapReady = false
     private var dragEnabled = true
     private var isFirstStyleLoad = true
@@ -40,8 +41,12 @@ class TrackAsiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate,
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.logoView.isHidden = true
         self.registrar = registrar
+        self.viewId = viewId
 
         super.init()
+        
+        // Register this controller with NavigationMethodHandler
+        NavigationMethodHandler.registerMapController(self, withId: Int(viewId))
 
         channel = FlutterMethodChannel(
             name: "plugins.flutter.io/trackasia_gl_\(viewId)",
@@ -939,6 +944,33 @@ class TrackAsiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate,
             reply["filter"] = currentLayerFilter as NSObject
             result(reply)
 
+        // Navigation methods - delegate to NavigationMethodHandler via plugin
+        case "navigation#calculateRoute",
+             "navigation#start",
+             "navigation#stop", 
+             "navigation#pause",
+             "navigation#resume",
+             "navigation#isActive",
+             "navigation#getProgress",
+             "navigationMapRoute#addRoute",
+             "navigationMapRoute#addRoutes",
+             "navigationMapRoute#removeRoute",
+             "navigationMapRoute#clearRoutes",
+             "navigationMapRoute#setVisibility",
+             "navigationMapRoute#fitCameraToRoutes":
+            NSLog("TrackAsiaMapController: Received navigation method: %@", methodCall.method)
+            if let navigationHandler = TrackAsiaMapsPlugin.navigationMethodHandler {
+                NSLog("TrackAsiaMapController: Forwarding to NavigationMethodHandler")
+                navigationHandler.handleMethodCall(methodCall, result: result)
+            } else {
+                NSLog("TrackAsiaMapController: NavigationMethodHandler is nil!")
+                result(FlutterError(
+                    code: "NAVIGATION_NOT_INITIALIZED", 
+                    message: "Navigation handler not initialized",
+                    details: nil
+                ))
+            }
+
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -1771,6 +1803,11 @@ class TrackAsiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate,
 
     func setAttributionButtonPosition(position: MLNOrnamentPosition) {
         mapView.attributionButtonPosition = position
+    }
+    
+    deinit {
+        // Unregister this controller from NavigationMethodHandler
+        NavigationMethodHandler.unregisterMapController(withId: Int(viewId))
     }
 }
 

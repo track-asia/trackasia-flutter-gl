@@ -21,15 +21,12 @@ import 'annotation_order_maps.dart';
 import 'click_annotations.dart';
 import 'custom_marker.dart';
 import 'full_map.dart';
-import 'improved_navigation_example.dart';
 import 'layer.dart';
 import 'line.dart';
 import 'local_style.dart';
 import 'map_ui.dart';
 import 'move_camera.dart';
-import 'navigation_example.dart';
 import 'navigation_map_route_example.dart';
-import 'navigation_test_page.dart';
 import 'offline_regions.dart';
 import 'page.dart';
 import 'place_batch.dart';
@@ -45,10 +42,7 @@ final List<ExamplePage> _allPages = <ExamplePage>[
   const FullMapPage(),
   const PMTilesPage(),
   const LocalizedMapPage(),
-  const NavigationExamplePage(),
-  const NavigationTestPage(),
   const NavigationMapRouteExamplePage(),
-  const ImprovedNavigationExamplePage(),
   const AnimateCameraPage(),
   const MoveCameraPage(),
   const PlaceSymbolPage(),

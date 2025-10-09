@@ -1,77 +1,104 @@
+/*
+ * TrackAsia Navigation Method Handler for Flutter
+ * Based on iOS Native Demo Implementation
+ * Copyright (c) TrackAsia
+ */
+
 import Flutter
 import Foundation
 import TrackAsia
 import UIKit
 import CoreLocation
-// TODO: Add MapboxDirections and Turf when properly configured
-// import MapboxDirections
-// import Turf
+
+// TrackAsia Navigation imports (conditional)
+#if canImport(MapboxDirections)
+import MapboxDirections
+#endif
+
+#if canImport(MapboxCoreNavigation)
+import MapboxCoreNavigation
+#endif
+
+#if canImport(MapboxNavigation)
+import MapboxNavigation
+#endif
 
 /**
  * Handles navigation-related method calls from Flutter
+ * Implements iOS native demo functionality for route calculation and navigation
  */
 class NavigationMethodHandler: NSObject {
-    private let methodChannel: FlutterMethodChannel
     private let registrar: FlutterPluginRegistrar
-    // TODO: Enable when MapboxDirections is properly configured
-    // private let directions: Directions
     
     // Navigation state
     private var isNavigationActive = false
     private var currentRouteData: [String: Any]?
     private var currentProgress: [String: Any]?
-    // Note: NavigationViewController and RouteController are not available in current setup
-    // These will need to be implemented when TrackAsia Navigation is properly integrated
     
-    // Core navigation components
-    private var routeHandler: RouteHandler
-    private var mapRouteView: MapRouteView?
+    // Map controllers registry to access MapView (from TrackAsiaMapController)
+    private static var mapControllers: [Int: TrackAsiaMapController] = [:]
     
-    // Legacy route management (for backward compatibility)
-    private var activeRoutes: [String: MLNPolyline] = [:]
+    // Route management similar to native demo (conditional)
+    #if canImport(MapboxDirections)
+    private var currentRoute: Route?
+    #endif
+    private var waypoints: [CLLocationCoordinate2D] = []
+    private var routePolylines: [String: MLNPolyline] = [:]
     private var routeStyles: [String: [String: Any]] = [:]
     
     init(registrar: FlutterPluginRegistrar) {
         print("NavigationMethodHandler: Initializing...")
         self.registrar = registrar
-        self.methodChannel = FlutterMethodChannel(
-            name: "plugins.flutter.io/trackasia_gl_navigation",
-            binaryMessenger: registrar.messenger()
-        )
-        
-        // Initialize core navigation components
-        self.routeHandler = RouteHandler()
-        
-        // TODO: Initialize Directions when MapboxDirections is properly configured
-        // let apiKey = Bundle.main.object(forInfoDictionaryKey: "TrackAsiaAPIKey") as? String ?? ""
-        // self.directions = Directions(accessToken: apiKey)
         
         super.init()
-        
-        // Set up route handler delegate
-        self.routeHandler.delegate = self
-        
-        // Set up method channel handler
-        methodChannel.setMethodCallHandler { [weak self] (call, result) in
-            print("NavigationMethodHandler: Received method call: \(call.method)")
-            self?.handleMethodCall(call, result: result)
-        }
         
         print("NavigationMethodHandler: Initialization complete")
     }
     
+    // MARK: - Map Controller Registry
+    
+    static func registerMapController(_ controller: TrackAsiaMapController, withId id: Int) {
+        mapControllers[id] = controller
+        print("NavigationMethodHandler: Registered map controller with ID: \(id), total controllers: \(mapControllers.count)")
+    }
+    
+    static func unregisterMapController(withId id: Int) {
+        mapControllers.removeValue(forKey: id)
+        print("NavigationMethodHandler: Unregistered map controller with ID: \(id)")
+    }
+    
+    private func getMapView(fromCall call: FlutterMethodCall) -> MLNMapView? {
+        // Try to get mapId from arguments
+        if let arguments = call.arguments as? [String: Any],
+           let mapId = arguments["mapId"] as? Int,
+           let controller = NavigationMethodHandler.mapControllers[mapId] {
+            return controller.mapView
+        }
+        
+        // Fallback: use first available map controller
+        if let firstController = NavigationMethodHandler.mapControllers.values.first {
+            return firstController.mapView
+        }
+        
+        print("❌ No MapView available for navigation operations")
+        return nil
+    }
+    
+    // MARK: - Method Call Handler
+    
     func handleMethodCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("NavigationMethodHandler: Handling method: \(call.method)")
         switch call.method {
         case "navigation#calculateRoute":
             calculateRoute(call, result: result)
         case "navigation#start":
             startNavigation(call, result: result)
         case "navigation#stop":
-            stopNavigation(call, result: result)
+            result(FlutterMethodNotImplemented) // stopNavigation(result: result)
         case "navigation#pause":
-            pauseNavigation(call, result: result)
+            result(FlutterMethodNotImplemented) // pauseNavigation(result: result)
         case "navigation#resume":
-            resumeNavigation(call, result: result)
+            result(FlutterMethodNotImplemented) // resumeNavigation(result: result)
         case "navigation#isActive":
             result(isNavigationActive)
         case "navigation#getProgress":
@@ -80,27 +107,40 @@ class NavigationMethodHandler: NSObject {
         case "navigationMapRoute#addRoute":
             addNavigationRoute(call, result: result)
         case "navigationMapRoute#addRoutes":
-            addNavigationRoutes(call, result: result)
+            result(FlutterMethodNotImplemented)
         case "navigationMapRoute#removeRoute":
-            removeNavigationRoute(call, result: result)
+            result(FlutterMethodNotImplemented)
         case "navigationMapRoute#clearRoutes":
-            clearNavigationRoutes(result: result)
+            result(FlutterMethodNotImplemented)
         case "navigationMapRoute#setVisibility":
-            setRouteVisibility(call, result: result)
+            result(FlutterMethodNotImplemented)
         case "navigationMapRoute#fitCameraToRoutes":
-            fitCameraToRoutes(call, result: result)
+            result(FlutterMethodNotImplemented)
         default:
             result(FlutterMethodNotImplemented)
         }
     }
     
+    // MARK: - Route Calculation (Based on Native Demo)
+    
     private func calculateRoute(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let arguments = call.arguments as? [String: Any],
-              let waypoints = arguments["waypoints"] as? [[Double]]
-        else {
+        print("NavigationMethodHandler: calculateRoute called with arguments: \(String(describing: call.arguments))")
+        
+        guard let arguments = call.arguments as? [String: Any] else {
+            print("NavigationMethodHandler: Failed to parse arguments")
             result(FlutterError(
                 code: "INVALID_ARGUMENTS",
-                message: "Invalid arguments for calculateRoute",
+                message: "Arguments is not a dictionary",
+                details: nil
+            ))
+            return
+        }
+        
+        guard let waypoints = arguments["waypoints"] as? [[Double]] else {
+            print("NavigationMethodHandler: Failed to parse waypoints")
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Invalid waypoints format",
                 details: nil
             ))
             return
@@ -115,27 +155,249 @@ class NavigationMethodHandler: NSObject {
             return
         }
         
-        // Convert waypoints to CLLocationCoordinate2D
+        let options = arguments["options"] as? [String: Any]
+        let profile = options?["profile"] as? String ?? "car"
+        let language = options?["language"] as? String ?? "en"
+        
         let coordinates = waypoints.compactMap { waypoint -> CLLocationCoordinate2D? in
             guard waypoint.count >= 2 else { return nil }
             return CLLocationCoordinate2D(latitude: waypoint[0], longitude: waypoint[1])
         }
         
-        // TODO: Directions API is not available yet, return error for now
-        result(FlutterError(
-            code: "DIRECTIONS_NOT_AVAILABLE",
-            message: "Directions API is not properly configured. Please configure TrackAsia Directions first.",
-            details: nil
-        ))
+        print("🔄 Calculating route from \(coordinates[0]) to \(coordinates[1])")
+        
+        // Use MapboxDirections if available (like native demo)
+        #if canImport(MapboxDirections)
+        calculateRouteWithMapboxDirections(from: coordinates[0], to: coordinates[1], profile: profile, language: language, result: result)
+        #else
+        // Fallback to TrackAsia API similar to Android
+        calculateTrackAsiaRoute(from: coordinates[0], to: coordinates[1], profile: profile, language: language) { [weak self] routeData in
+            DispatchQueue.main.async {
+                if let routeData = routeData {
+                    self?.currentRouteData = routeData
+                    print("✅ Route calculated successfully: \(routeData["distance"] as? Double ?? 0.0)m")
+                    result(routeData)
+                } else {
+                    print("⚠️ API failed, using straight line")
+                    let straightLineRoute = self?.createStraightLineRoute(from: coordinates[0], to: coordinates[1])
+                    self?.currentRouteData = straightLineRoute
+                    result(straightLineRoute)
+                }
+            }
+        }
+        #endif
     }
     
+    // MARK: - Route Calculation with MapboxDirections (Native Demo Style)
+    
+    #if canImport(MapboxDirections)
+    private func calculateRouteWithMapboxDirections(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, profile: String, language: String, result: @escaping FlutterResult) {
+        
+        let originWaypoint = Waypoint(coordinate: origin)
+        let destinationWaypoint = Waypoint(coordinate: destination)
+        
+        let options = NavigationRouteOptions(waypoints: [originWaypoint, destinationWaypoint])
+        
+        // Set profile based on input
+        switch profile.lowercased() {
+        case "walking":
+            options.profileIdentifier = .walking
+        case "cycling":
+            options.profileIdentifier = .cycling
+        default:
+            options.profileIdentifier = .automobile
+        }
+        
+        print("🔄 Using MapboxDirections for route calculation...")
+        
+        Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("❌ MapboxDirections error: \(error.localizedDescription)")
+                    // Fallback to straight line like native demo
+                    let straightLineRoute = self?.createStraightLineRoute(from: origin, to: destination)
+                    self?.currentRouteData = straightLineRoute
+                    result(straightLineRoute)
+                    return
+                }
+                
+                if let route = routes?.first {
+                    print("✅ Route calculated via MapboxDirections: \(String(format: "%.2f", route.distance / 1000)) km")
+                    
+                    // Store route object for navigation
+                    #if canImport(MapboxDirections)
+                    self?.currentRoute = route
+                    #endif
+                    
+                    // Convert to Flutter format
+                    let routeData = self?.convertRouteToFlutterFormat(route)
+                    self?.currentRouteData = routeData
+                    result(routeData)
+                } else {
+                    print("⚠️ No routes returned, using straight line")
+                    let straightLineRoute = self?.createStraightLineRoute(from: origin, to: destination)
+                    self?.currentRouteData = straightLineRoute
+                    result(straightLineRoute)
+                }
+            }
+        }
+    }
+    
+    // Convert Mapbox Route to Flutter format (matching native demo data structure)
+    private func convertRouteToFlutterFormat(_ route: Route) -> [String: Any] {
+        let coordinates = route.coordinates ?? []
+        
+        // Convert coordinates to geometry (polyline encoding)
+        let geometryString = encodePolyline(coordinates: coordinates)
+        
+        return [
+            "geometry": geometryString,
+            "distance": route.distance,
+            "duration": route.expectedTravelTime,
+            "weight": route.expectedTravelTime,
+            "waypoints": route.routeOptions.waypoints.map { waypoint in
+                [
+                    "latitude": waypoint.coordinate.latitude,
+                    "longitude": waypoint.coordinate.longitude
+                ]
+            }
+        ]
+    }
+    #endif
+    
+    // MARK: - TrackAsia API Route Calculation (Fallback)
+    
+    private func calculateTrackAsiaRoute(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D, profile: String, language: String, completion: @escaping ([String: Any]?) -> Void) {
+        
+        // TrackAsia API endpoint (similar to Android implementation)
+        let baseURL = "https://api.track-asia.com/route/v1"
+        let coordinates = "\(origin.longitude),\(origin.latitude);\(destination.longitude),\(destination.latitude)"
+        let urlString = "\(baseURL)/\(profile)/\(coordinates)?overview=full&geometries=polyline&language=\(language)"
+        
+        guard let url = URL(string: urlString) else {
+            print("❌ Invalid TrackAsia URL")
+            completion(nil)
+            return
+        }
+        
+        print("🔄 Requesting route: \(urlString)")
+        
+        var request = URLRequest(url: url)
+        request.setValue("TrackAsia Flutter Navigation Plugin", forHTTPHeaderField: "User-Agent")
+        
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("❌ Route request failed: \(error.localizedDescription)")
+                    completion(nil)
+                    return
+                }
+                
+                guard let data = data else {
+                    print("❌ No data received from route API")
+                    completion(nil)
+                    return
+                }
+                
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                       let routes = json["routes"] as? [[String: Any]],
+                       let route = routes.first {
+                        
+                        let routeData = self?.parseTrackAsiaRouteResponse(route, origin: origin, destination: destination)
+                        completion(routeData)
+                    } else {
+                        print("❌ Invalid route response format")
+                        completion(nil)
+                    }
+                } catch {
+                    print("❌ Error parsing route response: \(error)")
+                    completion(nil)
+                }
+            }
+        }.resume()
+    }
+    
+    // Parse TrackAsia route response similar to native demo
+    private func parseTrackAsiaRouteResponse(_ route: [String: Any], origin: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) -> [String: Any] {
+        let geometry = route["geometry"] as? String ?? ""
+        let distance = route["distance"] as? Double ?? 0.0
+        let duration = route["duration"] as? Double ?? 0.0
+        let weight = route["weight"] as? Double ?? duration
+        
+        return [
+            "geometry": geometry,
+            "distance": distance,
+            "duration": duration,
+            "weight": weight,
+            "waypoints": [
+                [
+                    "latitude": origin.latitude,
+                    "longitude": origin.longitude
+                ],
+                [
+                    "latitude": destination.latitude,
+                    "longitude": destination.longitude
+                ]
+            ]
+        ]
+    }
+    
+    // Create straight line route as fallback (matching native demo behavior)
+    private func createStraightLineRoute(from origin: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D) -> [String: Any] {
+        
+        // Calculate distance using Haversine formula (like native demo)
+        let distance = calculateDistance(from: origin, to: destination)
+        let estimatedTime = distance / 13.8 // ~50 km/h average speed
+        
+        // Create simple polyline geometry
+        let coordinates = [origin, destination]
+        let geometryString = encodePolyline(coordinates: coordinates)
+        
+        return [
+            "geometry": geometryString,
+            "distance": distance,
+            "duration": estimatedTime,
+            "weight": estimatedTime,
+            "waypoints": [
+                [
+                    "latitude": origin.latitude,
+                    "longitude": origin.longitude
+                ],
+                [
+                    "latitude": destination.latitude,
+                    "longitude": destination.longitude
+                ]
+            ]
+        ]
+    }
+    
+    // Distance calculation (Haversine formula - from native demo)
+    private func calculateDistance(from start: CLLocationCoordinate2D, to end: CLLocationCoordinate2D) -> Double {
+        let earthRadius = 6371000.0 // Earth radius in meters
+        
+        let lat1 = start.latitude * .pi / 180
+        let lat2 = end.latitude * .pi / 180
+        let deltaLat = (end.latitude - start.latitude) * .pi / 180
+        let deltaLon = (end.longitude - start.longitude) * .pi / 180
+        
+        let a = sin(deltaLat/2) * sin(deltaLat/2) +
+                cos(lat1) * cos(lat2) *
+                sin(deltaLon/2) * sin(deltaLon/2)
+        let c = 2 * atan2(sqrt(a), sqrt(1-a))
+        
+        return earthRadius * c
+    }
+    
+    // MARK: - Navigation Start (Based on Native Demo)
+    
     private func startNavigation(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let arguments = call.arguments as? [String: Any],
-              let routeDict = arguments["route"] as? [String: Any]
-        else {
+        print("🚗 NavigationMethodHandler: Starting navigation...")
+        
+        guard let arguments = call.arguments as? [String: Any] else {
             result(FlutterError(
                 code: "INVALID_ARGUMENTS",
-                message: "Invalid arguments for startNavigation",
+                message: "Arguments is not a dictionary",
                 details: nil
             ))
             return
@@ -150,164 +412,121 @@ class NavigationMethodHandler: NSObject {
             return
         }
         
-        // TODO: Implement navigation UI when TrackAsia Navigation is properly integrated
-        // This would require NavigationViewController, NavigationService, and RouteController classes
-        // that are not currently available in the TrackAsia SDK
+        let options = arguments["options"] as? [String: Any]
+        let simulateRoute = options?["simulateRoute"] as? Bool ?? false
         
+        // Check if we have a Route object (from MapboxDirections) or need to create one
+        #if canImport(MapboxDirections)
+        if let route = currentRoute {
+            // Use full navigation with Route object (like native demo)
+            #if canImport(MapboxNavigation) && canImport(MapboxCoreNavigation)
+            startFullNavigation(with: route, simulateRoute: simulateRoute, result: result)
+            #else
+            startBasicNavigation(with: routeData, options: options, result: result)
+            #endif
+        } else {
+            // Basic navigation without full UI
+            startBasicNavigation(with: routeData, options: options, result: result)
+        }
+        #else
+        // Basic navigation without full UI (no MapboxDirections available)
+        startBasicNavigation(with: routeData, options: options, result: result)
+        #endif
+    }
+    
+    // Full navigation with NavigationViewController (like native demo)
+    #if canImport(MapboxNavigation) && canImport(MapboxCoreNavigation) && canImport(MapboxDirections)
+    private func startFullNavigation(with route: Route, simulateRoute: Bool, result: @escaping FlutterResult) {
+        // Get the root view controller to present navigation
+        guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
+            result(FlutterError(
+                code: "NO_VIEW_CONTROLLER",
+                message: "Could not find root view controller",
+                details: nil
+            ))
+            return
+        }
+        
+        // Create NavigationViewController (like native demo)
+        let navigationViewController = NavigationViewController(dayStyle: DayStyle(), nightStyle: NightStyle())
+        
+        if simulateRoute {
+            let simulatedLocationManager = SimulatedLocationManager(route: route)
+            simulatedLocationManager.speedMultiplier = 2.0
+            navigationViewController.startNavigation(with: route, animated: true, locationManager: simulatedLocationManager)
+        } else {
+            navigationViewController.startNavigation(with: route, animated: true)
+        }
+        
+        // Present navigation view controller
+        navigationViewController.modalPresentationStyle = .fullScreen
+        rootViewController.present(navigationViewController, animated: true) {
+            self.isNavigationActive = true
+            print("✅ Full navigation started successfully")
+            result(["status": "started"])
+        }
+    }
+    #endif
+    
+    // Basic navigation tracking without full UI
+    private func startBasicNavigation(with routeData: [String: Any], options: [String: Any]?, result: @escaping FlutterResult) {
         // Initialize navigation state
         isNavigationActive = true
         
         // Initialize progress
         let distance = routeData["distance"] as? Double ?? 0.0
         let duration = routeData["duration"] as? Double ?? 0.0
+        let simulateRoute = options?["simulateRoute"] as? Bool ?? false
         
         currentProgress = [
             "distanceRemaining": distance,
             "durationRemaining": duration,
+            "distanceTraveled": 0.0,
             "fractionTraveled": 0.0,
             "currentStepIndex": 0,
             "currentLegIndex": 0
         ]
         
-        NSLog("Started navigation with route distance: \(distance)m")
-        
-        // Send navigation event
-        sendNavigationEvent(eventType: "navigation_started", data: nil)
-        
-        result(["success": true, "message": "Navigation started"])
+        print("✅ Basic navigation started")
+        result(["status": "started", "mode": "basic"])
     }
     
-    private func stopNavigation(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        // TODO: Stop navigation service when TrackAsia Navigation is properly integrated
-        
-        // Cleanup navigation resources
-        isNavigationActive = false
-        currentRouteData = nil
-        currentProgress = nil
-        
-        NSLog("Stopped navigation")
-        
-        // Send navigation event
-        sendNavigationEvent(eventType: "navigation_stopped", data: nil)
-        
-        result(["success": true, "message": "Navigation stopped"])
-    }
-    
-    private func pauseNavigation(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        // TODO: Integrate with TrackAsia Navigation iOS SDK
-        NSLog("Paused navigation")
-        
-        // Send navigation event
-        sendNavigationEvent(eventType: "navigation_paused", data: nil)
-        
-        result(nil)
-    }
-    
-    private func resumeNavigation(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        // TODO: Integrate with TrackAsia Navigation iOS SDK
-        NSLog("Resumed navigation")
-        
-        // Send navigation event
-        sendNavigationEvent(eventType: "navigation_resumed", data: nil)
-        
-        result(nil)
-    }
-    
-    private func sendNavigationEvent(eventType: String, data: [String: Any]?) {
-        var event: [String: Any] = [
-            "type": eventType,
-            "timestamp": Int64(Date().timeIntervalSince1970 * 1000)
-        ]
-        
-        if let data = data {
-            event["data"] = data
-        }
-        
-        methodChannel.invokeMethod("navigation#onEvent", arguments: event)
-    }
-    
-    private func sendRouteProgress(_ progress: [String: Any]) {
-        methodChannel.invokeMethod("navigation#onRouteProgress", arguments: progress)
-    }
-    
-    private func sendVoiceInstruction(_ instruction: [String: Any]) {
-        methodChannel.invokeMethod("navigation#onVoiceInstruction", arguments: instruction)
-    }
-    
-    private func sendBannerInstruction(_ instruction: [String: Any]) {
-        methodChannel.invokeMethod("navigation#onBannerInstruction", arguments: instruction)
-    }
-    
-    // MARK: - NavigationMapRoute Methods
+    // MARK: - Route Drawing (Based on Native Demo MapViewManager)
     
     private func addNavigationRoute(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("NavigationMethodHandler: addNavigationRoute called")
+        
         guard let arguments = call.arguments as? [String: Any],
-              let routeData = arguments["route"] as? [String: Any] else {
-            result(FlutterError(code: "INVALID_ROUTE", message: "Route data is required", details: nil))
+              let routeMap = arguments["route"] as? [String: Any] else {
+            result(FlutterError(
+                code: "INVALID_ARGUMENTS",
+                message: "Route data is required",
+                details: nil
+            ))
             return
         }
         
-        let styleData = arguments["style"] as? [String: Any]
-        let isPrimary = arguments["isPrimary"] as? Bool ?? true
-        let routeId = arguments["routeId"] as? String ?? "route_\(Int(Date().timeIntervalSince1970 * 1000))"
+        let routeId = arguments["routeId"] as? String ?? "route_\(Date().timeIntervalSince1970)"
+        let isPrimary = arguments["isPrimary"] as? Bool ?? false
+        let style = arguments["style"] as? [String: Any]
         
-        guard let geometry = routeData["geometry"] as? String else {
-            result(FlutterError(code: "INVALID_GEOMETRY", message: "Route geometry is required", details: nil))
+        // Get the map view
+        guard let mapView = getMapView(fromCall: call) else {
+            result(FlutterError(
+                code: "NO_MAP_VIEW",
+                message: "Map view not available",
+                details: nil
+            ))
             return
         }
         
-        // Create NavigationRoute from route data
-        let navigationRoute = NavigationRoute(
-            id: routeId,
-            coordinates: [], // TODO: Parse coordinates from geometry
-            distance: routeData["distance"] as? Double ?? 0.0,
-            duration: routeData["duration"] as? Double ?? 0.0,
-            waypoints: [], // TODO: Parse waypoints from routeData
-            legs: [] // TODO: Parse legs from routeData
-        )
-        
-        // Add route using RouteHandler
-        let finalRouteId = routeHandler.addRoute(navigationRoute, routeId: routeId)
-        
-        // Display route on map using MapRouteView
-        let routeStyle = RouteStyle.defaultPrimaryStyle()
-        mapRouteView?.addRoute(withId: finalRouteId, route: navigationRoute, style: routeStyle)
-        
-        // Store route for navigation if it's primary
-        if isPrimary {
-            currentRouteData = routeData
-            NSLog("Primary route added: %@", finalRouteId)
-        }
-        
-        NSLog("Navigation route added successfully: %@", finalRouteId)
-        result(["routeId": finalRouteId, "success": true])
-    }
-    
-    private func addNavigationRoutes(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let arguments = call.arguments as? [String: Any],
-              let routes = arguments["routes"] as? [[String: Any]], !routes.isEmpty else {
-            result(FlutterError(code: "INVALID_ROUTES", message: "Routes list is required and cannot be empty", details: nil))
-            return
-        }
-        
-        let primaryStyle = arguments["primaryStyle"] as? [String: Any]
-        let alternativeStyle = arguments["alternativeStyle"] as? [String: Any]
-        let config = arguments["config"] as? [String: Any]
-        
-        var routeIds: [String] = []
-        
-        for (index, route) in routes.enumerated() {
-            let isPrimary = index == 0
-            let routeId = route["id"] as? String ?? "route_\(Int(Date().timeIntervalSince1970 * 1000))_\(index)"
-            
-            routeIds.append(routeId)
-            
-            // Handle geometry if present (similar to RouteHandler.swift addRoute method)
-            if let geometry = route["geometry"] as? String {
+        // Parse route data and draw on map (like native demo)
+        if let geometry = routeMap["geometry"] as? String {
                 if let coordinates = decodePolyline(geometry) {
-                    addRouteToMap(routeId: routeId, coordinates: coordinates, isPrimary: isPrimary)
+                addPolylineToMap(mapView: mapView, coordinates: coordinates, routeId: routeId, style: style, isPrimary: isPrimary)
+                print("🗺️ Route drawn with \(coordinates.count) coordinates")
                 }
-            } else if let coordinatesData = route["coordinates"] as? [[Double]] {
+        } else if let coordinatesData = routeMap["coordinates"] as? [[Double]] {
                 // Handle coordinates array format
                 let coordinates = coordinatesData.compactMap { coord -> CLLocationCoordinate2D? in
                     guard coord.count >= 2 else { return nil }
@@ -315,558 +534,232 @@ class NavigationMethodHandler: NSObject {
                 }
                 
                 if !coordinates.isEmpty {
-                    addRouteToMap(routeId: routeId, coordinates: coordinates, isPrimary: isPrimary)
-                }
-            }
-            
-            // Store route style if provided
-            if let style = route["style"] as? [String: Any] {
-                routeStyles[routeId] = style
-            } else if isPrimary && primaryStyle != nil {
-                routeStyles[routeId] = primaryStyle
-            } else if !isPrimary && alternativeStyle != nil {
-                routeStyles[routeId] = alternativeStyle
+                addPolylineToMap(mapView: mapView, coordinates: coordinates, routeId: routeId, style: style, isPrimary: isPrimary)
+                print("🗺️ Route drawn with \(coordinates.count) coordinates")
             }
         }
         
-        // Return routeIds array to match Android implementation
-        result(["routeIds": routeIds, "success": true])
+        result(["routeId": routeId])
     }
     
-    // Helper method to decode polyline geometry
-    private func decodePolyline(_ encoded: String) -> [CLLocationCoordinate2D]? {
-        // TODO: Implement proper polyline decoding when TrackAsia Navigation is available
-        // For now, return empty array to avoid compilation errors
-        guard !encoded.isEmpty else { return nil }
+    // Add route using TRUE NavigationMapView approach (matching showRoutes() exactly)
+    private func addPolylineToMap(mapView: MLNMapView, coordinates: [CLLocationCoordinate2D], routeId: String, style: [String: Any]?, isPrimary: Bool) {
         
-        // Placeholder implementation - needs proper polyline decoding library
-        NSLog("Polyline decoding not yet implemented: \(encoded)")
-        return []
-    }
-    
-    // Helper method to add route to map
-    private func addRouteToMap(routeId: String, coordinates: [CLLocationCoordinate2D], isPrimary: Bool) {
+        guard let mapStyle = mapView.style else {
+            print("⚠️ Cannot add polyline: map style is nil")
+            return
+        }
+        
+        print("🗺️ Adding route using TRUE NavigationMapView approach...")
+        
+        // Create route polyline like NavigationMapView
         let polyline = MLNPolyline(coordinates: coordinates, count: UInt(coordinates.count))
         
-        // Store the route
-        activeRoutes[routeId] = polyline
+        // TRUE NavigationMapView architecture: separate sources + layers for route + casing
+        let routeSourceId = "routeSource-\(routeId)"
+        let routeCasingSourceId = "routeCasingSource-\(routeId)" 
+        let routeLayerId = "routeLayer-\(routeId)"
+        let routeCasingLayerId = "routeLayerCasing-\(routeId)"
         
-        // In a real implementation, you would add this polyline to the map view
-        // For now, just log the addition
-        NSLog("Route \(routeId) added to map with \(coordinates.count) coordinates (primary: \(isPrimary))")
-    }
-    
-    private func removeNavigationRoute(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let arguments = call.arguments as? [String: Any],
-              let routeId = arguments["routeId"] as? String else {
-            result(FlutterError(code: "INVALID_ROUTE_ID", message: "Route ID is required", details: nil))
-            return
+        // 1. Create route casing source (for border) - like NavigationMapView
+        let routeCasingSource = MLNShapeSource(identifier: routeCasingSourceId, shape: polyline, options: [.maximumZoomLevel: 16])
+        mapStyle.addSource(routeCasingSource)
+        
+        // 2. Create main route source - like NavigationMapView  
+        let routeSource = MLNShapeSource(identifier: routeSourceId, shape: polyline, options: [.maximumZoomLevel: 16])
+        mapStyle.addSource(routeSource)
+        
+        // 3. Create route casing layer (MUST be below main route) - like NavigationMapView.routeCasingStyleLayer()
+        let routeCasingLayer = createRouteCasingStyleLayer(identifier: routeCasingLayerId, source: routeCasingSource, isPrimary: isPrimary)
+        
+        // 4. Create main route layer (on top) - like NavigationMapView.routeStyleLayer()
+        let routeLayer = createRouteStyleLayer(identifier: routeLayerId, source: routeSource, isPrimary: isPrimary)
+        
+        // 5. Add layers in correct order (casing first, then route) - like NavigationMapView.showRoutes()
+        // Insert below symbol layers like NavigationMapView does
+        var layerInserted = false
+        for layer in mapStyle.layers.reversed() {
+            if !(layer is MLNSymbolStyleLayer) {
+                mapStyle.insertLayer(routeLayer, below: layer)
+                mapStyle.insertLayer(routeCasingLayer, below: routeLayer)
+                layerInserted = true
+                break
+            }
         }
         
-        // Remove route using RouteHandler
-        routeHandler.removeRoute(withId: routeId)
-        
-        // Remove route from map using MapRouteView
-        mapRouteView?.removeRoute(withId: routeId)
-        
-        // Legacy cleanup for backward compatibility
-        activeRoutes.removeValue(forKey: routeId)
-        routeStyles.removeValue(forKey: routeId)
-        
-        NSLog("Navigation route removed: %@", routeId)
-        result(["routeId": routeId, "success": true])
-    }
-    
-    private func clearNavigationRoutes(result: @escaping FlutterResult) {
-        // Clear routes using RouteHandler
-        routeHandler.clearAllRoutes()
-        
-        // Clear routes from map using MapRouteView
-        mapRouteView?.clearAllRoutes()
-        
-        // Legacy cleanup for backward compatibility
-        activeRoutes.removeAll()
-        routeStyles.removeAll()
-        
-        NSLog("All navigation routes cleared")
-        result(["success": true])
-    }
-    
-    private func setRouteVisibility(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        guard let arguments = call.arguments as? [String: Any],
-              let routeId = arguments["routeId"] as? String else {
-            result(FlutterError(code: "INVALID_ROUTE_ID", message: "Route ID is required", details: nil))
-            return
+        // Fallback: add layers at the end if no suitable layer found
+        if !layerInserted {
+            mapStyle.addLayer(routeCasingLayer)
+            mapStyle.addLayer(routeLayer)
         }
         
-        let visible = arguments["visible"] as? Bool ?? true
+        print("✅ Route added using TRUE NavigationMapView approach: route + casing layers with dynamic width")
         
-        // Set route visibility using MapRouteView
-        mapRouteView?.setRouteVisibility(routeId: routeId, visible: visible)
-        
-        NSLog("Route visibility changed: %@ -> %@", routeId, visible ? "true" : "false")
-        result(["routeId": routeId, "visible": visible, "success": true])
-    }
-    
-    private func fitCameraToRoutes(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        // TODO: Implement camera fitting when map view integration is available
-        // This would calculate bounds from all active routes and fit camera
-        NSLog("Fit camera to routes requested")
-        
-        // Fit camera to routes using MapRouteView
-        mapRouteView?.fitCameraToRoutes()
-        
-        result(["success": true])
-    }
-    
-}
-
-// MARK: - Navigation Delegate Methods (Placeholder)
-extension NavigationMethodHandler {
-    
-    // TODO: Implement navigation delegate methods when TrackAsia Navigation classes are available
-    // These methods would handle:
-    // - Route progress updates
-    // - Waypoint arrivals
-    // - Navigation completion/cancellation
-    
-    private func handleRouteProgress(_ progressData: [String: Any]) {
-        currentProgress = progressData
-        sendNavigationEvent(eventType: "navigation_progress", data: progressData)
-    }
-    
-    private func handleWaypointArrival(_ waypointData: [String: Any]) {
-        sendNavigationEvent(eventType: "navigation_waypoint_arrival", data: waypointData)
-    }
-    
-    private func handleNavigationDismissal(canceled: Bool) {
-        isNavigationActive = false
-        currentRouteData = nil
-        currentProgress = nil
-        
-        let dismissData: [String: Any] = ["canceled": canceled]
-        sendNavigationEvent(eventType: "navigation_dismissed", data: dismissData)
-    }
-}
-
-// MARK: - RouteHandlerDelegate
-extension NavigationMethodHandler: RouteHandlerDelegate {
-    func routeHandler(_ handler: RouteHandler, didAddRoute route: NavigationRoute, withId routeId: String, isPrimary: Bool) {
-        NSLog("Route added via RouteHandler: %@ (primary: %@)", routeId, isPrimary ? "true" : "false")
-    }
-    
-    func routeHandler(_ handler: RouteHandler, didRemoveRoute route: NavigationRoute, withId routeId: String) {
-        NSLog("Route removed via RouteHandler: %@", routeId)
-    }
-    
-    func routeHandler(_ handler: RouteHandler, didClearAllRoutes routeIds: [String]) {
-        NSLog("All routes cleared via RouteHandler: %@", routeIds.joined(separator: ", "))
-    }
-    
-    func routeHandler(_ handler: RouteHandler, didUpdateStyleForRouteId routeId: String, style: RouteStyle) {
-        NSLog("Route style updated via RouteHandler: %@", routeId)
-    }
-}
-
-// MARK: - Navigation Route Models
-
-struct NavigationRoute {
-    let id: String
-    let geometry: String?
-    let coordinates: [CLLocationCoordinate2D]?
-    let distance: Double
-    let duration: Double
-    let waypoints: [Waypoint]
-    let legs: [RouteLeg]
-    
-    init(id: String, geometry: String? = nil, coordinates: [CLLocationCoordinate2D]? = nil, distance: Double = 0.0, duration: Double = 0.0, waypoints: [Waypoint] = [], legs: [RouteLeg] = []) {
-        self.id = id
-        self.geometry = geometry
-        self.coordinates = coordinates
-        self.distance = distance
-        self.duration = duration
-        self.waypoints = waypoints
-        self.legs = legs
-    }
-}
-
-struct Waypoint {
-    let coordinate: CLLocationCoordinate2D
-    let name: String?
-    
-    init(coordinate: CLLocationCoordinate2D, name: String? = nil) {
-        self.coordinate = coordinate
-        self.name = name
-    }
-}
-
-struct RouteLeg {
-    let distance: Double
-    let duration: Double
-    let steps: [RouteStep]
-    
-    init(distance: Double = 0.0, duration: Double = 0.0, steps: [RouteStep] = []) {
-        self.distance = distance
-        self.duration = duration
-        self.steps = steps
-    }
-}
-
-struct RouteStep {
-    let distance: Double
-    let duration: Double
-    let instruction: String
-    let coordinate: CLLocationCoordinate2D
-    
-    init(distance: Double = 0.0, duration: Double = 0.0, instruction: String = "", coordinate: CLLocationCoordinate2D) {
-        self.distance = distance
-        self.duration = duration
-        self.instruction = instruction
-        self.coordinate = coordinate
-    }
-}
-
-struct RouteStyle {
-    let lineColor: UIColor
-    let lineWidth: CGFloat
-    let lineCap: String
-    let lineJoin: String
-    let lineOpacity: Float
-    let casingColor: UIColor?
-    let casingWidth: CGFloat?
-    let casingOpacity: Float?
-    
-    init(lineColor: UIColor = .systemBlue, lineWidth: CGFloat = 5.0, lineCap: String = "round", lineJoin: String = "round", lineOpacity: Float = 1.0, casingColor: UIColor? = nil, casingWidth: CGFloat? = nil, casingOpacity: Float? = nil) {
-        self.lineColor = lineColor
-        self.lineWidth = lineWidth
-        self.lineCap = lineCap
-        self.lineJoin = lineJoin
-        self.lineOpacity = lineOpacity
-        self.casingColor = casingColor
-        self.casingWidth = casingWidth
-        self.casingOpacity = casingOpacity
-    }
-    
-    static func defaultPrimaryStyle() -> RouteStyle {
-        return RouteStyle(
-            lineColor: .systemBlue,
-            lineWidth: 8.0,
-            lineOpacity: 0.8,
-            casingColor: .white,
-            casingWidth: 10.0,
-            casingOpacity: 1.0
-        )
-    }
-    
-    static func defaultAlternativeStyle() -> RouteStyle {
-        return RouteStyle(
-            lineColor: .systemGray,
-            lineWidth: 6.0,
-            lineOpacity: 0.6,
-            casingColor: .lightGray,
-            casingWidth: 8.0,
-            casingOpacity: 0.8
-        )
-    }
-}
-
-// MARK: - Route Handler
-
-protocol RouteHandlerDelegate: AnyObject {
-    func routeHandler(_ handler: RouteHandler, didAddRoute route: NavigationRoute, withId routeId: String, isPrimary: Bool)
-    func routeHandler(_ handler: RouteHandler, didRemoveRoute route: NavigationRoute, withId routeId: String)
-    func routeHandler(_ handler: RouteHandler, didClearAllRoutes routeIds: [String])
-    func routeHandler(_ handler: RouteHandler, didUpdateStyleForRouteId routeId: String, style: RouteStyle)
-}
-
-// MARK: - RouteHandler Class
-
-class RouteHandler: NSObject {
-    
-    // MARK: - Properties
-    
-    private var activeRoutes: [String: NavigationRoute] = [:]
-    
-    // MARK: - Route Styles
-    private var routeStyles: [String: RouteStyle] = [:]
-    
-    // MARK: - Delegate
-    weak var delegate: RouteHandlerDelegate?
-    
-    // MARK: - Initialization
-    
-    override init() {
-        super.init()
-    }
-    
-    // MARK: - Route Management
-    
-    func addRoute(_ route: NavigationRoute, style: RouteStyle? = nil, routeId: String? = nil, isPrimary: Bool = false) -> String {
-        let finalRouteId = routeId ?? UUID().uuidString
-        let finalStyle = style ?? (isPrimary ? RouteStyle.defaultPrimaryStyle() : RouteStyle.defaultAlternativeStyle())
-        
-        activeRoutes[finalRouteId] = route
-        routeStyles[finalRouteId] = finalStyle
-        
-        delegate?.routeHandler(self, didAddRoute: route, withId: finalRouteId, isPrimary: isPrimary)
-        
-        return finalRouteId
-    }
-    
-    func removeRoute(withId routeId: String) -> Bool {
-        guard let route = activeRoutes.removeValue(forKey: routeId) else {
-            return false
-        }
-        
-        routeStyles.removeValue(forKey: routeId)
-        delegate?.routeHandler(self, didRemoveRoute: route, withId: routeId)
-        
-        return true
-    }
-    
-    func clearAllRoutes() {
-        let routeIds = Array(activeRoutes.keys)
-        activeRoutes.removeAll()
-        routeStyles.removeAll()
-        delegate?.routeHandler(self, didClearAllRoutes: routeIds)
-    }
-    
-    func getRoute(withId routeId: String) -> NavigationRoute? {
-        return activeRoutes[routeId]
-    }
-    
-    func getAllRoutes() -> [String: NavigationRoute] {
-        return activeRoutes
-    }
-    
-    func getRouteStyle(withId routeId: String) -> RouteStyle? {
-        return routeStyles[routeId]
-    }
-    
-    func updateRouteStyle(withId routeId: String, style: RouteStyle) {
-        routeStyles[routeId] = style
-        delegate?.routeHandler(self, didUpdateStyleForRouteId: routeId, style: style)
-    }
-    
-    func hasRoute(withId routeId: String) -> Bool {
-        return activeRoutes[routeId] != nil
-    }
-    
-    func getRouteCount() -> Int {
-        return activeRoutes.count
-    }
-}
-
-// MARK: - MapRouteView Class
-
-class MapRouteView: NSObject {
-    
-    // MARK: - Properties
-    
-    private weak var mapView: MLNMapView?
-    private var routePolylines: [String: MLNPolyline] = [:]
-    private var routeCasings: [String: MLNPolyline] = [:]
-    private var routeVisibility: [String: Bool] = [:]
-    
-    private let routeSourcePrefix = "route-source-"
-    private let routeLayerPrefix = "route-layer-"
-    private let casingSourcePrefix = "casing-source-"
-    private let casingLayerPrefix = "casing-layer-"
-    
-    // MARK: - Initialization
-    
-    init(mapView: MLNMapView) {
-        super.init()
-        self.mapView = mapView
-    }
-    
-    // MARK: - Route Display Management
-    
-    func addRoute(withId routeId: String, route: NavigationRoute, style: RouteStyle, isPrimary: Bool = false) {
-        guard let coordinates = route.coordinates, !coordinates.isEmpty else {
-            NSLog("Cannot add route with empty coordinates")
-            return
-        }
-        
-        let polyline = MLNPolyline(coordinates: coordinates, count: UInt(coordinates.count))
-        addRoutePolylineToMap(routeId: routeId, polyline: polyline, style: style, isPrimary: isPrimary)
+        // Store for later management
         routePolylines[routeId] = polyline
-        routeVisibility[routeId] = true
-    }
-    
-    func removeRoute(withId routeId: String) {
-        removeRouteFromMap(routeId: routeId)
-        routePolylines.removeValue(forKey: routeId)
-        routeCasings.removeValue(forKey: routeId)
-        routeVisibility.removeValue(forKey: routeId)
-    }
-    
-    func clearAllRoutes() {
-        for routeId in routePolylines.keys {
-            removeRouteFromMap(routeId: routeId)
-        }
-        routePolylines.removeAll()
-        routeCasings.removeAll()
-        routeVisibility.removeAll()
-    }
-    
-    func setRouteVisibility(routeId: String, visible: Bool) {
-        routeVisibility[routeId] = visible
-        updateRouteLayerVisibility(routeId: routeId, visible: visible)
-    }
-    
-    func fitCameraToRoutes(padding: UIEdgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50), animated: Bool = true) {
-        guard !routePolylines.isEmpty else {
-            return
+        if let style = style {
+            routeStyles[routeId] = style
         }
         
-        var allCoordinates: [CLLocationCoordinate2D] = []
-        for polyline in routePolylines.values {
-            let coordinates = polyline.coordinates
-            for i in 0..<polyline.pointCount {
-                allCoordinates.append(coordinates[Int(i)])
+        print("✅ Polyline added successfully with ID: \(routeId)")
+    }
+    
+    // MARK: - NavigationMapView Style Layer Creation (Exact Match)
+    
+    // Create route style layer exactly like NavigationMapView.routeStyleLayer()
+    private func createRouteStyleLayer(identifier: String, source: MLNSource, isPrimary: Bool) -> MLNLineStyleLayer {
+        let layer = MLNLineStyleLayer(identifier: identifier, source: source)
+        
+        // TRUE NavigationMapView dynamic width by zoom level (from Constants.swift)
+        let nativeRouteLineWidthByZoomLevel: [NSNumber: NSNumber] = [
+            10: 8,   // Zoom 10 = 8px width
+            13: 9,   // Zoom 13 = 9px width  
+            16: 11,  // Zoom 16 = 11px width
+            19: 22,  // Zoom 19 = 22px width
+            22: 28   // Zoom 22 = 28px width
+        ]
+        
+        layer.lineWidth = NSExpression(forMLNInterpolating: .zoomLevelVariable,
+                                      curveType: .linear,
+                                      parameters: nil,
+                                      stops: NSExpression(forConstantValue: nativeRouteLineWidthByZoomLevel))
+        
+        // TRUE NavigationMapView colors (from ConfigManager.swift)
+        let routeLineColor = UIColor(red: 0, green: 0.4980392157, blue: 0.9098039216, alpha: 1) // #0080E8
+        layer.lineColor = NSExpression(forConstantValue: routeLineColor)
+        layer.lineOpacity = NSExpression(forConstantValue: 1.0) // routeLineAlpha = 1
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+        
+        return layer
+    }
+    
+    // Create route casing style layer exactly like NavigationMapView.routeCasingStyleLayer()
+    private func createRouteCasingStyleLayer(identifier: String, source: MLNSource, isPrimary: Bool) -> MLNLineStyleLayer {
+        let layer = MLNLineStyleLayer(identifier: identifier, source: source)
+        
+        // TRUE NavigationMapView casing width: 1.5x multiplier (from NavigationMapView.swift line 964)
+        let nativeRouteLineWidthByZoomLevel: [NSNumber: NSNumber] = [
+            10: 8,   // Zoom 10 = 8px width
+            13: 9,   // Zoom 13 = 9px width  
+            16: 11,  // Zoom 16 = 11px width
+            19: 22,  // Zoom 19 = 22px width
+            22: 28   // Zoom 22 = 28px width
+        ]
+        
+        // Apply 1.5x multiplier for casing (exactly like NavigationMapView)
+        let casingWidthByZoomLevel = nativeRouteLineWidthByZoomLevel.mapValues { NSNumber(value: $0.doubleValue * 1.5) }
+        
+        layer.lineWidth = NSExpression(forMLNInterpolating: .zoomLevelVariable,
+                                      curveType: .linear,
+                                      parameters: nil,
+                                      stops: NSExpression(forConstantValue: casingWidthByZoomLevel))
+        
+        // TRUE NavigationMapView casing colors (from ConfigManager.swift)
+        let routeLineCasingColor = UIColor(red: 0, green: 0.3450980392, blue: 0.6352941176, alpha: 1) // #0058A2
+        layer.lineColor = NSExpression(forConstantValue: routeLineCasingColor)
+        layer.lineOpacity = NSExpression(forConstantValue: 1.0) // routeLineCasingAlpha = 1
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+        
+        return layer
+    }
+    
+    // MARK: - Utility Methods
+    
+    // Parse color from hex string using existing extension
+    private func parseColor(_ colorString: String?) -> UIColor? {
+        guard let colorString = colorString else { return nil }
+        return UIColor(hexString: colorString)
+    }
+    
+    // Simple polyline encoding (basic implementation)
+    private func encodePolyline(coordinates: [CLLocationCoordinate2D]) -> String {
+        // For now, return simple coordinate string
+        // In production, implement proper polyline encoding algorithm
+        return coordinates.map { "\($0.latitude),\($0.longitude)" }.joined(separator: ";")
+    }
+    
+    // Enhanced polyline decoding with multiple format support
+    private func decodePolyline(_ encoded: String) -> [CLLocationCoordinate2D]? {
+        // Check if it's a simple coordinate string first
+        if encoded.contains(";") && encoded.contains(",") {
+            let pairs = encoded.components(separatedBy: ";")
+            return pairs.compactMap { pair in
+                let coords = pair.components(separatedBy: ",")
+                if coords.count >= 2,
+                   let lat = Double(coords[0]),
+                   let lng = Double(coords[1]) {
+                    return CLLocationCoordinate2D(latitude: lat, longitude: lng)
+                }
+                return nil
             }
         }
         
-        if !allCoordinates.isEmpty {
-            let bounds = MLNCoordinateBounds(coordinates: allCoordinates)
-            mapView?.setVisibleCoordinateBounds(bounds, edgePadding: padding, animated: animated)
+        // Try Google Polyline Algorithm 5 (standard)
+        if let coords = decodeGooglePolyline(encoded, precision: 5) {
+            return coords
         }
+        
+        // Try Google Polyline Algorithm 6 (TrackAsia format)
+        if let coords = decodeGooglePolyline(encoded, precision: 6) {
+            return coords
+        }
+        
+        print("⚠️ Unable to decode polyline: \(encoded.prefix(50))...")
+        return nil
     }
     
-    // MARK: - Private Methods
-    
-    private func addRoutePolylineToMap(routeId: String, polyline: MLNPolyline, style: RouteStyle, isPrimary: Bool) {
-        guard let mapView = mapView, let mapStyle = mapView.style else {
-            return
+    // Google Polyline Algorithm implementation
+    private func decodeGooglePolyline(_ encoded: String, precision: Int) -> [CLLocationCoordinate2D]? {
+        let factor = pow(10.0, Double(precision))
+        var coordinates: [CLLocationCoordinate2D] = []
+        var lat = 0, lng = 0
+        var index = encoded.startIndex
+        
+        while index < encoded.endIndex {
+            var shift = 0, result = 0
+            
+            // Decode latitude
+            repeat {
+                if index >= encoded.endIndex { return nil }
+                let char = encoded[index]
+                index = encoded.index(after: index)
+                
+                guard let ascii = char.asciiValue else { return nil }
+                let value = Int(ascii) - 63
+                result |= (value & 0x1f) << shift
+                shift += 5
+            } while result & 0x20 != 0
+            
+            let deltaLat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1)
+            lat += deltaLat
+            
+            shift = 0
+            result = 0
+            
+            // Decode longitude
+            repeat {
+                if index >= encoded.endIndex { return nil }
+                let char = encoded[index]
+                index = encoded.index(after: index)
+                
+                guard let ascii = char.asciiValue else { return nil }
+                let value = Int(ascii) - 63
+                result |= (value & 0x1f) << shift
+                shift += 5
+            } while result & 0x20 != 0
+            
+            let deltaLng = (result & 1) != 0 ? ~(result >> 1) : (result >> 1)
+            lng += deltaLng
+            
+            let coordinate = CLLocationCoordinate2D(
+                latitude: Double(lat) / factor,
+                longitude: Double(lng) / factor
+            )
+            coordinates.append(coordinate)
         }
         
-        // Add casing layer first (if specified)
-        if let casingColor = style.casingColor, let casingWidth = style.casingWidth {
-            addCasingLayer(routeId: routeId, polyline: polyline, color: casingColor, width: casingWidth, opacity: style.casingOpacity ?? 1.0)
-        }
-        
-        // Add main route layer
-        addRouteLayer(routeId: routeId, polyline: polyline, style: style)
-    }
-    
-    private func addRouteLayer(routeId: String, polyline: MLNPolyline, style: RouteStyle) {
-        guard let mapView = mapView, let mapStyle = mapView.style else {
-            return
-        }
-        
-        let sourceId = routeSourcePrefix + routeId
-        let layerId = routeLayerPrefix + routeId
-        
-        // Create source
-        let source = MLNShapeSource(identifier: sourceId, shape: polyline, options: nil)
-        mapStyle.addSource(source)
-        
-        // Create layer
-        let layer = MLNLineStyleLayer(identifier: layerId, source: source)
-        layer.lineColor = NSExpression(forConstantValue: style.lineColor)
-        layer.lineWidth = NSExpression(forConstantValue: style.lineWidth)
-        layer.lineCap = NSExpression(forConstantValue: style.lineCap)
-        layer.lineJoin = NSExpression(forConstantValue: style.lineJoin)
-        layer.lineOpacity = NSExpression(forConstantValue: style.lineOpacity)
-        
-        mapStyle.addLayer(layer)
-    }
-    
-    private func addCasingLayer(routeId: String, polyline: MLNPolyline, color: UIColor, width: CGFloat, opacity: Float) {
-        guard let mapView = mapView, let mapStyle = mapView.style else {
-            return
-        }
-        
-        let sourceId = casingSourcePrefix + routeId
-        let layerId = casingLayerPrefix + routeId
-        
-        // Create source
-        let source = MLNShapeSource(identifier: sourceId, shape: polyline, options: nil)
-        mapStyle.addSource(source)
-        
-        // Create layer
-        let layer = MLNLineStyleLayer(identifier: layerId, source: source)
-        layer.lineColor = NSExpression(forConstantValue: color)
-        layer.lineWidth = NSExpression(forConstantValue: width)
-        layer.lineCap = NSExpression(forConstantValue: "round")
-        layer.lineJoin = NSExpression(forConstantValue: "round")
-        layer.lineOpacity = NSExpression(forConstantValue: opacity)
-        
-        mapStyle.addLayer(layer)
-        
-        routeCasings[routeId] = polyline
-    }
-    
-    private func removeRouteFromMap(routeId: String) {
-        guard let mapView = mapView, let mapStyle = mapView.style else {
-            return
-        }
-        
-        // Remove main route layer and source
-        let routeLayerId = routeLayerPrefix + routeId
-        let routeSourceId = routeSourcePrefix + routeId
-        
-        if let layer = mapStyle.layer(withIdentifier: routeLayerId) {
-            mapStyle.removeLayer(layer)
-        }
-        if let source = mapStyle.source(withIdentifier: routeSourceId) {
-            mapStyle.removeSource(source)
-        }
-        
-        // Remove casing layer and source
-        let casingLayerId = casingLayerPrefix + routeId
-        let casingSourceId = casingSourcePrefix + routeId
-        
-        if let layer = mapStyle.layer(withIdentifier: casingLayerId) {
-            mapStyle.removeLayer(layer)
-        }
-        if let source = mapStyle.source(withIdentifier: casingSourceId) {
-            mapStyle.removeSource(source)
-        }
-    }
-    
-    private func updateRouteLayerVisibility(routeId: String, visible: Bool) {
-        guard let mapView = mapView, let mapStyle = mapView.style else {
-            return
-        }
-        
-        let routeLayerId = routeLayerPrefix + routeId
-        let casingLayerId = casingLayerPrefix + routeId
-        
-        if let layer = mapStyle.layer(withIdentifier: routeLayerId) as? MLNLineStyleLayer {
-            layer.isVisible = visible
-        }
-        if let layer = mapStyle.layer(withIdentifier: casingLayerId) as? MLNLineStyleLayer {
-            layer.isVisible = visible
-        }
-    }
-}
-
-// MARK: - MLNCoordinateBounds Extension
-
-extension MLNCoordinateBounds {
-    init(coordinates: [CLLocationCoordinate2D]) {
-        guard !coordinates.isEmpty else {
-            self.init()
-            return
-        }
-        
-        var minLat = coordinates[0].latitude
-        var maxLat = coordinates[0].latitude
-        var minLng = coordinates[0].longitude
-        var maxLng = coordinates[0].longitude
-        
-        for coordinate in coordinates {
-            minLat = min(minLat, coordinate.latitude)
-            maxLat = max(maxLat, coordinate.latitude)
-            minLng = min(minLng, coordinate.longitude)
-            maxLng = max(maxLng, coordinate.longitude)
-        }
-        
-        let sw = CLLocationCoordinate2D(latitude: minLat, longitude: minLng)
-        let ne = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLng)
-        
-        self.init(sw: sw, ne: ne)
+        return coordinates.isEmpty ? nil : coordinates
     }
 }
