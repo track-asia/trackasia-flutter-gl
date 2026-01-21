@@ -1150,51 +1150,44 @@ class TrackAsiaMapController extends TrackAsiaPlatform
     throw UnimplementedError();
   }
 
-  // Navigation methods
-  @override
-  Future<NavigationRoute?> calculateRoute({
+  // Navigation methods - Web platform not supported
+  Future<Map<String, dynamic>?> calculateRoute({
     required List<LatLng> waypoints,
-    NavigationOptions? options,
+    Map<String, dynamic>? options,
   }) async {
     // Web platform navigation not implemented yet
     throw UnimplementedError('Navigation is not supported on web platform');
   }
 
-  @override
   Future<void> startNavigation({
-    required NavigationRoute route,
-    NavigationOptions? options,
+    required Map<String, dynamic> route,
+    Map<String, dynamic>? options,
   }) async {
     // Web platform navigation not implemented yet
     throw UnimplementedError('Navigation is not supported on web platform');
   }
 
-  @override
   Future<void> stopNavigation() async {
     // Web platform navigation not implemented yet
     throw UnimplementedError('Navigation is not supported on web platform');
   }
 
-  @override
   Future<void> pauseNavigation() async {
     // Web platform navigation not implemented yet
     throw UnimplementedError('Navigation is not supported on web platform');
   }
 
-  @override
   Future<void> resumeNavigation() async {
     // Web platform navigation not implemented yet
     throw UnimplementedError('Navigation is not supported on web platform');
   }
 
-  @override
   Future<bool> isNavigationActive() async {
     // Web platform navigation not implemented yet
     return false;
   }
 
-  @override
-  Future<RouteProgress?> getCurrentRouteProgress() async {
+  Future<Map<String, dynamic>?> getCurrentRouteProgress() async {
     // Web platform navigation not implemented yet
     return null;
   }

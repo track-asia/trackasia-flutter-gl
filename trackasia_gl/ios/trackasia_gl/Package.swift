@@ -18,6 +18,8 @@ let package = Package(
         // TrackAsia Navigation dependencies
         .package(url: "https://github.com/flitsmeister/mapbox-directions-swift", exact: "0.23.3"),
         .package(url: "https://github.com/mapbox/turf-swift.git", from: "2.8.0"),
+        // TrackAsia Navigation iOS SDK (local path - update to your local path)
+        .package(path: "../../../../../trackasia-navigation-ios"),
     ],
     targets: [
         .target(
@@ -25,7 +27,9 @@ let package = Package(
             dependencies: [
                 .product(name: "Trackasia", package: "trackasia-native"),
                 .product(name: "MapboxDirections", package: "mapbox-directions-swift"),
-                .product(name: "Turf", package: "turf-swift")
+                .product(name: "Turf", package: "turf-swift"),
+                // Navigation UI modules
+                .product(name: "MapboxNavigation", package: "trackasia-navigation-ios"),
             ],
             cSettings: [
                 .headerSearchPath("include/trackasia_gl")

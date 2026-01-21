@@ -4,26 +4,42 @@
 Pod::Spec.new do |s|
   s.name             = 'trackasia_gl'
   s.version          = '2.0.3'
-  s.summary          = 'A new Flutter plugin.'
+  s.summary          = 'TrackAsia GL Flutter Plugin with integrated navigation.'
   s.description      = <<-DESC
-A new Flutter plugin.
+TrackAsia GL Flutter plugin with fully integrated navigation SDK.
+Includes route calculation, turn-by-turn navigation UI, and voice guidance.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://github.com/track-asia/trackasia-flutter-gl'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'TrackAsia' => 'support@track-asia.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'trackasia_gl/Sources/trackasia_gl/**/*'
+  
+  # Source files: Flutter plugin + embedded navigation SDK
+  s.source_files = 'trackasia_gl/Sources/trackasia_gl/**/*.{swift,h,m}',
+                   'Navigation/CoreNavigation/**/*.{swift,h,m}',
+                   'Navigation/UI/**/*.{swift,h,m}'
+  
+  # Navigation resources (assets, localizations)
+  # Note: Navigation/Resources includes all localizations - CoreNavigation/Resources is a subset
+  s.resources = ['Navigation/Resources/**/*']
+  
   s.dependency 'Flutter'
-  # When updating the dependency version,
-  # make sure to also update the version in Package.swift.
+  
+  # Map SDK
   s.dependency 'TrackAsia', '2.0.3'
   
-  # Optional navigation dependencies (if available)
-  # Users can add these manually if they have access to TrackAsia navigation libraries:
-  # s.dependency 'MapboxDirections', '~> 2.0'
-  # s.dependency 'MapboxCoreNavigation', '~> 2.0'
-  # s.dependency 'MapboxNavigation', '~> 2.0'
+  # Route calculation (MapboxDirections 2.x)
+  s.dependency 'MapboxDirections', '~> 2.0'
+  
+  # Geometry calculations (used by navigation)
+  s.dependency 'Turf', '~> 2.8'
+  
+  # NOTE: Solar is not available on CocoaPods (SPM-only)
+  # Day/night style switching uses #if canImport(Solar) conditional
+  
   s.swift_version = '5.0'
   s.ios.deployment_target = '12.0'
+  
+  # Framework settings for navigation
+  s.frameworks = 'CoreLocation', 'MapKit', 'AVFoundation'
 end
-

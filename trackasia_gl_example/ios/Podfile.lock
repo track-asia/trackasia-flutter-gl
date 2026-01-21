@@ -4,13 +4,20 @@ PODS:
   - Flutter (1.0.0)
   - location (0.0.1):
     - Flutter
+  - MapboxDirections (2.14.3):
+    - Polyline (~> 5.0)
+    - Turf (~> 2.8.0)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - Trackasia (2.0.3)
+  - Polyline (5.1.0)
+  - TrackAsia (2.0.3)
   - trackasia_gl (2.0.3):
     - Flutter
-    - Trackasia (= 2.0.3)
+    - MapboxDirections (~> 2.0)
+    - TrackAsia (= 2.0.3)
+    - Turf (~> 2.8)
+  - Turf (2.8.0)
 
 DEPENDENCIES:
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
@@ -20,8 +27,11 @@ DEPENDENCIES:
   - trackasia_gl (from `.symlinks/plugins/trackasia_gl/ios`)
 
 SPEC REPOS:
-  https://github.com/track-asia/trackasia-flutter-podspecs.git:
-    - Trackasia
+  trunk:
+    - MapboxDirections
+    - Polyline
+    - TrackAsia
+    - Turf
 
 EXTERNAL SOURCES:
   device_info_plus:
@@ -39,9 +49,12 @@ SPEC CHECKSUMS:
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   location: 155caecf9da4f280ab5fe4a55f94ceccfab838f8
+  MapboxDirections: d9ad8452e8927d95ed21e35f733834dbca7e0eb1
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  Trackasia: 8e0e885ade38efd0193dbabb9c2a942918951d3a
-  trackasia_gl: f3a519396cdb45afbf0e6ebe943f8ea5aea918fa
+  Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
+  TrackAsia: cfc1886493889f28a3d8516c8a5eabbb8685f38e
+  trackasia_gl: adae163165d1abe7e8330e33c910141f62927722
+  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
 
 PODFILE CHECKSUM: dc5ae3034eed68d8da708789fe7037b3859c7135
 

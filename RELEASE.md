@@ -41,3 +41,6 @@ Commit all changes and create a PR targeting the main branch.
 After the release PR has been merged, the release can be created
 by creating & pushing a tag on the main branch in the format `vVERSION`,
 for example `v0.20.0`.
+
+Đọc codebase trong generate, Tôi cần đi sâu vào giao diện hiển thị trạng thái tiến trình khi chuyển đổi hình ảnh, video. Kiểm tra data json từ api của dịch vụ để hiển thị đúng giá trị đúng nội dung trong item của giao diện, kiểm tra các hàm xử lý bên dưới đã hoàn chỉnh, hoạt động đúng yêu cầu chưa? 
+Phân tích, liệt kê cho tôi ý kiến về các vấn đề trên
