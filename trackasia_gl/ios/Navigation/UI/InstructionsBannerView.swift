@@ -131,9 +131,22 @@ open class BaseInstructionsBannerView: UIControl {
     
     /**
      Updates the instructions banner distance info for a given `RouteStepProgress`.
+     - parameter currentStepProgress: The current step progress
+     - parameter upcomingStep: Optional upcoming step to use for distance if current step has 0 distance (e.g., "depart" step)
      */
-    public func updateDistance(for currentStepProgress: RouteStepProgress) {
-        let distanceRemaining = currentStepProgress.distanceRemaining
+    public func updateDistance(for currentStepProgress: RouteStepProgress, upcomingStep: RouteStep? = nil) {
+        var distanceRemaining = currentStepProgress.distanceRemaining
+        
+        // If current step has 0 or very small distance (e.g., "depart" step),
+        // use the step's total distance or upcoming step's distance instead
+        if distanceRemaining <= 0 {
+            if currentStepProgress.step.distance > 0 {
+                distanceRemaining = currentStepProgress.step.distance
+            } else if let upcomingStep = upcomingStep {
+                distanceRemaining = upcomingStep.distance
+            }
+        }
+        
         self.distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }

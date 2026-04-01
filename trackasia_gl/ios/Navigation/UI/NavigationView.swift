@@ -54,10 +54,15 @@ open class NavigationView: UIView {
         self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)
     ]
     
-    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
-        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
-        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
-    ]
+    lazy var bannerHideConstraints: [NSLayoutConstraint] = {
+        let stackBottomConstraint = self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor)
+        stackBottomConstraint.priority = UILayoutPriority(999) // Lower priority to avoid conflicts
+        
+        let bannerTopConstraint = self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
+        bannerTopConstraint.priority = UILayoutPriority(999)
+        
+        return [stackBottomConstraint, bannerTopConstraint]
+    }()
 
     lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.bottomAnchor)
 

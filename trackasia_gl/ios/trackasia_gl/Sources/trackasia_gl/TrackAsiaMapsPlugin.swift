@@ -17,46 +17,16 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
             navigationMethodHandler = NavigationMethodHandler(registrar: registrar)
             NSLog("✅ TrackAsiaMapsPlugin: NavigationMethodHandler initialized successfully")
             NSLog("✅ TrackAsiaMapsPlugin: NavigationMethodHandler instance: %@", String(describing: navigationMethodHandler))
+            
+            // Register event channel for navigation events streaming to Flutter
+            let navigationEventChannel = FlutterEventChannel(
+                name: "plugins.flutter.io/trackasia_gl_navigation_events",
+                binaryMessenger: registrar.messenger()
+            )
+            navigationEventChannel.setStreamHandler(navigationMethodHandler)
+            NSLog("✅ TrackAsiaMapsPlugin: Navigation event channel registered")
         } catch {
             NSLog("❌ TrackAsiaMapsPlugin: Failed to initialize NavigationMethodHandler: %@", error.localizedDescription)
-        }
-        
-        // Register dedicated navigation channel
-        let navigationChannel = FlutterMethodChannel(
-            name: "plugins.flutter.io/trackasia_gl_navigation",
-            binaryMessenger: registrar.messenger()
-        )
-        
-        navigationChannel.setMethodCallHandler { methodCall, result in
-            NSLog("🔍 TRACE 1: NavigationChannel received method call")
-            NSLog("🔍 TRACE 2: Method name: %@", methodCall.method)
-            NSLog("🔍 TRACE 3: Arguments: %@", String(describing: methodCall.arguments))
-            
-            NSLog("🔍 TRACE 4: Checking navigationMethodHandler...")
-            if let navigationHandler = navigationMethodHandler {
-                NSLog("✅ TRACE 5: NavigationMethodHandler found, forwarding...")
-                
-                // Wrap in try-catch to prevent native crashes
-                do {
-                    NSLog("🔍 TRACE 6: About to call handleMethodCall...")
-                    navigationHandler.handleMethodCall(methodCall, result: result)
-                    NSLog("✅ TRACE 7: handleMethodCall completed")
-                } catch {
-                    NSLog("❌ TRACE ERROR: Exception in handleMethodCall: %@", error.localizedDescription)
-                    result(FlutterError(
-                        code: "NATIVE_EXCEPTION",
-                        message: "Native exception: " + error.localizedDescription,
-                        details: nil
-                    ))
-                }
-            } else {
-                NSLog("❌ TRACE 4A: NavigationMethodHandler is nil!")
-                result(FlutterError(
-                    code: "NAVIGATION_NOT_INITIALIZED",
-                    message: "Navigation handler not initialized",
-                    details: nil
-                ))
-            }
         }
         
         NSLog("TrackAsiaMapsPlugin: Navigation channel registered successfully")

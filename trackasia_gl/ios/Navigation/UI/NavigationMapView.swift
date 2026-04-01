@@ -21,7 +21,7 @@ open class NavigationMapView: MLNMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    @objc public var defaultAltitude: CLLocationDistance = 1000.0
+    @objc public var defaultAltitude: CLLocationDistance = 500.0
     
     /**
       Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
@@ -69,6 +69,11 @@ open class NavigationMapView: MLNMapView, UIGestureRecognizerDelegate {
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
+    
+    // Proceed to start line (dashed line from GPS to route start)
+    let proceedToStartSourceIdentifier = "proceedToStartSource"
+    let proceedToStartLayerIdentifier = "proceedToStartLayer"
+    @objc public dynamic var proceedToStartLineColor: UIColor = .systemBlue
     
     @objc public dynamic var trafficUnknownColor: UIColor = .trafficUnknown
     @objc public dynamic var trafficLowColor: UIColor = .trafficLow
@@ -219,6 +224,14 @@ open class NavigationMapView: MLNMapView, UIGestureRecognizerDelegate {
     fileprivate func commonInit() {
         self.makeGestureRecognizersRespectCourseTracking()
         self.makeGestureRecognizersUpdateCourseView()
+        
+        // Configure compass to be visible during navigation
+        // Position it below instruction banner
+        self.compassViewPosition = .topRight
+        self.compassViewMargins = CGPoint(x: 8, y: 120)
+        // Always show compass (don't auto-hide when map faces north)
+        self.compassView.isHidden = false
+        self.compassView.compassVisibility = .visible
         
         self.resumeNotifications()
     }
@@ -518,6 +531,85 @@ open class NavigationMapView: MLNMapView, UIGestureRecognizerDelegate {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
+        }
+        
+        // Also remove proceed to start line if present
+        self.removeProceedToStartLine()
+    }
+    
+    // MARK: - Proceed To Start Line
+    
+    /**
+     Shows a dashed line from the user's current GPS location to the route start point.
+     This helps users navigate to the beginning of their route when they are not already at the starting point.
+     
+     - Parameters:
+       - userLocation: The user's current GPS location
+       - routeStart: The starting coordinate of the route
+       - distanceThreshold: Minimum distance (in meters) to show the line. Default is 100m.
+     - Returns: The distance in meters between user location and route start, or nil if line was not shown
+     */
+    @discardableResult
+    public func showProceedToStartLine(from userLocation: CLLocationCoordinate2D, to routeStart: CLLocationCoordinate2D, distanceThreshold: CLLocationDistance = 100) -> CLLocationDistance? {
+        guard let style = self.style else {
+            print("📍 showProceedToStartLine: Map style not ready yet")
+            return nil
+        }
+        
+        // Calculate distance between user location and route start
+        let distance = userLocation.distance(to: routeStart)
+        
+        // Only show line if user is far enough from route start
+        guard distance > distanceThreshold else {
+            self.removeProceedToStartLine()
+            print("📍 showProceedToStartLine: User within \(Int(distanceThreshold))m of route start, line removed")
+            return nil
+        }
+        
+        // Create dashed line from user location to route start
+        let coordinates = [userLocation, routeStart]
+        let polyline = MLNPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        
+        // Update or create source
+        if let source = style.source(withIdentifier: proceedToStartSourceIdentifier) as? MLNShapeSource {
+            source.shape = polyline
+        } else {
+            let source = MLNShapeSource(identifier: proceedToStartSourceIdentifier, shape: polyline, options: nil)
+            style.addSource(source)
+            
+            // Create dashed line layer
+            let lineLayer = MLNLineStyleLayer(identifier: proceedToStartLayerIdentifier, source: source)
+            lineLayer.lineColor = NSExpression(forConstantValue: proceedToStartLineColor)
+            lineLayer.lineWidth = NSExpression(forConstantValue: 4)
+            lineLayer.lineOpacity = NSExpression(forConstantValue: 0.7)
+            lineLayer.lineDashPattern = NSExpression(forConstantValue: [2, 3]) // Dashed pattern
+            lineLayer.lineCap = NSExpression(forConstantValue: "round")
+            lineLayer.lineJoin = NSExpression(forConstantValue: "round")
+            
+            // Insert below route layer if it exists, otherwise add to top
+            if let routeLayer = style.layer(withIdentifier: routeLayerIdentifier) {
+                style.insertLayer(lineLayer, below: routeLayer)
+            } else {
+                style.addLayer(lineLayer)
+            }
+        }
+        
+        print("📍 showProceedToStartLine: Distance to route start: \(Int(distance))m")
+        return distance
+    }
+    
+    /**
+     Removes the proceed-to-start dashed line from the map.
+     */
+    public func removeProceedToStartLine() {
+        guard let style = self.style else { return }
+        
+        if let layer = style.layer(withIdentifier: proceedToStartLayerIdentifier) {
+            style.removeLayer(layer)
+        }
+        
+        if let source = style.source(withIdentifier: proceedToStartSourceIdentifier) {
+            style.removeSource(source)
         }
     }
     

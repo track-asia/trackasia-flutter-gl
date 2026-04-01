@@ -21,7 +21,16 @@ extension BottomBannerView {
         
         let cancelButton = CancelButton(type: .custom)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.setImage(UIImage(named: "close", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        
+        // Try to load from bundle, fallback to system symbol
+        if let closeImage = UIImage(named: "close", in: .mapboxNavigation, compatibleWith: nil) {
+            cancelButton.setImage(closeImage, for: .normal)
+        } else if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+            cancelButton.setImage(UIImage(systemName: "xmark", withConfiguration: config), for: .normal)
+            cancelButton.tintColor = .white
+        }
+        
         self.addSubview(cancelButton)
         self.cancelButton = cancelButton
         

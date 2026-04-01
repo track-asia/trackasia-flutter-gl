@@ -1701,7 +1701,6 @@ class TrackAsiaMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate,
     }
 
     func setCompassEnabled(compassEnabled: Bool) {
-        mapView.compassView.isHidden = compassEnabled
         mapView.compassView.isHidden = !compassEnabled
     }
 

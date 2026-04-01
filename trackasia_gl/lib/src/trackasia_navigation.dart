@@ -6,6 +6,9 @@ class TrackAsiaNavigation {
 
   static TrackAsiaNavigation? _instance;
 
+  // Event channel for native navigation events (iOS/Android)
+  static const EventChannel _navigationEventChannel = EventChannel('plugins.flutter.io/trackasia_gl_navigation_events');
+
   // Stream controllers for navigation events
   final StreamController<NavigationEvent> _navigationEventController = StreamController<NavigationEvent>.broadcast();
   final StreamController<RouteProgress> _routeProgressController = StreamController<RouteProgress>.broadcast();
@@ -22,7 +25,63 @@ class TrackAsiaNavigation {
     return TrackAsiaNavigation._(TrackAsiaPlatform.createInstance());
   }
 
-  TrackAsiaNavigation._([TrackAsiaPlatform? platform]) : _platform = platform ?? TrackAsiaPlatform.createInstance();
+  TrackAsiaNavigation._([TrackAsiaPlatform? platform]) : _platform = platform ?? TrackAsiaPlatform.createInstance() {
+    // Listen to native navigation events
+    _navigationEventChannel.receiveBroadcastStream().listen(_handleNativeEvent);
+  }
+
+  /// Handle incoming native navigation events
+  void _handleNativeEvent(dynamic event) {
+    if (event is! Map) return;
+    final eventMap = Map<String, dynamic>.from(event);
+    final type = eventMap['type'] as String?;
+
+    switch (type) {
+      case 'routeProgress':
+        final progress = RouteProgress(
+          distanceRemaining: (eventMap['distanceRemaining'] as num?)?.toDouble() ?? 0,
+          durationRemaining: (eventMap['durationRemaining'] as num?)?.toDouble() ?? 0,
+          distanceTraveled: (eventMap['distanceTraveled'] as num?)?.toDouble() ?? 0,
+          fractionTraveled: (eventMap['fractionTraveled'] as num?)?.toDouble() ?? 0,
+          currentStepIndex: eventMap['currentStepIndex'] as int? ?? 0,
+          currentLegIndex: eventMap['currentLegIndex'] as int? ?? 0,
+        );
+        _routeProgressController.add(progress);
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.routeProgress,
+          data: eventMap,
+        ));
+        break;
+
+      case 'arrival':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.arrival,
+          data: eventMap,
+        ));
+        break;
+
+      case 'reroute':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.reroute,
+          data: eventMap,
+        ));
+        break;
+
+      case 'offRoute':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.offRoute,
+          data: eventMap,
+        ));
+        break;
+
+      case 'navigationEnded':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.navigationEnded,
+          data: eventMap,
+        ));
+        break;
+    }
+  }
 
   /// Navigation event stream
   Stream<NavigationEvent> get onNavigationEvent {

@@ -2,6 +2,10 @@ import UIKit
 
 extension NavigationView {
     func setupConstraints() {
+        // Create height constraint with lower priority to avoid conflicts
+        let bannerHeightConstraint = self.instructionsBannerView.heightAnchor.constraint(equalToConstant: 96)
+        bannerHeightConstraint.priority = UILayoutPriority(999) // Just below required
+        
         NSLayoutConstraint.activate([
             self.mapView.topAnchor.constraint(equalTo: self.topAnchor),
             self.mapView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -14,7 +18,7 @@ extension NavigationView {
             
             self.instructionsBannerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.instructionsBannerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.instructionsBannerView.heightAnchor.constraint(equalToConstant: 96),
+            bannerHeightConstraint,
             
             self.informationStackView.topAnchor.constraint(equalTo: self.instructionsBannerView.bottomAnchor),
             self.informationStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -38,6 +42,9 @@ extension NavigationView {
             self.wayNameView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             self.wayNameView.bottomAnchor.constraint(equalTo: self.bottomBannerView.topAnchor, constant: -10)
         ])
+        
+        // Ensure hide constraints are deactivated before activating show constraints
+        NSLayoutConstraint.deactivate(self.bannerHideConstraints)
         NSLayoutConstraint.activate(self.bannerShowConstraints)
     }
 

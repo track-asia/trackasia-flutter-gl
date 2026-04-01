@@ -201,33 +201,150 @@ class RouteMapViewController: UIViewController {
 	
     func prepareForNavigation() {
         guard let routeController else { return }
+        
+        // Ensure navigation UI is visible - this activates bannerShowConstraints
+        // and deactivates bannerHideConstraints to prevent layout conflicts
+        self.navigationView.showUI(animated: false)
 		
         self.resetETATimer()
         self.navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
-        self.mapView.compassView.isHidden = true
-        self.mapView.tracksUserCourse = true
-
+        
+        // Update instruction banner with initial visual instruction
+        // This ensures the turn arrow and instruction text are shown from the start
+        let initialInstruction = routeController.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction
+        self.instructionsBannerView.update(for: initialInstruction)
+        self.instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress, upcomingStep: routeController.routeProgress.currentLegProgress.upComingStep)
+        self.lanesView.update(for: initialInstruction)
+        self.nextBannerView.update(for: initialInstruction)
+        
+        print("📍 prepareForNavigation: Initial instruction banner updated with: \(String(describing: initialInstruction?.primaryInstruction.maneuverType)) \(String(describing: initialInstruction?.primaryInstruction.maneuverDirection))")
+        
         if let camera = self.pendingCamera {
             self.mapView.camera = camera
+            self.mapView.tracksUserCourse = true
             return
         }
-		
-        if let location = routeController.location,
-           location.course > 0 {
-            self.mapView.updateCourseTracking(location: location, animated: false)
-        } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-                  let firstCoordinate = coordinates.first,
-                  coordinates.count > 1 {
-            let secondCoordinate = coordinates[1]
-            let course = firstCoordinate.direction(to: secondCoordinate)
-            let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate,
-                                         altitude: 0,
-                                         horizontalAccuracy: 0,
-                                         verticalAccuracy: 0,
-                                         course: course,
-                                         speed: 0,
-                                         timestamp: Date())
-            self.mapView.updateCourseTracking(location: newLocation, animated: false)
+        
+        // Get route coordinates
+        guard let routeCoordinates = routeController.routeProgress.route.coordinates,
+              routeCoordinates.count > 1 else {
+            print("⚠️ prepareForNavigation: No route coordinates available")
+            self.mapView.tracksUserCourse = true
+            return
+        }
+        
+        // Get user's current location
+        let userLocation = routeController.location ?? routeController.locationManager.location
+        let isSimulating = routeController.locationManager is SimulatedLocationManager
+        
+        // Get the start position for navigation
+        let navigationStartCoordinate: CLLocationCoordinate2D
+        let navigationHeading: CLLocationDirection
+        
+        if isSimulating {
+            // Simulation: start from route origin
+            navigationStartCoordinate = routeCoordinates[0]
+            navigationHeading = routeCoordinates[0].direction(to: routeCoordinates[1])
+            print("📍 prepareForNavigation [SIMULATION]: Will navigate from route start: \(navigationStartCoordinate)")
+        } else {
+            // Real GPS: start from current location
+            navigationStartCoordinate = userLocation?.coordinate ?? routeCoordinates[0]
+            navigationHeading = userLocation?.course ?? routeCoordinates[0].direction(to: routeCoordinates[1])
+            print("📍 prepareForNavigation [GPS]: Will navigate from current location: \(navigationStartCoordinate)")
+        }
+        
+        // ============================================
+        // PHASE 1: Show route overview (2D, fit bounds)
+        // ============================================
+        
+        // Build coordinates array including: route start, route end, and user location (if available)
+        var boundingCoordinates = [routeCoordinates.first!, routeCoordinates.last!]
+        if let userLoc = userLocation {
+            boundingCoordinates.append(userLoc.coordinate)
+        }
+        
+        // Create a polyline to fit the camera
+        let overviewLine = MLNPolyline(coordinates: boundingCoordinates, count: UInt(boundingCoordinates.count))
+        let overviewCamera = self.mapView.cameraThatFitsShape(
+            overviewLine,
+            direction: 0, // North-up for overview
+            edgePadding: UIEdgeInsets(top: 150, left: 50, bottom: 200, right: 50) // Space for top/bottom banners
+        )
+        overviewCamera.pitch = 0 // 2D view for overview
+        
+        // Set overview camera immediately
+        self.mapView.setCamera(overviewCamera, animated: false)
+        self.mapView.tracksUserCourse = false // Disable tracking during overview
+        
+        print("📍 prepareForNavigation [OVERVIEW]: Showing route overview with \(boundingCoordinates.count) bounding points")
+        
+        // ============================================
+        // Show "proceed to start" dashed line if user is far from route start
+        // ============================================
+        
+        if !isSimulating, let userLoc = userLocation {
+            // Only show in GPS mode when user is not at route start
+            let routeStartCoordinate = routeCoordinates[0]
+            if let distanceToStart = self.mapView.showProceedToStartLine(
+                from: userLoc.coordinate,
+                to: routeStartCoordinate,
+                distanceThreshold: 100 // Show line if > 100m from start
+            ) {
+                print("📍 prepareForNavigation [PROCEED_TO_START]: User is \(Int(distanceToStart))m from route start")
+            }
+        }
+        
+        // ============================================
+        // PHASE 2: After delay, switch to 3D navigation
+        // ============================================
+        
+        // Set up the location for course tracking
+        let trackingLocation: CLLocation
+        if isSimulating {
+            trackingLocation = CLLocation(
+                coordinate: navigationStartCoordinate,
+                altitude: 0,
+                horizontalAccuracy: 10,
+                verticalAccuracy: 10,
+                course: navigationHeading,
+                speed: 0,
+                timestamp: Date()
+            )
+        } else {
+            trackingLocation = userLocation ?? CLLocation(
+                coordinate: navigationStartCoordinate,
+                altitude: 0,
+                horizontalAccuracy: 10,
+                verticalAccuracy: 10,
+                course: navigationHeading,
+                speed: 0,
+                timestamp: Date()
+            )
+        }
+        
+        // After 2.5 seconds, switch to 3D navigation mode
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
+            guard let self = self else { return }
+            
+            print("📍 prepareForNavigation [3D]: Switching to 3D navigation view")
+            
+            // Store location for course tracking
+            self.mapView.userLocationForCourseTracking = trackingLocation
+            
+            // Create 3D camera for navigation
+            let navigationCamera = MLNMapCamera(
+                lookingAtCenter: navigationStartCoordinate,
+                acrossDistance: self.mapView.defaultAltitude,
+                pitch: 45, // 3D view
+                heading: navigationHeading
+            )
+            
+            // Animate to 3D view
+            self.mapView.setCamera(navigationCamera, withDuration: 1.0, animationTimingFunction: CAMediaTimingFunction(name: .easeInEaseOut)) {
+                // Enable course tracking after camera animation
+                self.mapView.tracksUserCourse = true
+                print("📍 prepareForNavigation [3D]: Course tracking enabled")
+            }
         }
     }
 	
@@ -246,7 +363,7 @@ class RouteMapViewController: UIViewController {
 		
         self.updateETA()
         self.currentStepIndexMapped = 0
-        self.instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress)
+        self.instructionsBannerView.updateDistance(for: routeController.routeProgress.currentLegProgress.currentStepProgress, upcomingStep: routeController.routeProgress.currentLegProgress.upComingStep)
 
         self.mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         self.mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -329,7 +446,7 @@ class RouteMapViewController: UIViewController {
         self.resetETATimer()
         self.updateETA()
 
-        self.instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
+        self.instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress, upcomingStep: routeProgress.currentLegProgress.upComingStep)
 
         if self.currentLegIndexMapped != routeProgress.legIndex {
             self.mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -345,6 +462,29 @@ class RouteMapViewController: UIViewController {
 
         if self.annotatesSpokenInstructions {
             self.mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
+        
+        // Update proceed-to-start line based on user's current position
+        // This will add the line if style is now ready (wasn't ready in prepareForNavigation)
+        // Or update the line position as user moves
+        // Or remove it when user is close to route start
+        if let routeStartCoord = routeProgress.route.coordinates?.first {
+            let isSimulating = routeController.locationManager is SimulatedLocationManager
+            if !isSimulating {
+                // In GPS mode, update the proceed-to-start line
+                if let distance = self.mapView.showProceedToStartLine(
+                    from: location.coordinate,
+                    to: routeStartCoord,
+                    distanceThreshold: 50 // Remove when within 50m
+                ) {
+                    // Line is shown, distance > 50m
+                    // Only log occasionally to avoid spam
+                    if Int(distance) % 1000 == 0 {
+                        print("📍 notifyDidChange: Proceed-to-start line updated, distance: \(Int(distance))m")
+                    }
+                }
+                // distance == nil means either style not ready OR user is within 50m
+            }
         }
     }
 
@@ -733,11 +873,44 @@ extension RouteMapViewController: StepsViewControllerDelegate {
 private extension RouteMapViewController {
     @objc
     func recenter(_ sender: AnyObject) {
+        NSLog("🔴 recenter() called - Resume button tapped!")
+        
         self.mapView.tracksUserCourse = true
         self.mapView.enableFrameByFrameCourseViewTracking(for: 3)
         self.isInOverviewMode = false
-        guard let routeController else { return }
-		
+        
+        guard let routeController else {
+            NSLog("🔴❌ recenter() - No routeController, early return!")
+            return
+        }
+        
+        NSLog("🔴✅ recenter() - routeController found")
+        
+        // CRITICAL FIX: Explicitly update camera to current user location
+        // Without this, the camera doesn't move immediately - only future updates would move it
+        if let location = routeController.locationManager.location {
+            NSLog("🔴✅ recenter() - Updating camera to location: lat=%f, lng=%f", location.coordinate.latitude, location.coordinate.longitude)
+            
+            // Store the location for course tracking
+            self.mapView.userLocationForCourseTracking = location
+            
+            // Update the camera to look at the user's location
+            let camera = MLNMapCamera(
+                lookingAtCenter: location.coordinate,
+                acrossDistance: self.mapView.altitude,
+                pitch: 45,
+                heading: location.course >= 0 ? location.course : self.mapView.camera.heading
+            )
+            
+            // Animate to the new camera position
+            self.mapView.setCamera(camera, withDuration: 0.5, animationTimingFunction: CAMediaTimingFunction(name: .easeInEaseOut), completionHandler: nil)
+            
+            // Also update the course tracking view
+            self.mapView.updateCourseTracking(location: location, animated: true)
+        } else {
+            NSLog("🔴⚠️ recenter() - No current location available from locationManager")
+        }
+        
         self.updateCameraAltitude(for: routeController.routeProgress)
 
         self.mapView.addArrow(route: routeController.routeProgress.route,
@@ -967,6 +1140,20 @@ private extension RouteMapViewController {
 
         if self.annotatesSpokenInstructions {
             self.mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
+        
+        // Show proceed-to-start dashed line if user is not at route start (GPS mode only)
+        let isSimulating = routeController.locationManager is SimulatedLocationManager
+        if !isSimulating,
+           let userLocation = routeController.location ?? routeController.locationManager.location,
+           let routeStart = routeController.routeProgress.route.coordinates?.first {
+            if let distance = self.mapView.showProceedToStartLine(
+                from: userLocation.coordinate,
+                to: routeStart,
+                distanceThreshold: 100 // Show if > 100m from start
+            ) {
+                print("📍 showRouteIfNeeded: Added proceed-to-start line, distance: \(Int(distance))m")
+            }
         }
     }
 }

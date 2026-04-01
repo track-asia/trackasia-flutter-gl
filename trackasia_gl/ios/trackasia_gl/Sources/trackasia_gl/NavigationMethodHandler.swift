@@ -13,6 +13,7 @@ import CoreLocation
 // MapboxDirections is declared as CocoaPods dependency in podspec
 // Using direct import since it should always be available
 import MapboxDirections
+import Polyline
 import Turf
 
 // NOTE: NavigationViewController, DayStyle, NightStyle, SimulatedLocationManager
@@ -23,7 +24,7 @@ import Turf
  * Handles navigation-related method calls from Flutter
  * Implements iOS native demo functionality for route calculation and navigation
  */
-class NavigationMethodHandler: NSObject {
+class NavigationMethodHandler: NSObject, FlutterStreamHandler {
     private let registrar: FlutterPluginRegistrar
     
     // Navigation state - STATIC to persist across instances
@@ -41,6 +42,10 @@ class NavigationMethodHandler: NSObject {
     private var routePolylines: [String: MLNPolyline] = [:]
     private var routeStyles: [String: [String: Any]] = [:]
     
+    // Event streaming to Flutter
+    private var navigationEventChannel: FlutterEventChannel?
+    private static var eventSink: FlutterEventSink?
+    
     // Accessors for static route data
     private var currentRoute: Route? {
         get { NavigationMethodHandler.currentRouteStatic }
@@ -50,6 +55,79 @@ class NavigationMethodHandler: NSObject {
     private var currentRouteData: [String: Any]? {
         get { NavigationMethodHandler.currentRouteDataStatic }
         set { NavigationMethodHandler.currentRouteDataStatic = newValue }
+    }
+    
+    // MARK: - Static Event Methods (for NavigationViewController callbacks)
+    
+    /// Send navigation event to Flutter
+    static func sendNavigationEvent(_ event: [String: Any]) {
+        DispatchQueue.main.async {
+            eventSink?(event)
+        }
+    }
+    
+    /// Send route progress update to Flutter
+    static func sendRouteProgress(distanceRemaining: Double, durationRemaining: Double, 
+                                   distanceTraveled: Double, fractionTraveled: Double,
+                                   currentStepIndex: Int, currentLegIndex: Int) {
+        sendNavigationEvent([
+            "type": "routeProgress",
+            "distanceRemaining": distanceRemaining,
+            "durationRemaining": durationRemaining,
+            "distanceTraveled": distanceTraveled,
+            "fractionTraveled": fractionTraveled,
+            "currentStepIndex": currentStepIndex,
+            "currentLegIndex": currentLegIndex
+        ])
+    }
+    
+    /// Send arrival event to Flutter
+    static func sendArrivalEvent(waypointName: String?, waypointIndex: Int) {
+        sendNavigationEvent([
+            "type": "arrival",
+            "waypointName": waypointName ?? "",
+            "waypointIndex": waypointIndex
+        ])
+    }
+    
+    /// Send reroute event to Flutter  
+    static func sendRerouteEvent(newRouteDistance: Double, newRouteDuration: Double) {
+        sendNavigationEvent([
+            "type": "reroute",
+            "newRouteDistance": newRouteDistance,
+            "newRouteDuration": newRouteDuration
+        ])
+    }
+    
+    /// Send off-route event to Flutter
+    static func sendOffRouteEvent(latitude: Double, longitude: Double) {
+        sendNavigationEvent([
+            "type": "offRoute",
+            "latitude": latitude,
+            "longitude": longitude
+        ])
+    }
+    
+    /// Send navigation ended event to Flutter
+    static func sendNavigationEndedEvent(canceled: Bool) {
+        sendNavigationEvent([
+            "type": "navigationEnded",
+            "canceled": canceled
+        ])
+    }
+    
+    // MARK: - FlutterStreamHandler
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        NavigationMethodHandler.eventSink = events
+        NSLog("✅ NavigationMethodHandler: Event sink connected")
+        return nil
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        NavigationMethodHandler.eventSink = nil
+        NSLog("🔴 NavigationMethodHandler: Event sink disconnected")
+        return nil
     }
     
     init(registrar: FlutterPluginRegistrar) {
@@ -857,16 +935,21 @@ class NavigationMethodHandler: NSObject {
         if #available(iOS 13.0, *) {
             // iOS 13+ uses window scenes
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                rootViewController = windowScene.windows.first?.rootViewController
+                rootViewController = windowScene.windows.first(where: { $0.isKeyWindow })?.rootViewController
             }
         }
         
         // Fallback for older iOS versions or if scene approach failed
         if rootViewController == nil {
+            rootViewController = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        }
+        
+        // Final fallback
+        if rootViewController == nil {
             rootViewController = UIApplication.shared.windows.first?.rootViewController
         }
         
-        guard let rootVC = rootViewController else {
+        guard var topVC = rootViewController else {
             print("❌ Could not find root view controller")
             result(FlutterError(
                 code: "NO_VIEW_CONTROLLER",
@@ -876,11 +959,42 @@ class NavigationMethodHandler: NSObject {
             return
         }
         
-        presentNavigationController(with: route, simulateRoute: simulateRoute, on: rootVC, result: result)
+        // Find the top-most presented view controller
+        while let presentedVC = topVC.presentedViewController {
+            topVC = presentedVC
+        }
+        
+        // Check if view is in window hierarchy
+        guard topVC.view.window != nil else {
+            // Delay presentation until view is in window hierarchy
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.presentNavigationController(with: route, simulateRoute: simulateRoute, on: topVC, result: result)
+            }
+            return
+        }
+        
+        presentNavigationController(with: route, simulateRoute: simulateRoute, on: topVC, result: result)
     }
     
     private func presentNavigationController(with route: Route, simulateRoute: Bool, on rootViewController: UIViewController, result: @escaping FlutterResult) {
         print("🚗 Presenting NavigationViewController...")
+        
+        // Ensure we're on main thread and view is ready
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.presentNavigationController(with: route, simulateRoute: simulateRoute, on: rootViewController, result: result)
+            }
+            return
+        }
+        
+        // Check if view is in window hierarchy
+        guard rootViewController.view.window != nil else {
+            print("⚠️ View not in window hierarchy, delaying presentation...")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                self?.presentNavigationController(with: route, simulateRoute: simulateRoute, on: rootViewController, result: result)
+            }
+            return
+        }
         
         // Get the map style URL from the registered Flutter map controller
         // This ensures navigation uses the same map style as the main app
@@ -1242,9 +1356,19 @@ class NavigationMethodHandler: NSObject {
     
     // Enhanced polyline decoding with multiple format support
     private func decodePolyline(_ encoded: String) -> [CLLocationCoordinate2D]? {
+        // IMPORTANT: DO NOT remove backslash or other characters from the polyline!
+        // Backslash (ASCII 92) is a VALID polyline-encoded character (value 29 in the algorithm).
+        // Removing it corrupts the delta encoding, causing coordinates to drift.
+        // The JSON parser already handles escape sequences correctly.
+        
+        let cleanEncoded = encoded  // Use polyline as-is from API
+        
+        NSLog("🔴 decodePolyline: Length=%d", cleanEncoded.count)
+        NSLog("🔴 decodePolyline: First 50 chars: %@", String(cleanEncoded.prefix(50)))
+        
         // Check if it's a simple coordinate string first
-        if encoded.contains(";") && encoded.contains(",") {
-            let pairs = encoded.components(separatedBy: ";")
+        if cleanEncoded.contains(";") && cleanEncoded.contains(",") {
+            let pairs = cleanEncoded.components(separatedBy: ";")
             return pairs.compactMap { pair in
                 let coords = pair.components(separatedBy: ",")
                 if coords.count >= 2,
@@ -1257,27 +1381,35 @@ class NavigationMethodHandler: NSObject {
         }
         
         // Try Google Polyline Algorithm 6 first (TrackAsia/Mapbox format)
-        if let coords = decodeGooglePolyline(encoded, precision: 6), !coords.isEmpty {
+        // Using Polyline library's tested implementation  
+        
+        // Now try the actual polyline with precision 6 (TrackAsia uses polyline6)
+        let polylineResult = Polyline(encodedPolyline: cleanEncoded, precision: 1e6)
+        if let coords = polylineResult.coordinates, !coords.isEmpty {
+            // Convert Polyline.LocationCoordinate2D to CLLocationCoordinate2D
+            let clCoords = coords.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }
             // Validate: coordinates should be in valid lat/lng range
-            if let first = coords.first, 
+            if let first = clCoords.first, 
                first.latitude >= -90 && first.latitude <= 90 &&
                first.longitude >= -180 && first.longitude <= 180 {
-                print("   ✅ Decoded with precision 6: \(coords.count) coords")
-                print("   ✅ P6 First coord: lat=\(first.latitude), lng=\(first.longitude)")
-                if let last = coords.last {
-                    print("   ✅ P6 Last coord: lat=\(last.latitude), lng=\(last.longitude)")
+                NSLog("🔴✅ Decoded with precision 6: %d coords", clCoords.count)
+                NSLog("🔴✅ P6 First coord: lat=%f, lng=%f", first.latitude, first.longitude)
+                if let last = clCoords.last {
+                    NSLog("🔴✅ P6 Last coord: lat=%f, lng=%f", last.latitude, last.longitude)
                 }
-                return coords
+                return clCoords
             }
         }
         
         // Try Google Polyline Algorithm 5 (OSRM standard)
-        if let coords = decodeGooglePolyline(encoded, precision: 5), !coords.isEmpty {
-            if let first = coords.first,
+        // Using Polyline library's tested implementation
+        if let coords = Polyline(encodedPolyline: cleanEncoded, precision: 1e5).coordinates, !coords.isEmpty {
+            let clCoords = coords.map { CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude) }
+            if let first = clCoords.first,
                first.latitude >= -90 && first.latitude <= 90 &&
                first.longitude >= -180 && first.longitude <= 180 {
-                print("   ✅ Decoded with precision 5: \(coords.count) coords")
-                return coords
+                NSLog("🔴✅ Decoded with precision 5: %d coords", clCoords.count)
+                return clCoords
             }
         }
         

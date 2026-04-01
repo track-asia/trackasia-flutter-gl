@@ -406,9 +406,11 @@ open class NavigationViewController: UIViewController {
         mapSubview.pinInSuperview()
         
         self.styleManager = StyleManager(self, dayStyle: dayStyle, nightStyle: nightStyle)
-
-        self.mapViewController.navigationView.hideUI(animated: false)
-        self.mapView.tracksUserCourse = false
+        
+        // Don't hide UI here - startNavigation() will call prepareForNavigation()
+        // which calls showUI() to properly activate bannerShowConstraints
+        // Removing hideUI() here prevents constraint conflict where both 
+        // bannerShowConstraints and bannerHideConstraints are active simultaneously
     }
 	
     @available(*, unavailable)
@@ -590,6 +592,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     func mapViewControllerDidFinish(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
         self.endNavigation()
         self.delegate?.navigationViewControllerDidFinishRouting(self)
+        
+        // Send navigation ended event to Flutter
+        NavigationMethodHandler.sendNavigationEndedEvent(canceled: canceled)
+        
         // Dismiss the navigation view controller to return to the main app
         self.dismiss(animated: true, completion: nil)
     }
@@ -625,10 +631,15 @@ extension NavigationViewController: RouteControllerDelegate {
         self.delegate?.navigationViewController(self, willRerouteFrom: location)
     }
     
-    
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route, reason: RouteController.RerouteReason) {
         self.mapViewController.notifyDidReroute(route: route)
         self.delegate?.navigationViewController(self, didRerouteAlong: route)
+        
+        // Send reroute event to Flutter
+        NavigationMethodHandler.sendRerouteEvent(
+            newRouteDistance: route.distance,
+            newRouteDuration: route.expectedTravelTime
+        )
     }
     
     public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
@@ -658,6 +669,13 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint?) -> Bool {
         let advancesToNextLeg = self.delegate?.navigationViewController(self, didArriveAt: waypoint) ?? true
+        
+        // Send arrival event to Flutter
+        let waypointIndex = routeController.routeProgress.legIndex
+        NavigationMethodHandler.sendArrivalEvent(
+            waypointName: waypoint?.name,
+            waypointIndex: waypointIndex
+        )
         
         if !self.isConnectedToCarPlay, // CarPlayManager shows rating on CarPlay if it's connected
            routeController.routeProgress.isFinalLeg, advancesToNextLeg {
@@ -745,6 +763,16 @@ private extension NavigationViewController {
 
         self.mapViewController.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         guard let routeController else { return }
+        
+        // Send route progress to Flutter
+        NavigationMethodHandler.sendRouteProgress(
+            distanceRemaining: routeProgress.distanceRemaining,
+            durationRemaining: routeProgress.durationRemaining,
+            distanceTraveled: routeProgress.distanceTraveled,
+            fractionTraveled: routeProgress.fractionTraveled,
+            currentStepIndex: routeProgress.currentLegProgress.stepIndex,
+            currentLegIndex: routeProgress.legIndex
+        )
 		
         // If the user has arrived, don't snap the user puck.
         // In the case the user drives beyond the waypoint,
