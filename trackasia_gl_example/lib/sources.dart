@@ -162,7 +162,7 @@ class FullMapState extends State<FullMap> {
         'earthquakes-heatmap-source',
         const GeojsonSourceProperties(
             data:
-                'https://track-asia.io.github.track-asia-js/docs/assets/earthquakes.geojson'));
+                'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'));
 
     await controller.addLayer(
       'earthquakes-heatmap-source',
