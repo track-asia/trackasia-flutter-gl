@@ -3,7 +3,7 @@
 [![Pub Version](https://img.shields.io/pub/v/trackasia_gl)](https://pub.dev/packages/trackasia_gl)
 [![likes](https://img.shields.io/pub/likes/trackasia_gl?logo=flutter)](https://pub.dev/packages/trackasia_gl)
 [![Pub Points](https://img.shields.io/pub/points/trackasia_gl)](https://pub.dev/packages/trackasia_gl/score)
-[![stars](https://badgen.net/github/stars/track-asia/flutter-trackasia-gl?label=stars&color=green&icon=github)](https://github.com/josxha/flutter-trackasia-gl/stargazers)
+[![stars](https://badgen.net/github/stars/track-asia/flutter-trackasia-gl?label=stars&color=green&icon=github)](https://github.com/track-asia/flutter-trackasia-gl/stargazers)
 
 This Flutter plugin allows to show **embedded interactive and customizable
 vector maps** as a Flutter widget.
