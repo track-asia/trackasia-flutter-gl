@@ -368,7 +368,7 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
         let baseURL = "https://maps.track-asia.com/route/v1"
         let coordinates = "\(origin.longitude),\(origin.latitude);\(destination.longitude),\(destination.latitude)"
         // TrackAsia API key (same as used in U-Map Flutter app - Constants.apiKeyVN)
-        let apiKey = "c83d316e47617682005753cf8d2528b98e"
+        let apiKey = "YOUR_TRACKASIA_MAP_KEY"
         // IMPORTANT: URL must end with .json before query params (matching Flutter api_service.dart format)
         // CRITICAL: Use polyline6 (precision 6) to match Flutter app - NOT polyline (precision 5)
         let urlString = "\(baseURL)/\(profilePath)/\(coordinates).json?key=\(apiKey)&overview=full&geometries=polyline6&steps=true"
@@ -1006,7 +1006,7 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
             NSLog("🔴 Using map style URL from Flutter: %@", mapStyleURL.absoluteString)
         } else {
             // Fallback to TrackAsia VN streets style v2 (matching U-Map Constants.urlStyleStreetsVN)
-            mapStyleURL = URL(string: "https://maps.track-asia.com/styles/v2/streets.json?key=c83d316e47617682005753cf8d2528b98e")!
+            mapStyleURL = URL(string: "https://maps.track-asia.com/styles/v2/streets.json?key=YOUR_TRACKASIA_MAP_KEY")!
             NSLog("🔴 Using fallback TrackAsia VN style URL")
         }
         
