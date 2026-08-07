@@ -45,6 +45,7 @@ class TrackAsiaMap extends StatefulWidget {
     this.onMapClick,
     this.onUserLocationUpdated,
     this.onMapLongClick,
+    this.onCameraMoveStarted,
     this.onCameraTrackingDismissed,
     this.onCameraTrackingChanged,
     this.onCameraIdle,
@@ -230,6 +231,9 @@ class TrackAsiaMap extends StatefulWidget {
   /// called whenever a new location update is received by the map view.
   final OnUserLocationUpdated? onUserLocationUpdated;
 
+  /// Called when map camera begins moving. [isGesture] is true for user pans.
+  final OnCameraMoveStartedCallback? onCameraMoveStarted;
+
   /// Called when the map's camera no longer follows the physical device location, e.g. because the user moved the map
   final OnCameraTrackingDismissedCallback? onCameraTrackingDismissed;
 
@@ -265,7 +269,8 @@ class _TrackAsiaMapState extends State<TrackAsiaMap> {
       Completer<TrackAsiaMapController>();
 
   late _TrackAsiaMapOptions _trackasiaMapOptions;
-  final TrackAsiaPlatform _trackasiaPlatform = TrackAsiaPlatform.createInstance();
+  final TrackAsiaPlatform _trackasiaPlatform =
+      TrackAsiaPlatform.createInstance();
 
   @override
   Widget build(BuildContext context) {
@@ -333,6 +338,7 @@ class _TrackAsiaMapState extends State<TrackAsiaMap> {
       onMapClick: widget.onMapClick,
       onUserLocationUpdated: widget.onUserLocationUpdated,
       onMapLongClick: widget.onMapLongClick,
+      onCameraMoveStarted: widget.onCameraMoveStarted,
       onCameraTrackingDismissed: widget.onCameraTrackingDismissed,
       onCameraTrackingChanged: widget.onCameraTrackingChanged,
       onCameraIdle: widget.onCameraIdle,

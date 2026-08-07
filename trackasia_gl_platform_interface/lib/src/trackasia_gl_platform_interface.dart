@@ -23,7 +23,7 @@ abstract class TrackAsiaPlatform {
 
   final onFeatureDraggedPlatform = ArgumentCallbacks<Map<String, dynamic>>();
 
-  final onCameraMoveStartedPlatform = ArgumentCallbacks<void>();
+  final onCameraMoveStartedPlatform = ArgumentCallbacks<bool>();
 
   final onCameraMovePlatform = ArgumentCallbacks<CameraPosition>();
 
@@ -213,20 +213,20 @@ abstract class TrackAsiaPlatform {
     required List<LatLng> waypoints,
     NavigationOptions? options,
   });
-  
+
   Future<void> startNavigation({
     required NavigationRoute route,
     NavigationOptions? options,
   });
-  
+
   Future<void> stopNavigation();
-  
+
   Future<void> pauseNavigation();
-  
+
   Future<void> resumeNavigation();
-  
+
   Future<bool> isNavigationActive();
-  
+
   Future<RouteProgress?> getCurrentRouteProgress();
 
   @mustCallSuper
@@ -246,7 +246,7 @@ abstract class TrackAsiaPlatform {
     onCameraTrackingDismissedPlatform.clear();
     onMapIdlePlatform.clear();
     onUserLocationUpdatedPlatform.clear();
-    
+
     // Clear navigation callbacks
     onNavigationEventPlatform.clear();
     onRouteProgressPlatform.clear();

@@ -24,6 +24,17 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
                 binaryMessenger: registrar.messenger()
             )
             navigationEventChannel.setStreamHandler(navigationMethodHandler)
+            let navigationMethodChannel = FlutterMethodChannel(
+                name: "plugins.flutter.io/trackasia_gl_navigation",
+                binaryMessenger: registrar.messenger()
+            )
+            navigationMethodChannel.setMethodCallHandler { call, result in
+                guard let handler = navigationMethodHandler else {
+                    result(FlutterMethodNotImplemented)
+                    return
+                }
+                handler.handleMethodCall(call, result: result)
+            }
             NSLog("✅ TrackAsiaMapsPlugin: Navigation event channel registered")
         } catch {
             NSLog("❌ TrackAsiaMapsPlugin: Failed to initialize NavigationMethodHandler: %@", error.localizedDescription)
@@ -212,5 +223,10 @@ public class TrackAsiaMapsPlugin: NSObject, FlutterPlugin {
             let key = registrar.lookupKey(forAsset: tilesdb)
             return Bundle.main.path(forResource: key, ofType: nil)
         }
+    }
+
+    public static func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+        navigationMethodHandler?.cleanup()
+        navigationMethodHandler = nil
     }
 }

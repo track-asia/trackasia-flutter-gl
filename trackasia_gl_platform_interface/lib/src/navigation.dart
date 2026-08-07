@@ -97,6 +97,8 @@ enum NavigationEventType {
   navigationPaused,
   navigationResumed,
   navigationEnded,
+  rerouting,
+  navigationError,
   voiceInstruction,
   bannerInstruction,
 }
@@ -131,7 +133,8 @@ class RouteProgress {
   final double _durationRemaining;
 
   /// Duration remaining as Duration object
-  Duration get durationRemaining => Duration(seconds: _durationRemaining.round());
+  Duration get durationRemaining =>
+      Duration(seconds: _durationRemaining.round());
 
   /// Distance traveled in meters
   final double distanceTraveled;
@@ -145,6 +148,24 @@ class RouteProgress {
   /// Current leg index
   final int currentLegIndex;
 
+  /// Matched location latitude. Null until first progress update.
+  final double? latitude;
+
+  /// Matched location longitude. Null until first progress update.
+  final double? longitude;
+
+  /// Matched location bearing in degrees.
+  final double? bearing;
+
+  /// Matched location speed in meters per second.
+  final double? speed;
+
+  /// Remaining distance in current step.
+  final double? stepDistanceRemaining;
+
+  /// Current road or step name.
+  final String? currentRoadName;
+
   const RouteProgress({
     required this.distanceRemaining,
     required double durationRemaining,
@@ -152,6 +173,12 @@ class RouteProgress {
     required this.fractionTraveled,
     required this.currentStepIndex,
     required this.currentLegIndex,
+    this.latitude,
+    this.longitude,
+    this.bearing,
+    this.speed,
+    this.stepDistanceRemaining,
+    this.currentRoadName,
   }) : _durationRemaining = durationRemaining;
 
   factory RouteProgress.fromMap(Map<String, dynamic> map) {
@@ -162,6 +189,12 @@ class RouteProgress {
       fractionTraveled: (map['fractionTraveled'] ?? 0.0).toDouble(),
       currentStepIndex: map['currentStepIndex'] ?? 0,
       currentLegIndex: map['currentLegIndex'] ?? 0,
+      latitude: (map['latitude'] as num?)?.toDouble(),
+      longitude: (map['longitude'] as num?)?.toDouble(),
+      bearing: (map['bearing'] as num?)?.toDouble(),
+      speed: (map['speed'] as num?)?.toDouble(),
+      stepDistanceRemaining: (map['stepDistanceRemaining'] as num?)?.toDouble(),
+      currentRoadName: map['currentRoadName'] as String?,
     );
   }
 }
@@ -207,12 +240,16 @@ class BannerInstruction {
   /// Maneuver modifier
   final String? maneuverModifier;
 
+  /// Text for a close following maneuver, if returned by routing API.
+  final String? nextText;
+
   const BannerInstruction({
     required this.primaryText,
     this.secondaryText,
     required this.distanceAlongGeometry,
     this.maneuverType,
     this.maneuverModifier,
+    this.nextText,
   });
 
   factory BannerInstruction.fromMap(Map<String, dynamic> map) {
@@ -222,6 +259,7 @@ class BannerInstruction {
       distanceAlongGeometry: (map['distanceAlongGeometry'] ?? 0.0).toDouble(),
       maneuverType: map['maneuverType'],
       maneuverModifier: map['maneuverModifier'],
+      nextText: map['nextText'],
     );
   }
 }
@@ -365,4 +403,5 @@ class NavigationUIConfig {
 typedef NavigationEventCallback = void Function(NavigationEvent event);
 typedef RouteProgressCallback = void Function(RouteProgress progress);
 typedef VoiceInstructionCallback = void Function(VoiceInstruction instruction);
-typedef BannerInstructionCallback = void Function(BannerInstruction instruction);
+typedef BannerInstructionCallback = void Function(
+    BannerInstruction instruction);
