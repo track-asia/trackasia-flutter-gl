@@ -13,6 +13,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.embedding.engine.plugins.lifecycle.HiddenLifecycleReference;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.EventChannel;
 
 /**
  * Plugin for controlling a set of TrackAsiaMap views to be shown as overlays on top of the Flutter
@@ -26,6 +27,7 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
   private static GlobalMethodHandler globalMethodHandler;
   private static Activity currentActivity;
   private Lifecycle lifecycle;
+  private EventChannel navigationEventChannel;
 
   public TrackAsiaMapsPlugin() {
     // no-op
@@ -47,6 +49,23 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
         new MethodChannel(binding.getBinaryMessenger(), "plugins.flutter.io/trackasia_gl_navigation");
     navigationChannel.setMethodCallHandler(globalMethodHandler.getNavigationMethodHandler());
 
+    navigationEventChannel =
+        new EventChannel(binding.getBinaryMessenger(), "plugins.flutter.io/trackasia_gl_navigation_events");
+    navigationEventChannel.setStreamHandler(
+        new EventChannel.StreamHandler() {
+          @Override
+          public void onListen(Object arguments, EventChannel.EventSink events) {
+            globalMethodHandler.getNavigationMethodHandler().setEventSink(events);
+          }
+
+          @Override
+          public void onCancel(Object arguments) {
+            if (globalMethodHandler != null) {
+              globalMethodHandler.getNavigationMethodHandler().setEventSink(null);
+            }
+          }
+        });
+
     binding
         .getPlatformViewRegistry()
         .registerViewFactory(
@@ -64,6 +83,13 @@ public class TrackAsiaMapsPlugin implements FlutterPlugin, ActivityAware {
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    if (globalMethodHandler != null) {
+      globalMethodHandler.getNavigationMethodHandler().cleanup();
+    }
+    if (navigationEventChannel != null) {
+      navigationEventChannel.setStreamHandler(null);
+      navigationEventChannel = null;
+    }
     globalMethodHandler = null;
   }
 

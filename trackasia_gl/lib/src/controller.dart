@@ -24,6 +24,7 @@ typedef OnStyleLoadedCallback = void Function();
 
 typedef OnUserLocationUpdated = void Function(UserLocation location);
 
+typedef OnCameraMoveStartedCallback = void Function(bool isGesture);
 typedef OnCameraTrackingDismissedCallback = void Function();
 typedef OnCameraTrackingChangedCallback = void Function(
     MyLocationTrackingMode mode);
@@ -82,6 +83,7 @@ class TrackAsiaMapController extends ChangeNotifier {
     this.onMapClick,
     this.onMapLongClick,
     //this.onAttributionClick,
+    this.onCameraMoveStarted,
     this.onCameraTrackingDismissed,
     this.onCameraTrackingChanged,
     this.onMapIdle,
@@ -111,8 +113,9 @@ class TrackAsiaMapController extends ChangeNotifier {
       }
     });
 
-    _trackasiaPlatform.onCameraMoveStartedPlatform.add((_) {
+    _trackasiaPlatform.onCameraMoveStartedPlatform.add((isGesture) {
       _isCameraMoving = true;
+      onCameraMoveStarted?.call(isGesture);
       notifyListeners();
     });
 
@@ -186,6 +189,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   final OnStyleLoadedCallback? onStyleLoadedCallback;
   final OnMapClickCallback? onMapClick;
   final OnMapLongClickCallback? onMapLongClick;
+
+  final OnCameraMoveStartedCallback? onCameraMoveStarted;
 
   final OnUserLocationUpdated? onUserLocationUpdated;
 
@@ -1216,7 +1221,8 @@ class TrackAsiaMapController extends ChangeNotifier {
   /// Adds an image layer to the map's style at render time.
   Future<void> addImageLayer(String layerId, String imageSourceId,
       {double? minzoom, double? maxzoom}) {
-    return _trackasiaPlatform.addLayer(layerId, imageSourceId, minzoom, maxzoom);
+    return _trackasiaPlatform.addLayer(
+        layerId, imageSourceId, minzoom, maxzoom);
   }
 
   /// Adds an image layer below the layer provided with belowLayerId to the map's style at render time.

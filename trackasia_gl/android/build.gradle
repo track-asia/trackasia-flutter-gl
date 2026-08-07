@@ -55,7 +55,6 @@ android {
         
         // TrackAsia Navigation dependencies
         implementation 'io.github.track-asia:navigation-core:2.0.2'
-        implementation 'io.github.track-asia:navigation-ui-android:2.0.2'
         implementation 'io.github.track-asia:geojson:2.0.2'
         implementation 'io.github.track-asia:turf:2.0.2'
         

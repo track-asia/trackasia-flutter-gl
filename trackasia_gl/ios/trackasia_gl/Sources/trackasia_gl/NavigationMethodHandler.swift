@@ -5,6 +5,7 @@
  */
 
 import Flutter
+import AVFoundation
 import Foundation
 import TrackAsia
 import UIKit
@@ -24,13 +25,24 @@ import Turf
  * Handles navigation-related method calls from Flutter
  * Implements iOS native demo functionality for route calculation and navigation
  */
-class NavigationMethodHandler: NSObject, FlutterStreamHandler {
+class NavigationMethodHandler: NSObject, FlutterStreamHandler, RouteControllerDelegate {
     private let registrar: FlutterPluginRegistrar
     
     // Navigation state - STATIC to persist across instances
     private var isNavigationActive = false
     private static var currentRouteDataStatic: [String: Any]?
     private var currentProgress: [String: Any]?
+    private var routeController: RouteController?
+    private var simulatedLocationManager: SimulatedLocationManager?
+    private var notificationTokens: [NSObjectProtocol] = []
+    private let speechSynthesizer = AVSpeechSynthesizer()
+    private var isMuted = false
+    private var isReroutingEnabled = true
+    private var routeProfile = "car"
+    private var voiceLanguage = "vi-VN"
+    private var arrivalEmitted = false
+    private var rerouteInFlight = false
+    private var lastInstructionSignature: String?
     
     // Map controllers registry to access MapView (from TrackAsiaMapController)
     private static var mapControllers: [Int: TrackAsiaMapController] = [:]
@@ -187,6 +199,8 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
             result(isNavigationActive)
         case "navigation#getProgress":
             result(currentProgress)
+        case "navigation#setMuted":
+            setMuted(call, result: result)
         // NavigationMapRoute methods
         case "navigationMapRoute#addRoute":
             addNavigationRoute(call, result: result)
@@ -242,6 +256,7 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
         let options = arguments["options"] as? [String: Any]
         let profile = options?["profile"] as? String ?? "car"
         let language = options?["language"] as? String ?? "en"
+        routeProfile = normalizedProfile(profile)
         
         let coordinates = waypoints.compactMap { waypoint -> CLLocationCoordinate2D? in
             guard waypoint.count >= 2 else { return nil }
@@ -364,11 +379,10 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
         
         // TrackAsia API endpoint - using maps.track-asia.com (correct host)
         // TrackAsia API uses 'car/walk/bike' profiles (not 'driving/walking/cycling')
-        let profilePath = profile.lowercased() == "walking" ? "walk" : (profile.lowercased() == "cycling" ? "bike" : "car")
+        let profilePath = normalizedProfile(profile)
         let baseURL = "https://maps.track-asia.com/route/v1"
         let coordinates = "\(origin.longitude),\(origin.latitude);\(destination.longitude),\(destination.latitude)"
-        // TrackAsia API key (same as used in U-Map Flutter app - Constants.apiKeyVN)
-        let apiKey = "c83d316e47617682005753cf8d2528b98e"
+        let apiKey = "public_key"
         // IMPORTANT: URL must end with .json before query params (matching Flutter api_service.dart format)
         // CRITICAL: Use polyline6 (precision 6) to match Flutter app - NOT polyline (precision 5)
         let urlString = "\(baseURL)/\(profilePath)/\(coordinates).json?key=\(apiKey)&overview=full&geometries=polyline6&steps=true"
@@ -882,45 +896,237 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
         return earthRadius * c
     }
     
-    // MARK: - Navigation Start (Based on Native Demo)
+    // MARK: - Headless Navigation
     
     private func startNavigation(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        NSLog("��🚗 NavigationMethodHandler: Starting navigation...")
-        
-        guard let arguments = call.arguments as? [String: Any] else {
+        guard let route = currentRoute else {
             result(FlutterError(
-                code: "INVALID_ARGUMENTS",
-                message: "Arguments is not a dictionary",
+                code: "ROUTE_REQUIRED",
+                message: "Calculate a route before starting navigation.",
                 details: nil
             ))
             return
         }
-        
-        guard let routeData = currentRouteData else {
-            result(FlutterError(
-                code: "NO_ROUTE",
-                message: "No route available. Please calculate a route first.",
-                details: nil
-            ))
-            return
-        }
-        
-        let options = arguments["options"] as? [String: Any]
-        let simulateRoute = options?["simulateRoute"] as? Bool ?? false
-        
-        // Navigation modules are now integrated into trackasia_gl pod
-        // Always use full navigation when we have a Route object
-        NSLog("��🚗 NavigationMethodHandler: Checking currentRoute...")
-        if let route = currentRoute {
-            NSLog("🔴✅ NavigationMethodHandler: currentRoute available - starting full navigation")
-            NSLog("🔴   Route distance: %f meters", route.distance)
-            startFullNavigation(with: route, simulateRoute: simulateRoute, result: result)
+
+        let options = call.arguments as? [String: Any]
+        let navigationOptions = options?["options"] as? [String: Any]
+        let simulateRoute = navigationOptions?["simulateRoute"] as? Bool ?? false
+
+        stopNavigationInternal(emitEnded: false, clearRoute: false)
+
+        isMuted = !(navigationOptions?["enableVoiceGuidance"] as? Bool ?? true)
+        isReroutingEnabled = navigationOptions?["enableRerouting"] as? Bool ?? true
+        voiceLanguage = navigationOptions?["language"] as? String ?? "vi-VN"
+        arrivalEmitted = false
+        rerouteInFlight = false
+        lastInstructionSignature = nil
+        currentProgress = nil
+
+        let locationManager: NavigationLocationManager
+        if simulateRoute {
+            let simulator = SimulatedLocationManager(route: route)
+            simulator.speedMultiplier = 2.0
+            simulatedLocationManager = simulator
+            locationManager = simulator
         } else {
-            print("⚠️ NavigationMethodHandler: currentRoute is NIL - falling back to basic navigation")
-            print("   routeData keys: \(routeData.keys.joined(separator: ", "))")
-            // Basic navigation without full UI
-            startBasicNavigation(with: routeData, options: options, result: result)
+            simulatedLocationManager = nil
+            locationManager = NavigationLocationManager()
         }
+
+        let controller = RouteController(along: route, locationManager: locationManager)
+        controller.delegate = self
+        routeController = controller
+        attachRouteControllerObservers(to: controller)
+        controller.resume()
+        isNavigationActive = true
+
+        emit("navigationStarted", data: ["simulateRoute": simulateRoute])
+        emitBanner(for: controller.routeProgress, force: true)
+        result(["success": true, "simulateRoute": simulateRoute])
+    }
+
+    private func setMuted(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arguments = call.arguments as? [String: Any]
+        isMuted = arguments?["muted"] as? Bool ?? false
+        if isMuted {
+            speechSynthesizer.stopSpeaking(at: .immediate)
+        }
+        result(isMuted)
+    }
+
+    private func attachRouteControllerObservers(to controller: RouteController) {
+        let notificationCenter = NotificationCenter.default
+        notificationTokens = [
+            notificationCenter.addObserver(
+                forName: .routeControllerProgressDidChange,
+                object: controller,
+                queue: .main
+            ) { [weak self] notification in
+                self?.handleRouteProgress(notification)
+            },
+            notificationCenter.addObserver(
+                forName: .routeControllerWillReroute,
+                object: controller,
+                queue: .main
+            ) { [weak self] notification in
+                self?.handleWillReroute(notification)
+            },
+            notificationCenter.addObserver(
+                forName: .routeControllerDidReroute,
+                object: controller,
+                queue: .main
+            ) { [weak self] _ in
+                self?.handleDidReroute()
+            },
+            notificationCenter.addObserver(
+                forName: .routeControllerDidFailToReroute,
+                object: controller,
+                queue: .main
+            ) { [weak self] notification in
+                self?.handleDidFailToReroute(notification)
+            },
+        ]
+    }
+
+    private func handleRouteProgress(_ notification: Notification) {
+        guard isNavigationActive,
+              let routeProgress = notification.userInfo?[RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        else {
+            return
+        }
+
+        let location = notification.userInfo?[RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
+        let step = routeProgress.currentLegProgress.currentStep
+        let roadName = step.names?.first?.isEmpty == false ? step.names?.first : nil
+        let progress: [String: Any] = [
+            "latitude": nullable(location?.coordinate.latitude),
+            "longitude": nullable(location?.coordinate.longitude),
+            "bearing": nullable(location?.course.isQualified == true ? location?.course : nil),
+            "speed": nullable(location?.speed.isQualified == true ? location?.speed : nil),
+            "distanceRemaining": routeProgress.distanceRemaining,
+            "durationRemaining": routeProgress.durationRemaining,
+            "distanceTraveled": routeProgress.distanceTraveled,
+            "fractionTraveled": routeProgress.fractionTraveled,
+            "stepDistanceRemaining": routeProgress.currentLegProgress.currentStepProgress.distanceRemaining,
+            "currentStepIndex": routeProgress.currentLegProgress.stepIndex,
+            "currentLegIndex": routeProgress.legIndex,
+            "currentRoadName": nullable(roadName),
+        ]
+        currentProgress = progress
+        emit("routeProgress", data: progress)
+        emitBanner(for: routeProgress)
+        if simulatedLocationManager != nil, routeProgress.distanceRemaining <= 30 {
+            emitArrival(
+                waypoint: routeProgress.currentLeg.destination,
+                waypointIndex: routeProgress.legIndex
+            )
+            routeController?.suspendLocationUpdates()
+        }
+    }
+
+    private func emitBanner(for routeProgress: RouteProgress, force: Bool = false) {
+        let legProgress = routeProgress.currentLegProgress
+        let step = legProgress.currentStep
+        let signature = "\(routeProgress.legIndex)-\(legProgress.stepIndex)"
+        guard force || lastInstructionSignature != signature else { return }
+        lastInstructionSignature = signature
+
+        let visual = legProgress.currentStepProgress.currentVisualInstruction
+        let primary = visual?.primaryInstruction
+        let secondary = visual?.secondaryInstruction
+        let nextStep = legProgress.upComingStep
+        let primaryText = primary?.text ?? step.instructions
+        let secondaryText = secondary?.text
+        let nextText = visual?.tertiaryInstruction?.text ?? nextStep?.instructions
+        emit("bannerInstruction", data: [
+            "primaryText": primaryText,
+            "secondaryText": nullable(secondaryText),
+            "maneuverType": (primary?.maneuverType ?? step.maneuverType).rawValue,
+            "maneuverModifier": nullable((primary?.maneuverDirection ?? step.maneuverDirection)?.rawValue),
+            "distanceAlongGeometry": legProgress.currentStepProgress.distanceRemaining,
+            "distanceToManeuver": legProgress.currentStepProgress.distanceRemaining,
+            "nextText": nullable(nextText),
+        ])
+        emitVoice(text: primaryText, distanceAlongGeometry: legProgress.currentStepProgress.distanceRemaining)
+    }
+
+    private func emitVoice(text: String, distanceAlongGeometry: CLLocationDistance) {
+        guard !text.isEmpty else { return }
+        emit("voiceInstruction", data: [
+            "text": text,
+            "distanceAlongGeometry": distanceAlongGeometry,
+        ])
+        guard !isMuted else { return }
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: voiceLanguage)
+        speechSynthesizer.speak(utterance)
+    }
+
+    private func handleWillReroute(_ notification: Notification) {
+        guard isNavigationActive, !rerouteInFlight else { return }
+        rerouteInFlight = true
+        let location = notification.userInfo?[RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
+        emit("offRoute", data: [
+            "latitude": nullable(location?.coordinate.latitude),
+            "longitude": nullable(location?.coordinate.longitude),
+        ])
+        emit("rerouting")
+    }
+
+    private func handleDidReroute() {
+        guard let route = routeController?.routeProgress.route else { return }
+        rerouteInFlight = false
+        currentRoute = route
+        let coordinates = route.shape?.coordinates ?? []
+        let waypoints = [coordinates.first, coordinates.last].compactMap { $0 }
+        emit("reroute", data: convertRouteToFlutterFormat(route, waypoints: waypoints))
+    }
+
+    private func handleDidFailToReroute(_ notification: Notification) {
+        rerouteInFlight = false
+        let error = notification.userInfo?[RouteControllerNotificationUserInfoKey.routingErrorKey] as? Error
+        emit("navigationError", data: [
+            "code": "REROUTE_ERROR",
+            "message": error?.localizedDescription ?? "Unable to reroute.",
+        ])
+    }
+
+    func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
+        isReroutingEnabled
+    }
+
+    func routeControllerGetDirections(
+        from location: CLLocation,
+        along progress: RouteProgress,
+        completion: @escaping (Route?, [Route]?, Error?) -> Void
+    ) -> Bool {
+        guard let destination = progress.route.legs.last?.destination?.coordinate else {
+            completion(nil, nil, NavigationBridgeError.missingDestination)
+            return true
+        }
+
+        requestTrackAsiaRoute(
+            from: location.coordinate,
+            to: destination,
+            profile: routeProfile
+        ) { route, error in
+            completion(route, route.map { [$0] }, error)
+        }
+        return true
+    }
+
+    func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint?) -> Bool {
+        emitArrival(waypoint: waypoint, waypointIndex: routeController.routeProgress.legIndex)
+        return false
+    }
+
+    private func emitArrival(waypoint: Waypoint?, waypointIndex: Int) {
+        guard !arrivalEmitted else { return }
+        arrivalEmitted = true
+        emit("arrival", data: [
+            "waypointName": nullable(waypoint?.name),
+            "waypointIndex": waypointIndex,
+        ])
     }
     
     // Full navigation with NavigationViewController (like native demo)
@@ -1006,7 +1212,7 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
             NSLog("🔴 Using map style URL from Flutter: %@", mapStyleURL.absoluteString)
         } else {
             // Fallback to TrackAsia VN streets style v2 (matching U-Map Constants.urlStyleStreetsVN)
-            mapStyleURL = URL(string: "https://maps.track-asia.com/styles/v2/streets.json?key=c83d316e47617682005753cf8d2528b98e")!
+            mapStyleURL = URL(string: "https://maps.track-asia.com/styles/v2/streets.json?key=YOUR_TRACKASIA_MAP_KEY")!
             NSLog("🔴 Using fallback TrackAsia VN style URL")
         }
         
@@ -1129,40 +1335,124 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
     // MARK: - Navigation Control Methods
     
     private func stopNavigation(result: @escaping FlutterResult) {
-        print("🛑 Stopping navigation...")
-        
-        // Reset navigation state
-        isNavigationActive = false
-        currentProgress = nil
-        currentRouteData = nil
-        
-        currentRoute = nil
-        
-        // Clear route from map if we have map controller
-        for (_, controller) in Self.mapControllers {
-            let mapView = controller.mapView
-            // Remove route polylines
-            for (_, polyline) in routePolylines {
-                mapView.removeAnnotation(polyline)
-            }
-            routePolylines.removeAll()
-            routeStyles.removeAll()
-        }
-        
-        print("✅ Navigation stopped successfully")
-        result(["status": "stopped"])
+        stopNavigationInternal(emitEnded: true, clearRoute: true)
+        result(true)
     }
     
     private func pauseNavigation(result: @escaping FlutterResult) {
-        print("⏸️ Pausing navigation...")
-        // Navigation pause logic
+        routeController?.suspendLocationUpdates()
         result(["status": "paused"])
     }
     
     private func resumeNavigation(result: @escaping FlutterResult) {
-        print("▶️ Resuming navigation...")
-        // Navigation resume logic
+        routeController?.resume()
         result(["status": "resumed"])
+    }
+
+    func cleanup() {
+        stopNavigationInternal(emitEnded: true, clearRoute: true)
+        NavigationMethodHandler.eventSink = nil
+    }
+
+    private func stopNavigationInternal(emitEnded: Bool, clearRoute: Bool) {
+        let wasActive = isNavigationActive
+        isNavigationActive = false
+        rerouteInFlight = false
+        notificationTokens.forEach { NotificationCenter.default.removeObserver($0) }
+        notificationTokens.removeAll()
+        routeController?.delegate = nil
+        routeController?.endNavigation()
+        routeController = nil
+        simulatedLocationManager = nil
+        speechSynthesizer.stopSpeaking(at: .immediate)
+        currentProgress = nil
+        lastInstructionSignature = nil
+        if clearRoute {
+            currentRoute = nil
+            currentRouteData = nil
+        }
+        if emitEnded && wasActive {
+            emit("navigationEnded")
+        }
+    }
+
+    private func emit(_ type: String, data: [String: Any] = [:]) {
+        var event = data
+        event["type"] = type
+        DispatchQueue.main.async {
+            NavigationMethodHandler.eventSink?(event)
+        }
+    }
+
+    private func nullable(_ value: Any?) -> Any {
+        value ?? NSNull()
+    }
+
+    private func normalizedProfile(_ profile: String) -> String {
+        switch profile.lowercased() {
+        case "walking", "walk":
+            return "walk"
+        case "cycling", "bike":
+            return "bike"
+        default:
+            return "car"
+        }
+    }
+
+    private func requestTrackAsiaRoute(
+        from origin: CLLocationCoordinate2D,
+        to destination: CLLocationCoordinate2D,
+        profile: String,
+        completion: @escaping (Route?, Error?) -> Void
+    ) {
+        let coordinates = "\(origin.longitude),\(origin.latitude);\(destination.longitude),\(destination.latitude)"
+        let urlString = "https://maps.track-asia.com/route/v1/\(normalizedProfile(profile))/\(coordinates).json?key=public_key&overview=full&geometries=polyline6&steps=true"
+        guard let url = URL(string: urlString) else {
+            completion(nil, NavigationBridgeError.invalidRouteURL)
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            var route: Route?
+            var routeError: Error?
+
+            defer {
+                DispatchQueue.main.async {
+                    completion(route, routeError)
+                }
+            }
+
+            if let error {
+                route = nil
+                routeError = error
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200 ..< 300).contains(httpResponse.statusCode),
+                  let data,
+                  let responseJSON = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let routeJSON = (responseJSON["routes"] as? [[String: Any]])?.first,
+                  let geometry = routeJSON["geometry"] as? String,
+                  let distance = routeJSON["distance"] as? Double,
+                  let duration = routeJSON["duration"] as? Double,
+                  let createdRoute = self?.createRouteFromOSRMResponse(
+                    geometry: geometry,
+                    distance: distance,
+                    duration: duration,
+                    legs: routeJSON["legs"] as? [[String: Any]],
+                    origin: origin,
+                    destination: destination
+                  )
+            else {
+                route = nil
+                routeError = NavigationBridgeError.invalidRouteResponse
+                return
+            }
+
+            route = createdRoute
+            routeError = nil
+        }.resume()
     }
     
     // MARK: - Route Drawing (Based on Native Demo MapViewManager)
@@ -1468,5 +1758,22 @@ class NavigationMethodHandler: NSObject, FlutterStreamHandler {
         }
         
         return coordinates.isEmpty ? nil : coordinates
+    }
+}
+
+private enum NavigationBridgeError: LocalizedError {
+    case invalidRouteURL
+    case invalidRouteResponse
+    case missingDestination
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidRouteURL:
+            return "Invalid TrackAsia route URL."
+        case .invalidRouteResponse:
+            return "TrackAsia returned an invalid route response."
+        case .missingDestination:
+            return "Navigation destination is unavailable."
+        }
     }
 }

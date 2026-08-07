@@ -7,13 +7,20 @@ class TrackAsiaNavigation {
   static TrackAsiaNavigation? _instance;
 
   // Event channel for native navigation events (iOS/Android)
-  static const EventChannel _navigationEventChannel = EventChannel('plugins.flutter.io/trackasia_gl_navigation_events');
+  static const EventChannel _navigationEventChannel =
+      EventChannel('plugins.flutter.io/trackasia_gl_navigation_events');
+  static const MethodChannel _navigationMethodChannel =
+      MethodChannel('plugins.flutter.io/trackasia_gl_navigation');
 
   // Stream controllers for navigation events
-  final StreamController<NavigationEvent> _navigationEventController = StreamController<NavigationEvent>.broadcast();
-  final StreamController<RouteProgress> _routeProgressController = StreamController<RouteProgress>.broadcast();
-  final StreamController<VoiceInstruction> _voiceInstructionController = StreamController<VoiceInstruction>.broadcast();
-  final StreamController<BannerInstruction> _bannerInstructionController = StreamController<BannerInstruction>.broadcast();
+  final StreamController<NavigationEvent> _navigationEventController =
+      StreamController<NavigationEvent>.broadcast();
+  final StreamController<RouteProgress> _routeProgressController =
+      StreamController<RouteProgress>.broadcast();
+  final StreamController<VoiceInstruction> _voiceInstructionController =
+      StreamController<VoiceInstruction>.broadcast();
+  final StreamController<BannerInstruction> _bannerInstructionController =
+      StreamController<BannerInstruction>.broadcast();
 
   /// Get the singleton instance
   static TrackAsiaNavigation get instance {
@@ -25,7 +32,8 @@ class TrackAsiaNavigation {
     return TrackAsiaNavigation._(TrackAsiaPlatform.createInstance());
   }
 
-  TrackAsiaNavigation._([TrackAsiaPlatform? platform]) : _platform = platform ?? TrackAsiaPlatform.createInstance() {
+  TrackAsiaNavigation._([TrackAsiaPlatform? platform])
+      : _platform = platform ?? TrackAsiaPlatform.createInstance() {
     // Listen to native navigation events
     _navigationEventChannel.receiveBroadcastStream().listen(_handleNativeEvent);
   }
@@ -38,17 +46,28 @@ class TrackAsiaNavigation {
 
     switch (type) {
       case 'routeProgress':
-        final progress = RouteProgress(
-          distanceRemaining: (eventMap['distanceRemaining'] as num?)?.toDouble() ?? 0,
-          durationRemaining: (eventMap['durationRemaining'] as num?)?.toDouble() ?? 0,
-          distanceTraveled: (eventMap['distanceTraveled'] as num?)?.toDouble() ?? 0,
-          fractionTraveled: (eventMap['fractionTraveled'] as num?)?.toDouble() ?? 0,
-          currentStepIndex: eventMap['currentStepIndex'] as int? ?? 0,
-          currentLegIndex: eventMap['currentLegIndex'] as int? ?? 0,
-        );
+        final progress = RouteProgress.fromMap(eventMap);
         _routeProgressController.add(progress);
         _navigationEventController.add(NavigationEvent(
           type: NavigationEventType.routeProgress,
+          data: eventMap,
+        ));
+        break;
+
+      case 'bannerInstruction':
+        final instruction = BannerInstruction.fromMap(eventMap);
+        _bannerInstructionController.add(instruction);
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.bannerInstruction,
+          data: eventMap,
+        ));
+        break;
+
+      case 'voiceInstruction':
+        final instruction = VoiceInstruction.fromMap(eventMap);
+        _voiceInstructionController.add(instruction);
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.voiceInstruction,
           data: eventMap,
         ));
         break;
@@ -77,6 +96,27 @@ class TrackAsiaNavigation {
       case 'navigationEnded':
         _navigationEventController.add(NavigationEvent(
           type: NavigationEventType.navigationEnded,
+          data: eventMap,
+        ));
+        break;
+
+      case 'navigationStarted':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.navigationStarted,
+          data: eventMap,
+        ));
+        break;
+
+      case 'rerouting':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.rerouting,
+          data: eventMap,
+        ));
+        break;
+
+      case 'navigationError':
+        _navigationEventController.add(NavigationEvent(
+          type: NavigationEventType.navigationError,
           data: eventMap,
         ));
         break;
@@ -138,6 +178,15 @@ class TrackAsiaNavigation {
     return _platform.stopNavigation();
   }
 
+  /// Mute or unmute native voice guidance without stopping navigation.
+  Future<bool> setMuted(bool muted) async {
+    final result = await _navigationMethodChannel.invokeMethod<bool>(
+      'navigation#setMuted',
+      <String, dynamic>{'muted': muted},
+    );
+    return result ?? muted;
+  }
+
   /// Pause the current navigation session
   Future<void> pauseNavigation() async {
     return _platform.pauseNavigation();
@@ -166,7 +215,8 @@ class TrackAsiaNavigation {
 /// Extension methods for TrackAsiaMapController to add navigation functionality
 extension TrackAsiaMapControllerNavigation on TrackAsiaMapController {
   /// Get the navigation instance for this map
-  TrackAsiaNavigation get navigation => TrackAsiaNavigation._(_trackasiaPlatform);
+  TrackAsiaNavigation get navigation =>
+      TrackAsiaNavigation._(_trackasiaPlatform);
 
   /// Quick method to calculate and start navigation
   ///
