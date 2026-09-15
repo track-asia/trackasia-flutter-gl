@@ -81,7 +81,7 @@ class TrackAsiaNavigation {
 
       case 'reroute':
         _navigationEventController.add(NavigationEvent(
-          type: NavigationEventType.reroute,
+          type: NavigationEventType.routeRecalculation,
           data: eventMap,
         ));
         break;
@@ -95,7 +95,7 @@ class TrackAsiaNavigation {
 
       case 'navigationEnded':
         _navigationEventController.add(NavigationEvent(
-          type: NavigationEventType.navigationEnded,
+          type: NavigationEventType.navigationStopped,
           data: eventMap,
         ));
         break;
