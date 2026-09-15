@@ -1,3 +1,8 @@
+## 2.0.4
+
+* Update TrackAsia Android Native SDK to 2.0.3 with new brand logo.
+* Update NavigationRoute definition and export issues.
+
 ## 2.0.4-dev.1 Pre-release Development Version
 - Fixed NavigationRoute definition and export issues
 - Updated dependencies to compatible versions
