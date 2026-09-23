@@ -16,7 +16,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 class TrackAsiaMapBuilder implements TrackAsiaMapOptionsSink {
   public final String TAG = getClass().getSimpleName();
   private final TrackAsiaMapOptions options =
-      new TrackAsiaMapOptions().attributionEnabled(true).logoEnabled(false).textureMode(true);
+      new TrackAsiaMapOptions().attributionEnabled(false).logoEnabled(false).textureMode(true);
   private boolean trackCameraPosition = false;
   private boolean myLocationEnabled = false;
   private boolean dragEnabled = true;

@@ -2,6 +2,8 @@
 
 * Update TrackAsia Android Native SDK to 2.0.3 with new brand logo.
 * Update NavigationRoute definition and export issues.
+* Preserve the headless Flutter navigation bridge and workspace platform packages.
+* Keep Android map logo and attribution chrome disabled for embedded navigation maps.
 
 ## 2.0.4-dev.1 Pre-release Development Version
 - Fixed NavigationRoute definition and export issues

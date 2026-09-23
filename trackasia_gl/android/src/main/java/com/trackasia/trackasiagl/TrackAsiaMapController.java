@@ -228,6 +228,11 @@ final class TrackAsiaMapController
   @Override
   public void onMapReady(TrackAsiaMap trackAsiaMap) {
     this.trackAsiaMap = trackAsiaMap;
+    try {
+      trackAsiaMap.getUiSettings().setLogoEnabled(false);
+      trackAsiaMap.getUiSettings().setAttributionEnabled(false);
+    } catch (Exception ignored) {
+    }
     if (mapReadyResult != null) {
       mapReadyResult.success(null);
       mapReadyResult = null;
