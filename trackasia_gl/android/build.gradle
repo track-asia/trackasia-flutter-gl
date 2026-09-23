@@ -19,6 +19,9 @@ rootProject.allprojects {
         google()
         mavenCentral()
     }
+    configurations.configureEach {
+        resolutionStrategy.force 'io.github.track-asia:trackasia-android-gestures:2.0.2'
+    }
 }
 
 apply plugin: 'com.android.library'
